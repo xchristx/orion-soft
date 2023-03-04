@@ -14,7 +14,7 @@ const navConfig = size => [
       // MANAGEMENT : COMPRAS
       {
         title: 'Compras',
-        path: '/dashboard/usuario/compras/historial',
+        path: '/dashboard/usuario/compras',
         icon: icon('ic_cart', size),
         children: [
           { title: 'nuevo pedido', path: '/dashboard/usuario/compras/nuevo' },

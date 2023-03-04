@@ -18,21 +18,21 @@ import {
 // redux
 // import { useDispatch, useSelector } from '../../../redux/store';
 // utils
-import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+import { fDate } from '../../../../utils/formatTime';
+import { fCurrency } from '../../../../utils/formatNumber';
 // hooks
 // components
-import Page from '../../../components/Page';
-import Label from '../../../components/Label';
-import Scrollbar from '../../../components/Scrollbar';
-import SearchNotFound from '../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import ProductListHead from './components/product-list/ProductListHead';
-import ProductListToolbar from './components/product-list/ProductListToolbar';
-import ProductMoreMenu from './components/product-list/ProductMoreMenu';
+import Page from '../../../../components/Page';
+import Label from '../../../../components/Label';
+import Scrollbar from '../../../../components/Scrollbar';
+import SearchNotFound from '../../../../components/SearchNotFound';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import ProductListHead from '../components/product-list/ProductListHead';
+import ProductListToolbar from '../components/product-list/ProductListToolbar';
+import ProductMoreMenu from '../components/product-list/ProductMoreMenu';
 // import { getProducts } from '../../../redux/slices/product';
-import Image from '../../../components/Image';
-import { products } from '../../../_mock/product';
+import Image from '../../../../components/Image';
+import { products } from '../../../../_mock/product';
 // sections
 
 // ----------------------------------------------------------------------
