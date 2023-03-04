@@ -37,10 +37,10 @@ import Image from '../../../components/Image';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', alignRight: false },
-  { id: 'createdAt', label: 'Create at', alignRight: false },
-  { id: 'inventoryType', label: 'Status', alignRight: false },
-  { id: 'price', label: 'Price', alignRight: true },
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'createdAt', label: 'Fecha de creación', alignRight: false },
+  { id: 'inventoryType', label: 'Estado', alignRight: false },
+  { id: 'price', label: 'Precio', alignRight: true },
   { id: '' },
 ];
 
