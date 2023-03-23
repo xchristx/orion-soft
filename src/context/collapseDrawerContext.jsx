@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { createContext, useState, useEffect } from 'react';
 // hooks
 import useResponsive from '../hooks/useResponsive';
@@ -18,9 +17,9 @@ const CollapseDrawerContext = createContext(initialState);
 
 // ----------------------------------------------------------------------
 
-// CollapseDrawerProvider.propTypes = {
-//   children: PropTypes.node,
-// };
+CollapseDrawerProvider.propTypes = {
+  children: PropTypes.node,
+};
 
 function CollapseDrawerProvider({ children }) {
   const isDesktop = useResponsive('up', 'lg');

@@ -119,7 +119,7 @@ export function DotIcon({ active }) {
           height: 4,
           borderRadius: '50%',
           bgcolor: 'text.disabled',
-          transition: (theme) =>
+          transition: theme =>
             theme.transitions.create('transform', {
               duration: theme.transitions.duration.shorter,
             }),
@@ -140,10 +140,5 @@ ArrowIcon.propTypes = {
 };
 
 export function ArrowIcon({ open }) {
-  return (
-    <Iconify
-      icon={open ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
-      sx={{ width: 16, height: 16, ml: 1 }}
-    />
-  );
+  return <Iconify icon={open ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'} sx={{ width: 16, height: 16, ml: 1 }} />;
 }

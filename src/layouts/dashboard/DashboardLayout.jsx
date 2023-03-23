@@ -5,13 +5,13 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
-import useCollapseDrawer from '../../hooks/useColllapseDrawer';
 // config
 import { HEADER, NAVBAR } from './header/config';
 //
 import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +39,8 @@ const MainStyle = styled('main', {
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
-  const { collapseClick, isCollapse } = useCollapseDrawer();
+  const { collapseClick, collapseHover } = useSelector(s => s.drawerSlice);
+  const isCollapse = collapseClick && !collapseHover;
 
   const isDesktop = useResponsive('up', 'lg');
 

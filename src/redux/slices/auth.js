@@ -9,10 +9,6 @@ import { FIREBASE_API } from '../../../config';
 
 // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-// const ADMIN_EMAILS = ['botines.workers@gmail.com'];
-
 const firebaseApp = initializeApp(FIREBASE_API);
 
 const AUTH = getAuth(firebaseApp);
@@ -28,7 +24,7 @@ export const fetchUser = createAsyncThunk('auth/login', async ({ email, password
     };
     return data;
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 });
 
@@ -64,48 +60,34 @@ const slice = createSlice({
   reducers: {
     // START LOADING
     login(state, action) {
-      const user = action.payload;
-      return {
-        ...state,
-        isAuthenticated: true,
-        isInitialized: true,
-        user,
-      };
+      state.user = action.payload;
+      state.isAuthenticated = true;
+      state.isInitialized = true;
     },
     setUserNull(state) {
-      return {
-        ...state,
-        isAuthenticated: false,
-        isInitialized: true,
-        user: null,
-      };
+      state.isAuthenticated = false;
+      state.isInitialized = true;
+      state.user = null;
     },
     startLoading(state) {
-      return {
-        ...state,
-        isLoading: true,
-      };
+      state.isLoading = true;
     },
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
       state.user = null;
-      console.log(action.payload);
     },
     setUserData(state, action) {
-      return {
-        ...state,
-        isLoading: false,
-        isAuthenticated: true,
-        user: {
-          ...state.user,
-          firstName: action.payload.firstName,
-          rol: action.payload.rol,
-          lastName: action.payload.lastName,
-          uid: action.payload.uid,
-          email: action.payload.email,
-          photoUrl: action.payload.photoUrl ? action.payload.photoUrl : '',
-        },
+      state.isLoading = false;
+      state.isAuthenticated = true;
+      state.user = {
+        ...state.user,
+        firstName: action.payload.firstName,
+        rol: action.payload.rol,
+        lastName: action.payload.lastName,
+        uid: action.payload.uid,
+        email: action.payload.email,
+        photoUrl: action.payload.photoUrl ? action.payload.photoUrl : '',
       };
     },
   },
@@ -116,13 +98,10 @@ const slice = createSlice({
       state.isInitialized = false;
     });
     builder.addCase(fetchUser.fulfilled, (state, actions) => {
-      return {
-        ...state,
-        isLoading: false,
-        isAuthenticated: true,
-        isInitialized: true,
-        user: { ...state.user, email: actions.payload.email, uid: actions.payload.uid },
-      };
+      state.isLoading = false;
+      state.isAuthenticated = true;
+      state.isInitialized = true;
+      state.user = { ...state.user, email: actions.payload.email, uid: actions.payload.uid };
     });
     builder.addCase(fetchUser.rejected, (state, action) => {
       state.isLoading = false;
@@ -137,13 +116,10 @@ const slice = createSlice({
       state.isInitialized = false;
     });
     builder.addCase(registerUser.fulfilled, (state, actions) => {
-      return {
-        ...state,
-        isLoading: false,
-        isAuthenticated: true,
-        isInitialized: true,
-        user: { ...state.user, email: actions.payload.email, uid: actions.payload.uid },
-      };
+      state.isLoading = false;
+      state.isAuthenticated = true;
+      state.isInitialized = true;
+      state.user = { ...state.user, email: actions.payload.email, uid: actions.payload.uid };
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;

@@ -17,7 +17,6 @@ import { FIREBASE_API } from '../config';
 import { setUserData, setUserNull, startLoading } from './redux/slices/auth';
 import { ProgressBarStyle } from './components/ProgressBar';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
-import RtlLayout from './components/RtlLayout';
 
 // ----------------------------------------------------------------------
 
@@ -46,15 +45,13 @@ export default function App() {
   return (
     <>
       <ThemeProvider>
-        <RtlLayout>
-          <NotistackProvider>
-            <MotionLazyContainer>
-              <ProgressBarStyle />
-              <ScrollToTop />
-              <Router />
-            </MotionLazyContainer>
-          </NotistackProvider>
-        </RtlLayout>
+        <NotistackProvider>
+          <MotionLazyContainer>
+            <ProgressBarStyle />
+            <ScrollToTop />
+            <Router />
+          </MotionLazyContainer>
+        </NotistackProvider>
       </ThemeProvider>
     </>
   );

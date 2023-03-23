@@ -6,6 +6,10 @@ export const ModuleCard = ({ title, icon, path }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    if (path.includes('compras')) {
+      navigate(`${path}/nuevo`);
+      return;
+    }
     navigate(path);
   };
 

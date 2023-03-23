@@ -17,6 +17,7 @@ export default function CollapseButton({ onToggleCollapse, collapseClick }) {
       <Box
         sx={{
           lineHeight: 0,
+
           transition: theme =>
             theme.transitions.create('transform', {
               duration: theme.transitions.duration.shorter,

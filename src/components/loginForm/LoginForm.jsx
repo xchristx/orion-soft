@@ -9,17 +9,16 @@ import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 // routes
-// hooks
-import useIsMountedRef from '../../hooks/useIsMountedRef';
 // components
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../components/hook-form';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '../../redux/slices/auth';
+// utils
+import { getValidationError } from '../../utils/getValidationError';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const isMountedRef = useIsMountedRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -48,22 +47,23 @@ export default function LoginForm() {
   } = methods;
 
   const onSubmit = data => {
-    try {
-      dispatch(fetchUser({ email: data.email, password: data.password }));
-      navigate('/dashboard/usuario');
-    } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', error);
-      }
-    }
+    dispatch(fetchUser({ email: data.email, password: data.password })).then(e => {
+      if (e.error) {
+        reset();
+        if (e.error.code === 'auth/network-request-failed') {
+          setError('beforeSubmit', { type: e.error.code, message: getValidationError(e.error.code) });
+          return;
+        }
+        setError('afterSubmit', { type: e.error.code, message: getValidationError(e.error.code) });
+      } else navigate('/dashboard/usuario');
+    });
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        {!!errors.beforeSubmit && <Alert severity="error">{errors.beforeSubmit.message}</Alert>}
 
         <RHFTextField name="email" label="Correo electrónico" />
 

@@ -6,11 +6,12 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Box, Stack, Drawer } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
-import useCollapseDrawer from '../../../hooks/useColllapseDrawer';
 // utils
 import cssStyles from '../../../utils/cssStyles';
 // config
 import { NAVBAR } from '../header/config';
+// redux
+import { handleHoverEnter, handleHoverLeave, handleToggleCollapse } from '../../../redux/slices/drawer';
 // components
 import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
@@ -18,6 +19,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 import navConfig from './NavConfig';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +46,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } = useCollapseDrawer();
+  const dispatch = useDispatch();
+  const { collapseClick, collapseHover } = useSelector(s => s.drawerSlice);
+  const isCollapse = collapseClick && !collapseHover;
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -71,9 +75,11 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box component="img" src="/src/assets/mainviewImg/orion-logo.jpg" sx={{ height: 150, p: 0, m: '0 auto' }} />
+          <Box component="img" src="/src/assets/mainviewImg/orion-logo.jpg" sx={{ height: isCollapse ? 50 : 80, m: '0 auto' }} />
 
-          {isDesktop && !isCollapse && <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />}
+          {isDesktop && !isCollapse && (
+            <CollapseButton onToggleCollapse={() => dispatch(handleToggleCollapse())} collapseClick={collapseClick} />
+          )}
         </Stack>
 
         <NavbarAccount isCollapse={isCollapse} />
@@ -106,8 +112,12 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <Drawer
           open
           variant="persistent"
-          onMouseEnter={onHoverEnter}
-          onMouseLeave={onHoverLeave}
+          onMouseEnter={() => {
+            dispatch(handleHoverEnter());
+          }}
+          onMouseLeave={() => {
+            dispatch(handleHoverLeave());
+          }}
           PaperProps={{
             sx: {
               width: NAVBAR.DASHBOARD_WIDTH,
