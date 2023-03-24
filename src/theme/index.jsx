@@ -9,6 +9,7 @@ import typography from './typography';
 import breakpoints from './breakpoints';
 import componentsOverride from './overrides';
 import shadows, { customShadows } from './shadows';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -17,8 +18,7 @@ ThemeProvider.propTypes = {
 };
 
 export default function ThemeProvider({ children }) {
-  const themeDirection = 'ltr';
-  const themeMode = 'light';
+  const { themeMode } = useSelector(s => s.settings);
   const isLight = themeMode === 'light';
 
   const themeOptions = useMemo(
@@ -27,11 +27,10 @@ export default function ThemeProvider({ children }) {
       typography,
       breakpoints,
       shape: { borderRadius: 8 },
-      direction: themeDirection,
       shadows: isLight ? shadows.light : shadows.dark,
       customShadows: isLight ? customShadows.light : customShadows.dark,
     }),
-    [isLight, themeDirection]
+    [isLight]
   );
 
   const theme = createTheme(themeOptions);

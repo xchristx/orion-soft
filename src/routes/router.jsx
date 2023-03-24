@@ -47,7 +47,7 @@ export default function Router() {
             <Route index element={<Ventas />} />
           </Route>
           <Route path="compras">
-            <Route path="nuevo" element={<Compras />} />
+            <Route path="nuevo" element={<NuevaCompra />} />
             <Route path="historial" element={<Historial />} />
           </Route>
           <Route path="clientes" element={<Clientes />} />
@@ -76,7 +76,7 @@ const LoginPage = Loadable(lazy(() => import('../pages/auth/LoginPage')));
 const Page404 = Loadable(lazy(() => import('../pages/Page404')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 const Ventas = Loadable(lazy(() => import('../pages/user/ventas/Ventas')));
-const Compras = Loadable(lazy(() => import('../pages/user/compras/pages/Compras')));
+const NuevaCompra = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompra')));
 const Clientes = Loadable(lazy(() => import('../pages/user/clientes/Clientes')));
 const Proveedores = Loadable(lazy(() => import('../pages/user/proveedores/Proveedores')));
 const Products = Loadable(lazy(() => import('../pages/user/product/Products')));

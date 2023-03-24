@@ -17,7 +17,7 @@ import CartWidget from '../components/CartWidget';
 
 // ----------------------------------------------------------------------
 
-export default function Compras() {
+export default function NuevaCompra() {
   const dispatch = useDispatch();
 
   const [openFilter, setOpenFilter] = useState(false);
@@ -47,6 +47,7 @@ export default function Compras() {
 
   useEffect(() => {
     dispatch(getProducts());
+    console.log(products);
   }, [dispatch]);
 
   useEffect(() => {

@@ -76,7 +76,7 @@ export function ShopProductSearch() {
         <InputStyle
           {...params}
           stretchStart={200}
-          placeholder="Search product..."
+          placeholder="Buscar..."
           onKeyUp={handleKeyUp}
           InputProps={{
             ...params.InputProps,

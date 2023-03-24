@@ -18,6 +18,7 @@ import { IconButtonAnimate } from '../../../components/animate/IconButtonAnimate
 //
 // import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
+import MuiSwitch from './MuiSwitch';
 // import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -83,6 +84,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+          <MuiSwitch />
           <AccountPopover />
         </Stack>
       </Toolbar>
