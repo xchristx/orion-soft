@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 // utils
-import axios from '../../utils/axios';
-import { dispatch } from '../store';
+// import axios from '../../utils/axios';
+import { products } from '../../_mock/product';
 //
 
 // ----------------------------------------------------------------------
@@ -11,8 +11,8 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  products: [],
-  product: null,
+  products,
+  product: {},
   sortBy: null,
   filters: {
     gender: [],
@@ -184,6 +184,12 @@ const slice = createSlice({
       state.checkout.shipping = shipping;
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
+    getProdTest(state, action) {
+      const clean = string => string.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>/\s+]/gi, '').toLowerCase();
+      const data = state.products.find(prod => clean(prod.codigo) === clean(action.payload));
+      state.product = data;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -206,35 +212,45 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
+  getProdTest,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export const getProducts = () => {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.products));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-};
+// export const getProducts = () => {
+//   return async () => {
+//     dispatch(slice.actions.startLoading());
+//     try {
+//       const response = await axios.get('/api/products');
+//       dispatch(slice.actions.getProductsSuccess(response.data.products));
+//     } catch (error) {
+//       dispatch(slice.actions.hasError(error));
+//     }
+//   };
+// };
 
 // ----------------------------------------------------------------------
 
+// export const getProduct = name => dispatch => {
+//   return async () => {
+//     dispatch(slice.actions.startLoading());
+//     try {
+//       const response = await axios.get('/api/products/product', {
+//         params: { name },
+//       });
+//       dispatch(slice.actions.getProductSuccess(response.data.product))
+//     } catch (error) {
+//       console.error(error);
+//       dispatch(slice.actions.hasError(error));
+//     }
+//   };
+// };
+export const getProducts = () => dispatch => {
+  dispatch(slice.actions.startLoading);
+  dispatch(slice.actions.getProductsSuccess(products));
+};
 export const getProduct = name => dispatch => {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+  dispatch(slice.actions.startLoading());
+
+  dispatch(slice.actions.getProdTest(name));
 };

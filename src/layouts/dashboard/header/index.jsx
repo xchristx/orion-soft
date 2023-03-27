@@ -71,7 +71,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           px: { lg: 5 },
         }}
       >
-        {isDesktop && verticalLayout && <Box component="img" src="/public/assets/toro.png" sx={{ mr: 2.5, height: 10 }} />}
+        {isDesktop && verticalLayout && <Box component="img" src="/assets/toro.png" sx={{ mr: 2.5, height: 10 }} />}
 
         {!isDesktop && (
           <IconButtonAnimate onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>

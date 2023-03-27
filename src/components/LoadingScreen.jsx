@@ -44,7 +44,7 @@ export default function LoadingScreen({ isDashboard, ...other }) {
               repeat: Infinity,
             }}
           >
-            <Box component="img" sx={{ height: 50 }} src="/public/assets/toro.png" />
+            <Box component="img" sx={{ height: 50 }} src="/assets/toro.png" />
           </m.div>
 
           <Box

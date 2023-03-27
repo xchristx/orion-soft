@@ -18,49 +18,48 @@ ShopProductCard.propTypes = {
 };
 
 export function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const { nombre, img, precio, colores, disponible, precioIva, codigo } = product;
 
-  const linkTo = `/dashboard/inventario/product/${paramCase(name)}`;
+  const linkTo = `/dashboard/usuario/compras/producto/${paramCase(codigo)}`;
 
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
-        {status && (
+        {disponible && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={(disponible === 'sale' && 'error') || 'info'}
             sx={{
               top: 16,
               right: 16,
               zIndex: 9,
               position: 'absolute',
-              textTransform: 'uppercase',
             }}
           >
-            {status}
+            {disponible} uds
           </Label>
         )}
-        <Image alt={name} src={cover} ratio="1/1" />
+        <Image alt={nombre} src={img} ratio="1/1" />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to={linkTo} color="inherit" component={RouterLink}>
           <Typography variant="subtitle2" noWrap>
-            {name}
+            {nombre.toUpperCase()}
           </Typography>
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          <ColorPreview colors={colores} />
 
-          <Stack direction="row" spacing={0.5}>
-            {priceSale && (
-              <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(priceSale)}
+          <Stack direction="row" spacing={0.8}>
+            {precioIva && (
+              <Typography component="span" sx={{ color: 'lightcoral', fontSize: '0.95rem' }}>
+                F {fCurrency(precio / 0.93)}
               </Typography>
             )}
 
-            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+            <Typography variant="subtitle1">{fCurrency(precio)}</Typography>
           </Stack>
         </Stack>
       </Stack>

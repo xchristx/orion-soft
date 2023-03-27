@@ -41,6 +41,7 @@ export function ShopProductSearch() {
         const response = await axios.get('/api/products/search', {
           params: { query: value },
         });
+        console.log(response);
 
         if (isMountedRef.current) {
           setSearchResults(response.data.results);

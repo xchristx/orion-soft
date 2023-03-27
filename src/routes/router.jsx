@@ -7,7 +7,6 @@ import AuthGuard from '../guards/AuthGuard';
 // Components
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardUser from '../pages/user/mainview/Mainview';
-import Historial from '../pages/user/compras/pages/Historial';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +47,7 @@ export default function Router() {
           </Route>
           <Route path="compras">
             <Route path="nuevo" element={<NuevaCompra />} />
+            <Route path="producto/:nombre" element={<ProductDetails />} />
             <Route path="historial" element={<Historial />} />
           </Route>
           <Route path="clientes" element={<Clientes />} />
@@ -80,3 +80,5 @@ const NuevaCompra = Loadable(lazy(() => import('../pages/user/compras/pages/Nuev
 const Clientes = Loadable(lazy(() => import('../pages/user/clientes/Clientes')));
 const Proveedores = Loadable(lazy(() => import('../pages/user/proveedores/Proveedores')));
 const Products = Loadable(lazy(() => import('../pages/user/product/Products')));
+const Historial = Loadable(lazy(() => import('../pages/user/compras/pages/Historial')));
+const ProductDetails = Loadable(lazy(() => import('../pages/user/compras/pages/ProductDetails')));

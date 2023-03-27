@@ -24,73 +24,74 @@ export default function NuevaCompra() {
 
   const { products, sortBy, filters } = useSelector(state => state.product);
 
-  const filteredProducts = applyFilter(products, sortBy, filters);
+  // const filteredProducts = applyFilter(products, sortBy, filters);
+  const filteredProducts = products;
 
-  const defaultValues = {
-    gender: filters.gender,
-    category: filters.category,
-    colors: filters.colors,
-    priceRange: filters.priceRange,
-    rating: filters.rating,
-  };
+  // const defaultValues = {
+  //   gender: filters.gender,
+  //   category: filters.category,
+  //   colors: filters.colors,
+  //   priceRange: filters.priceRange,
+  //   rating: filters.rating,
+  // };
 
-  const methods = useForm({
-    defaultValues,
-  });
+  // const methods = useForm({
+  //   defaultValues,
+  // });
 
-  const { reset, watch, setValue } = methods;
+  // const { reset, watch, setValue } = methods;
 
-  const values = watch();
+  // const values = watch();
 
-  const isDefault =
-    !values.priceRange && !values.rating && values.gender.length === 0 && values.colors.length === 0 && values.category === 'All';
+  // const isDefault =
+  //   !values.priceRange && !values.rating && values.gender.length === 0 && values.colors.length === 0 && values.category === 'All';
+  const isDefault = true;
 
-  useEffect(() => {
-    dispatch(getProducts());
-    console.log(products);
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getProducts());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(filterProducts(values));
-  }, [dispatch, values]);
+  // useEffect(() => {
+  //   dispatch(filterProducts(values));
+  // }, [dispatch, values]);
 
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
+  // const handleOpenFilter = () => {
+  //   setOpenFilter(true);
+  // };
 
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
+  // const handleCloseFilter = () => {
+  //   setOpenFilter(false);
+  // };
 
-  const handleResetFilter = () => {
-    reset();
-    handleCloseFilter();
-  };
+  // const handleResetFilter = () => {
+  //   reset();
+  //   handleCloseFilter();
+  // };
 
-  const handleRemoveGender = value => {
-    const newValue = filters.gender.filter(item => item !== value);
-    setValue('gender', newValue);
-  };
+  // const handleRemoveGender = value => {
+  //   const newValue = filters.gender.filter(item => item !== value);
+  //   setValue('gender', newValue);
+  // };
 
-  const handleRemoveCategory = () => {
-    setValue('category', 'All');
-  };
+  // const handleRemoveCategory = () => {
+  //   setValue('category', 'All');
+  // };
 
-  const handleRemoveColor = value => {
-    const newValue = filters.colors.filter(item => item !== value);
-    setValue('colors', newValue);
-  };
+  // const handleRemoveColor = value => {
+  //   const newValue = filters.colors.filter(item => item !== value);
+  //   setValue('colors', newValue);
+  // };
 
-  const handleRemovePrice = () => {
-    setValue('priceRange', '');
-  };
+  // const handleRemovePrice = () => {
+  //   setValue('priceRange', '');
+  // };
 
-  const handleRemoveRating = () => {
-    setValue('rating', '');
-  };
+  // const handleRemoveRating = () => {
+  //   setValue('rating', '');
+  // };
 
   return (
-    <Page title="Ecommerce: Shop">
+    <Page title="Nueva Compra">
       <Container maxWidth={'lg'}>
         <HeaderBreadcrumbs
           heading="Shop"
@@ -111,23 +112,23 @@ export default function NuevaCompra() {
           justifyContent="space-between"
           sx={{ mb: 2 }}
         >
-          <ShopProductSearch />
+          {/* <ShopProductSearch /> */}
 
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+          {/* <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <FormProvider methods={methods}>
               <ShopFilterSidebar onResetAll={handleResetFilter} isOpen={openFilter} onOpen={handleOpenFilter} onClose={handleCloseFilter} />
             </FormProvider>
 
             <ShopProductSort />
-          </Stack>
+          </Stack> */}
         </Stack>
 
-        <Stack sx={{ mb: 3 }}>
+        {/* <Stack sx={{ mb: 3 }}>
           {!isDefault && (
             <>
               <Typography variant="body2" gutterBottom>
                 <strong>{filteredProducts.length}</strong>
-                &nbsp;Products found
+                &nbsp;este solo sale con filtros
               </Typography>
 
               <ShopTagFiltered
@@ -142,7 +143,7 @@ export default function NuevaCompra() {
               />
             </>
           )}
-        </Stack>
+        </Stack> */}
 
         <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
         <CartWidget />

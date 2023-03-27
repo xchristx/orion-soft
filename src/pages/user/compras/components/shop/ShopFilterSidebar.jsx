@@ -51,7 +51,7 @@ export function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose }) {
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon={'ic:round-filter-list'} />} onClick={onOpen}>
-        Filters
+        Filtros
       </Button>
 
       <Drawer
@@ -64,7 +64,7 @@ export function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose }) {
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 1, py: 2 }}>
           <Typography variant="subtitle1" sx={{ ml: 1 }}>
-            Filters
+            Filtros
           </Typography>
           <IconButton onClick={onClose}>
             <Iconify icon={'eva:close-fill'} width={20} height={20} />
