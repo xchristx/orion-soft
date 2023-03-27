@@ -15,8 +15,10 @@ import { ColorSinglePicker } from '../../../../../components/color-utils';
 import { FormProvider } from '../../../../../components/hook-form';
 import ProductPropiedadesTable from './ProductPropiedadesTable';
 import { getDetail } from '../../../../../utils/getDetail';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductAddSizesDialog from './ProductAddSizesDialog';
+import { Box } from '@mui/system';
+import useResponsive from '../../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -38,11 +40,13 @@ ProductDetailsSummary.propTypes = {
 
 export default function ProductDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
   const navigate = useNavigate();
+  const isDesktop = useResponsive('up', 'sm');
 
   const { id, nombre, img, disponible, precio, colores, tallas, status = '' } = product;
 
   const [open, setOpen] = useState(false);
   const [sizes, setSizes] = useState([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
+  const [isEmptySizes, setIsEmptySizes] = useState(false);
 
   const alreadyProduct = cart.map(item => item.nombre).includes(nombre);
 
@@ -92,6 +96,14 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const empty = sizes.every(el => {
+      return el.value === 0;
+    });
+    if (!empty) setIsEmptySizes(true);
+    else setIsEmptySizes(false);
+  }, [sizes]);
 
   return (
     <RootStyle {...other}>
@@ -148,9 +160,11 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
         <ProductPropiedadesTable rows={getDetail(product)} />
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-        <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={sizes} setSizes={setSizes} />
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', pr: 2 }}>
+          <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={sizes} isEmptySizes={isEmptySizes} setSizes={setSizes} />
+        </Box>
 
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+        <Stack direction={isDesktop ? 'row' : 'column'} spacing={2} sx={{ mt: 5 }}>
           <Button
             fullWidth
             disabled={isMaxQuantity}

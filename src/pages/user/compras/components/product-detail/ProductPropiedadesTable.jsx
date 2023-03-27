@@ -9,15 +9,17 @@ export default function ProductPropiedadesTable({ rows }) {
         <TableHead>
           <TableRow>
             {rows.map((row, i) => (
-              <TableCell key={i}>{row.title}</TableCell>
+              <TableCell align="center" key={i}>
+                {row.title}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
             {rows.map((row, i) => (
-              <TableCell key={i} align="right">
-                {typeof row.value === 'boolean' ? <CheckCircleOutlineIcon /> : capitalize(row.value)}
+              <TableCell key={i} align="center">
+                {typeof row.value === 'boolean' ? <CheckCircleOutlineIcon color="success" /> : capitalize(row.value)}
               </TableCell>
             ))}
           </TableRow>

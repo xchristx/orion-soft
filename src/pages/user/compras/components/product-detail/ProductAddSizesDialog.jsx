@@ -14,20 +14,28 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  TextField,
 } from '@mui/material';
 
 import Iconify from '../../../../../components/Iconify';
 import useResponsive from '../../../../../hooks/useResponsive';
+import { useState } from 'react';
 
-export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes }) {
+export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes, isEmptySizes }) {
   const isMobile = useResponsive('down', 'md');
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const [defaultSizes, setDefaultSizes] = useState(sizes);
+
+  const handleClose = cancel => {
+    if (cancel) setSizes(defaultSizes);
+    else setDefaultSizes(sizes);
     setOpen(false);
+  };
+  const handleReset = () => {
+    setSizes([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
   };
 
   const handleIncreaseItem = key => {
@@ -38,7 +46,6 @@ export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes }
         } else return el;
       })
     );
-    console.log(sizes);
   };
   const handleDecrementItem = key => {
     setSizes(
@@ -49,73 +56,76 @@ export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes }
       })
     );
   };
+  const handleChangeInput = (e, key) => {
+    setSizes(
+      sizes.map(el => {
+        if (el.size === key) {
+          return { ...el, value: e.target.value ? parseInt(e.target.value) : 0 };
+        } else return el;
+      })
+    );
+  };
 
   return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+    <>
+      <Button sx={{ my: 2 }} variant="outlined" onClick={handleClickOpen}>
         Añadir Tallas
       </Button>
-      <Dialog fullScreen={isMobile} fullWidth maxWidth="xl" open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+      {isEmptySizes && (
+        <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Table sx={{ minWidth: { xs: 150 } }} aria-label="simple table">
+            <TableHead>
+              <TableRow>{sizes.map(el => el.value > 0 && <TableCell key={el.size}>{el.size}</TableCell>)}</TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>{sizes.map(el => el.value > 0 && <TableCell key={el.size}>{el.value}</TableCell>)}</TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      <Dialog fullScreen={isMobile} fullWidth maxWidth="xs" open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
         <DialogTitle id="responsive-dialog-title">{'Elegir tallas'}</DialogTitle>
         <DialogContent>
           <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Table sx={{ maxWidth: { sm: 200, md: '100%' } }} aria-label="simple table">
-              {isMobile ? (
-                <TableBody>
-                  {sizes.map(el => (
-                    <TableRow key={el.size}>
-                      <TableCell>{el.size}</TableCell>
-                      <TableCell>
-                        <Incrementer
-                          available={200}
-                          quantity={el.value}
-                          onIncrementQuantity={() => handleIncreaseItem(el.size)}
-                          onDecrementQuantity={() => handleDecrementItem(el.size)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              ) : (
-                <>
-                  <TableHead>
-                    <TableRow>
-                      {sizes.map(el => (
-                        <TableCell align="center" key={el.size}>
-                          {el.size}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      {sizes.map(el => (
-                        <TableCell align="center" key={el.size}>
-                          <Incrementer
-                            available={200}
-                            quantity={el.value}
-                            onIncrementQuantity={() => handleIncreaseItem(el.size)}
-                            onDecrementQuantity={() => handleDecrementItem(el.size)}
-                          />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableBody>
-                </>
-              )}
+            <Table sx={{ maxWidth: { xs: 150 } }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Talla</TableCell>
+                  <TableCell align="center">Cantidad</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sizes.map(el => (
+                  <TableRow key={el.size}>
+                    <TableCell>{el.size}</TableCell>
+                    <TableCell>
+                      <Incrementer
+                        available={200}
+                        quantity={el.value}
+                        onIncrementQuantity={() => handleIncreaseItem(el.size)}
+                        onDecrementQuantity={() => handleDecrementItem(el.size)}
+                        handleChangeInput={e => handleChangeInput(e, el.size)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Disagree
+          <Button autoFocus onClick={handleReset}>
+            Resetear
           </Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
+          <Button autoFocus onClick={() => handleClose(true)}>
+            Cancelar
+          </Button>
+          <Button onClick={() => handleClose(false)} autoFocus>
+            Aceptar
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
 ProductAddSizesDialog.propTypes = {
@@ -123,8 +133,9 @@ ProductAddSizesDialog.propTypes = {
   setOpen: PropTypes.func.isRequired,
   sizes: PropTypes.array.isRequired,
   setSizes: PropTypes.func.isRequired,
+  isEmptySizes: PropTypes.bool,
 };
-function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity }) {
+function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity, handleChangeInput }) {
   return (
     <Box
       sx={{
@@ -138,13 +149,11 @@ function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuan
         borderColor: 'grey.50032',
       }}
     >
-      <IconButton size="small" color="inherit" disabled={quantity <= 1} onClick={onDecrementQuantity}>
+      <IconButton size="small" color="inherit" disabled={quantity <= 0} onClick={onDecrementQuantity}>
         <Iconify icon={'eva:minus-fill'} width={14} height={14} />
       </IconButton>
 
-      <Typography variant="body2" component="span" sx={{ width: 40, textAlign: 'center' }}>
-        {quantity}
-      </Typography>
+      <TextField value={quantity} variant="standard" size="small" sx={{ width: 20 }} onChange={handleChangeInput} />
 
       <IconButton size="small" color="inherit" disabled={quantity >= available} onClick={onIncrementQuantity}>
         <Iconify icon={'eva:plus-fill'} width={14} height={14} />
@@ -158,4 +167,5 @@ Incrementer.propTypes = {
   quantity: PropTypes.number,
   onIncrementQuantity: PropTypes.func,
   onDecrementQuantity: PropTypes.func,
+  handleChangeInput: PropTypes.func,
 };
