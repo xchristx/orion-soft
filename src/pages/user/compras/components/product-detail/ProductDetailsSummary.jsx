@@ -4,13 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Stack, Button, Divider, Typography } from '@mui/material';
+import { Stack, Button, Divider, Typography, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 
-// utils
-import { fCurrency } from '../../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../../components/Iconify';
-import SocialsButton from '../../../../../components/SocialsButton';
 import { ColorSinglePicker } from '../../../../../components/color-utils';
 import { FormProvider } from '../../../../../components/hook-form';
 import ProductPropiedadesTable from './ProductPropiedadesTable';
@@ -19,6 +16,9 @@ import { useEffect, useState } from 'react';
 import ProductAddSizesDialog from './ProductAddSizesDialog';
 import { Box } from '@mui/system';
 import useResponsive from '../../../../../hooks/useResponsive';
+import { useDispatch } from 'react-redux';
+import { setCantidadProduct, setTallas } from '../../../../../redux/slices/product';
+import { fCurrency } from '../../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -38,19 +38,15 @@ ProductDetailsSummary.propTypes = {
   product: PropTypes.any,
 };
 
-export default function ProductDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
+export default function ProductDetailsSummary({ cart, product, onAddCart, ...other }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
 
-  const { id, nombre, img, disponible, precio, colores, tallas, status = '' } = product;
+  const { id, nombre, img, disponible, precio, colores, tallas, status = '', cantidad } = product;
 
   const [open, setOpen] = useState(false);
-  const [sizes, setSizes] = useState([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
   const [isEmptySizes, setIsEmptySizes] = useState(false);
-
-  const alreadyProduct = cart.map(item => item.nombre).includes(nombre);
-
-  const isMaxQuantity = cart.filter(item => item.nombre === nombre).map(item => item.quantity)[0] >= disponible;
 
   const defaultValues = {
     id,
@@ -58,9 +54,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
     img,
     disponible,
     precio,
-    colores: colores[0],
-    tallas: tallas[4],
-    quantity: disponible < 1 ? 0 : 1,
+    color: colores[0],
   };
 
   const methods = useForm({
@@ -73,14 +67,15 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   const onSubmit = async data => {
     try {
-      if (!alreadyProduct) {
-        onAddCart({
-          ...data,
-          subtotal: data.price * data.quantity,
-        });
-      }
-      onGotoStep(0);
-      navigate('/');
+      dispatch(setTallas({ idProd: id, tallas, add: true }));
+      console.log(cantidad);
+      onAddCart({
+        ...data,
+        subtotal: data.precio * cantidad,
+        tallas,
+        cantidad,
+      });
+      navigate('/dashboard/usuario/compras/checkout');
     } catch (error) {
       console.error(error);
     }
@@ -88,9 +83,12 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
   const handleAddCart = async () => {
     try {
+      dispatch(setTallas({ idProd: id, tallas, add: true }));
       onAddCart({
         ...values,
-        subtotal: values.price * values.quantity,
+        subtotal: values.precio * cantidad,
+        tallas,
+        cantidad,
       });
     } catch (error) {
       console.error(error);
@@ -98,12 +96,19 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
   };
 
   useEffect(() => {
-    const empty = sizes.every(el => {
+    const empty = tallas.every(el => {
       return el.value === 0;
     });
-    if (!empty) setIsEmptySizes(true);
-    else setIsEmptySizes(false);
-  }, [sizes]);
+    if (!empty) {
+      setIsEmptySizes(true);
+    } else {
+      setIsEmptySizes(false);
+    }
+    const quantity = tallas.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0);
+    dispatch(setCantidadProduct(quantity));
+  }, [tallas]);
 
   return (
     <RootStyle {...other}>
@@ -124,12 +129,30 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
           <Typography variant="h4" paragraph>
             {nombre}
           </Typography>
-          <Typography variant="h5" component="span" color="error">
-            {`C/F ${precio && fCurrency(precio / 0.93)}`}
-          </Typography>
-          <Typography variant="h5" component="span">
-            {`S/F ${precio && fCurrency(precio)}`}
-          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Typography variant="h5" component="span">
+              Precio:
+            </Typography>
+            <Controller
+              name="precio"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup row value={precio} onChange={field.onChange}>
+                  <Stack>
+                    <Typography component="span" sx={{ pl: 1.5, m: 0 }}>
+                      s/iva
+                    </Typography>
+                    <FormControlLabel sx={{ p: 0, m: 0 }} value={precio} label={fCurrency(precio)} control={<Radio />} />
+                  </Stack>
+                  <Divider sx={{ m: 1 }} orientation="vertical" variant="middle" flexItem />
+                  <Stack>
+                    <Typography>c/iva</Typography>
+                    <FormControlLabel value={precio / 0.93} label={fCurrency(precio / 0.93)} control={<Radio />} />
+                  </Stack>
+                </RadioGroup>
+              )}
+            />
+          </Stack>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -161,13 +184,14 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
 
         <Divider sx={{ borderStyle: 'dashed' }} />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', pr: 2 }}>
-          <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={sizes} isEmptySizes={isEmptySizes} setSizes={setSizes} />
+          <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={tallas} isEmptySizes={isEmptySizes} />
         </Box>
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction={isDesktop ? 'row' : 'column'} spacing={2} sx={{ mt: 5 }}>
           <Button
             fullWidth
-            disabled={isMaxQuantity}
+            disabled={!isEmptySizes}
             size="large"
             color="warning"
             variant="contained"
@@ -178,13 +202,9 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             Añadir al carrito
           </Button>
 
-          <Button fullWidth size="large" type="submit" variant="contained">
+          <Button disabled={!(isEmptySizes && cantidad && precio)} fullWidth size="large" type="submit" variant="contained">
             Pedir ahora
           </Button>
-        </Stack>
-
-        <Stack alignItems="center" sx={{ mt: 3 }}>
-          <SocialsButton initialColor />
         </Stack>
       </FormProvider>
     </RootStyle>

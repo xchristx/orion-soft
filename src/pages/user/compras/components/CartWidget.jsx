@@ -36,10 +36,10 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
 
 export default function CartWidget() {
   const { checkout } = useSelector(state => state.product);
-  const totalItems = sum(checkout.cart.map(item => item.quantity));
+  const totalItems = sum(checkout.cart.map(item => item.cantidad));
 
   return (
-    <RootStyle to={'/404'}>
+    <RootStyle to={'/dashboard/usuario/compras/checkout'}>
       <Badge showZero badgeContent={totalItems} color="error" max={99}>
         <Iconify icon={'eva:shopping-cart-fill'} width={24} height={24} />
       </Badge>

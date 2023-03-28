@@ -7,7 +7,7 @@ import { Box, Card, Grid, Divider, Container, Typography } from '@mui/material';
 import { TabContext, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProduct, addCart, onGotoStep } from '../../../../redux/slices/product';
+import { getProduct, addCart } from '../../../../redux/slices/product';
 
 // components
 import Page from '../../../../components/Page';
@@ -68,10 +68,6 @@ export default function ProductDetails() {
     dispatch(addCart(product));
   };
 
-  const handleGotoStep = step => {
-    dispatch(onGotoStep(step));
-  };
-
   if (!product || !product.colores) {
     return <h1>Cargando....</h1>;
   }
@@ -101,7 +97,7 @@ export default function ProductDetails() {
                   <ProductDetailsCarousel product={product} />
                 </Grid>
                 <Grid item xs={12} md={8} lg={8}>
-                  <ProductDetailsSummary product={product} cart={checkout.cart} onAddCart={handleAddCart} onGotoStep={handleGotoStep} />
+                  <ProductDetailsSummary product={product} cart={checkout.cart} onAddCart={handleAddCart} />
                 </Grid>
               </Grid>
             </Card>

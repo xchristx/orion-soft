@@ -37,11 +37,8 @@ export const products = [
     img: 'https://res.cloudinary.com/dw8jw0zhx/image/upload/v1677762931/orion-soft/303-montalvo.jpg',
     adicional: '',
     disponible: 12,
-    tallas: [
-      { talla: 38, cant: 2 },
-      { talla: 40, cant: 5 },
-      { talla: 40, cant: 5 },
-    ],
+    tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
+    cantidad: 0,
   },
   {
     id: 2,
@@ -66,11 +63,8 @@ export const products = [
     img: 'https://res.cloudinary.com/dw8jw0zhx/image/upload/v1677762931/orion-soft/303-montalvo.jpg',
     adicional: '',
     disponible: 12,
-    tallas: [
-      { talla: 38, cant: 2 },
-      { talla: 40, cant: 5 },
-      { talla: 40, cant: 5 },
-    ],
+    tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
+    cantidad: 0,
   },
   {
     id: 3,
@@ -94,11 +88,8 @@ export const products = [
     img: 'https://res.cloudinary.com/dw8jw0zhx/image/upload/v1677762931/orion-soft/303-montalvo.jpg',
     adicional: 'lengueta castor',
     disponible: 12,
-    tallas: [
-      { talla: 38, cant: 2 },
-      { talla: 40, cant: 5 },
-      { talla: 40, cant: 5 },
-    ],
+    tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
+    cantidad: 0,
   },
   {
     id: 4,
@@ -123,11 +114,8 @@ export const products = [
     img: 'https://res.cloudinary.com/dw8jw0zhx/image/upload/v1677762931/orion-soft/303-montalvo.jpg',
     adicional: '',
     disponible: 12,
-    tallas: [
-      { talla: 38, cant: 2 },
-      { talla: 40, cant: 5 },
-      { talla: 40, cant: 5 },
-    ],
+    tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
+    cantidad: 0,
   },
   {
     id: 5,
@@ -152,10 +140,7 @@ export const products = [
     img: 'https://res.cloudinary.com/dw8jw0zhx/image/upload/v1677762931/orion-soft/303-montalvo.jpg',
     adicional: 'cuello de cuero, lengueta cuero suave, lengueta acolchada',
     disponible: 12,
-    tallas: [
-      { talla: 38, cant: 2 },
-      { talla: 40, cant: 5 },
-      { talla: 40, cant: 5 },
-    ],
+    tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
+    cantidad: 0,
   },
 ];

@@ -20,8 +20,11 @@ import {
 import Iconify from '../../../../../components/Iconify';
 import useResponsive from '../../../../../hooks/useResponsive';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setTallasProduct } from '../../../../../redux/slices/product';
 
-export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes, isEmptySizes }) {
+export default function ProductAddSizesDialog({ open, setOpen, sizes, isEmptySizes }) {
+  const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'md');
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,46 +33,52 @@ export default function ProductAddSizesDialog({ open, setOpen, sizes, setSizes, 
   const [defaultSizes, setDefaultSizes] = useState(sizes);
 
   const handleClose = cancel => {
-    if (cancel) setSizes(defaultSizes);
+    if (cancel) dispatch(setTallasProduct(defaultSizes));
     else setDefaultSizes(sizes);
     setOpen(false);
   };
   const handleReset = () => {
-    setSizes([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
+    dispatch(setTallasProduct([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 }))));
   };
 
   const handleIncreaseItem = key => {
-    setSizes(
-      [...sizes].map(el => {
-        if (el.size === key) {
-          return { ...el, value: el.value + 1 };
-        } else return el;
-      })
+    dispatch(
+      setTallasProduct(
+        [...sizes].map(el => {
+          if (el.size === key) {
+            return { ...el, value: el.value + 1 };
+          } else return el;
+        })
+      )
     );
   };
   const handleDecrementItem = key => {
-    setSizes(
-      sizes.map(el => {
-        if (el.size === key) {
-          return { ...el, value: el.value - 1 };
-        } else return el;
-      })
+    dispatch(
+      setTallasProduct(
+        sizes.map(el => {
+          if (el.size === key) {
+            return { ...el, value: el.value - 1 };
+          } else return el;
+        })
+      )
     );
   };
   const handleChangeInput = (e, key) => {
-    setSizes(
-      sizes.map(el => {
-        if (el.size === key) {
-          return { ...el, value: e.target.value ? parseInt(e.target.value) : 0 };
-        } else return el;
-      })
+    dispatch(
+      setTallasProduct(
+        sizes.map(el => {
+          if (el.size === key) {
+            return { ...el, value: e.target.value ? parseInt(e.target.value) : 0 };
+          } else return el;
+        })
+      )
     );
   };
 
   return (
     <>
       <Button sx={{ my: 2 }} variant="outlined" onClick={handleClickOpen}>
-        Añadir Tallas
+        {isEmptySizes ? 'Editar Tallas' : 'Añadir Tallas'}
       </Button>
       {isEmptySizes && (
         <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -132,7 +141,6 @@ ProductAddSizesDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   sizes: PropTypes.array.isRequired,
-  setSizes: PropTypes.func.isRequired,
   isEmptySizes: PropTypes.bool,
 };
 function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity, handleChangeInput }) {

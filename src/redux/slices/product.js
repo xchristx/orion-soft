@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import sum from 'lodash/sum';
+import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 // utils
 // import axios from '../../utils/axios';
@@ -71,12 +71,31 @@ const slice = createSlice({
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
     },
+    // SET TALLAS
+    setTallas(state, action) {
+      const data = state.products.map(prod => {
+        if (prod.id === action.payload.idProd && action.payload.add) {
+          return { ...prod, tallas: action.payload.tallas };
+        } else if (prod.id === action.payload.idProd && !action.payload.add) {
+          console.log('here');
+          return { ...prod, tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })), cantidad: 0 };
+        }
+        return prod;
+      });
+      state.products = data;
+    },
+    setTallasProduct(state, action) {
+      state.product.tallas = action.payload;
+    },
+    setCantidadProduct(state, action) {
+      state.product.cantidad = action.payload;
+    },
 
     // CHECKOUT
     getCart(state, action) {
       const cart = action.payload;
 
-      //   const subtotal = sum(cart.map((cartItem) => cartItem.price * cartItem.quantity));
+      const subtotal = sum(cart.map(cartItem => cartItem.price * cartItem.quantity));
       const discount = cart.length === 0 ? 0 : state.checkout.discount;
       const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
       const billing = cart.length === 0 ? null : state.checkout.billing;
@@ -85,8 +104,8 @@ const slice = createSlice({
       state.checkout.discount = discount;
       state.checkout.shipping = shipping;
       state.checkout.billing = billing;
-      //   state.checkout.subtotal = subtotal;
-      //   state.checkout.total = subtotal - discount;
+      state.checkout.subtotal = subtotal;
+      state.checkout.total = subtotal - discount;
     },
 
     addCart(state, action) {
@@ -126,19 +145,6 @@ const slice = createSlice({
       state.checkout.billing = null;
     },
 
-    onBackStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    onNextStep(state) {
-      state.checkout.activeStep += 1;
-    },
-
-    onGotoStep(state, action) {
-      const goToStep = action.payload;
-      state.checkout.activeStep = goToStep;
-    },
-
     increaseQuantity(state, action) {
       const productId = action.payload;
       const updateCart = state.checkout.cart.map(product => {
@@ -173,19 +179,7 @@ const slice = createSlice({
       state.checkout.billing = action.payload;
     },
 
-    applyDiscount(state, action) {
-      const discount = action.payload;
-      state.checkout.discount = discount;
-      state.checkout.total = state.checkout.subtotal - discount;
-    },
-
-    applyShipping(state, action) {
-      const shipping = action.payload;
-      state.checkout.shipping = shipping;
-      state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
-    },
     getProdTest(state, action) {
-      const clean = string => string.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>/\s+]/gi, '').toLowerCase();
       const data = state.products.find(prod => clean(prod.codigo) === clean(action.payload));
       state.product = data;
       state.isLoading = false;
@@ -201,18 +195,16 @@ export const {
   getCart,
   addCart,
   resetCart,
-  onGotoStep,
-  onBackStep,
-  onNextStep,
   deleteCart,
   createBilling,
-  applyShipping,
-  applyDiscount,
   increaseQuantity,
   decreaseQuantity,
   sortByProducts,
   filterProducts,
   getProdTest,
+  setTallas,
+  setTallasProduct,
+  setCantidadProduct,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -254,3 +246,4 @@ export const getProduct = name => dispatch => {
 
   dispatch(slice.actions.getProdTest(name));
 };
+const clean = string => string.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>/\s+]/gi, '').toLowerCase();
