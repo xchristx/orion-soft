@@ -9,13 +9,9 @@ import Avatar from './Avatar';
 export const MyAvatar = ({ ...other }) => {
   const { user } = useSelector(s => s.authSlice);
 
+  const displayName = user?.firstName + ' ' + user?.lastName;
   return (
-    <Avatar
-      src={user?.photoURL}
-      alt={user?.firstName}
-      color={user?.photoURL ? 'default' : createAvatar(user?.displayName).color}
-      {...other}
-    >
+    <Avatar src={user?.photoURL} alt={user?.firstName} color={user?.photoURL ? 'default' : createAvatar(displayName).color} {...other}>
       {createAvatar(user?.firstName).name}
     </Avatar>
   );

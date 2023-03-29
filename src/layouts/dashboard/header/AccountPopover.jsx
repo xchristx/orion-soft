@@ -38,8 +38,6 @@ export default function AccountPopover() {
 
   const isMountedRef = useIsMountedRef();
 
-  // const { enqueueSnackbar } = useSnackbar();
-
   const [open, setOpen] = useState(null);
 
   const handleOpen = event => {
@@ -59,7 +57,6 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.error(error);
-      // enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
 
