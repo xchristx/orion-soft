@@ -31,6 +31,9 @@ export default function getColorName(hex) {
     case '#453426':
       color = 'cafe';
       break;
+    case '#e1c699':
+      color = 'arena';
+      break;
     default:
       color = hex;
   }

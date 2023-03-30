@@ -11,12 +11,12 @@ import MenuPopover from '../../../../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
 
-ProductMoreMenu.propTypes = {
+HistoryMoreMenu.propTypes = {
   onDelete: PropTypes.func,
   productName: PropTypes.string,
 };
 
-export default function ProductMoreMenu({ onDelete, productName }) {
+export default function HistoryMoreMenu({ onDelete, productName }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = event => {

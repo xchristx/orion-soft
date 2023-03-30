@@ -5,7 +5,8 @@ import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Stack, Button, Divider, Typography, Radio, RadioGroup, FormControlLabel } from '@mui/material';
-
+//
+import { v4 as uuid } from 'uuid';
 // components
 import Iconify from '../../../../../components/Iconify';
 import { ColorSinglePicker } from '../../../../../components/color-utils';
@@ -17,7 +18,7 @@ import ProductAddSizesDialog from './ProductAddSizesDialog';
 import { Box } from '@mui/system';
 import useResponsive from '../../../../../hooks/useResponsive';
 import { useDispatch } from 'react-redux';
-import { setCantidadProduct, setTallas } from '../../../../../redux/slices/product';
+import { setCantidadProduct } from '../../../../../redux/slices/product';
 import { fCurrency } from '../../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
@@ -43,16 +44,15 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
 
-  const { id, nombre, img, disponible, precio, colores, tallas, status = '', cantidad } = product;
+  const { nombre, img, disponible, precio, colores, tallas, status = '', cantidad } = product;
+  const uid = uuid();
 
   const [open, setOpen] = useState(false);
   const [isEmptySizes, setIsEmptySizes] = useState(false);
+  const [sizes, setSizes] = useState(tallas);
+  const [iva, setIva] = useState(false);
 
   const defaultValues = {
-    id,
-    nombre,
-    img,
-    disponible,
     precio,
     color: colores[0],
   };
@@ -67,14 +67,19 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
 
   const onSubmit = async data => {
     try {
-      dispatch(setTallas({ idProd: id, tallas, add: true }));
-      console.log(cantidad);
       onAddCart({
         ...data,
+        ...product,
         subtotal: data.precio * cantidad,
-        tallas,
+        tallas: sizes,
         cantidad,
+        uid,
+        iva,
+        nombre,
+        img,
+        disponible,
       });
+      setSizes(tallas);
       navigate('/dashboard/usuario/compras/checkout');
     } catch (error) {
       console.error(error);
@@ -83,20 +88,25 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
 
   const handleAddCart = async () => {
     try {
-      dispatch(setTallas({ idProd: id, tallas, add: true }));
       onAddCart({
         ...values,
         subtotal: values.precio * cantidad,
-        tallas,
+        tallas: sizes,
         cantidad,
+        uid,
+        iva,
+        nombre,
+        img,
+        disponible,
       });
+      setSizes(tallas);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    const empty = tallas.every(el => {
+    const empty = sizes.every(el => {
       return el.value === 0;
     });
     if (!empty) {
@@ -104,11 +114,11 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
     } else {
       setIsEmptySizes(false);
     }
-    const quantity = tallas.reduce((acc, curr) => {
+    const quantity = sizes.reduce((acc, curr) => {
       return acc + curr.value;
     }, 0);
     dispatch(setCantidadProduct(quantity));
-  }, [tallas]);
+  }, [sizes]);
 
   return (
     <RootStyle {...other}>
@@ -137,17 +147,17 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
               name="precio"
               control={control}
               render={({ field }) => (
-                <RadioGroup row value={precio} onChange={field.onChange}>
-                  <Stack>
+                <RadioGroup row {...field}>
+                  <Stack onClick={() => setIva(false)}>
                     <Typography component="span" sx={{ pl: 1.5, m: 0 }}>
                       s/iva
                     </Typography>
                     <FormControlLabel sx={{ p: 0, m: 0 }} value={precio} label={fCurrency(precio)} control={<Radio />} />
                   </Stack>
                   <Divider sx={{ m: 1 }} orientation="vertical" variant="middle" flexItem />
-                  <Stack>
+                  <Stack onClick={() => setIva(true)}>
                     <Typography>c/iva</Typography>
-                    <FormControlLabel value={precio / 0.93} label={fCurrency(precio / 0.93)} control={<Radio />} />
+                    <FormControlLabel value={Math.round(precio / 0.93)} label={fCurrency(Math.round(precio / 0.93))} control={<Radio />} />
                   </Stack>
                 </RadioGroup>
               )}
@@ -184,7 +194,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, ...oth
 
         <Divider sx={{ borderStyle: 'dashed' }} />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', pr: 2 }}>
-          <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={tallas} isEmptySizes={isEmptySizes} />
+          <ProductAddSizesDialog open={open} setOpen={setOpen} sizes={sizes} setSizes={setSizes} isEmptySizes={isEmptySizes} />
         </Box>
         <Divider sx={{ borderStyle: 'dashed' }} />
 

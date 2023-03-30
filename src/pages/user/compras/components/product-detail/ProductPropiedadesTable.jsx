@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, capitalize } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-export default function ProductPropiedadesTable({ rows }) {
+export default function ProductPropiedadesTable({ rows, sx }) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ ...sx }}>
       <Table aria-label="simple table" sx={{ my: 2 }}>
         <TableHead>
           <TableRow>
@@ -30,4 +30,5 @@ export default function ProductPropiedadesTable({ rows }) {
 }
 ProductPropiedadesTable.propTypes = {
   rows: PropTypes.array,
+  sx: PropTypes.any,
 };

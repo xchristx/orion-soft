@@ -2,19 +2,7 @@ import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import {
-  Box,
-  Card,
-  Table,
-  TableRow,
-  Checkbox,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  TableContainer,
-  TablePagination,
-} from '@mui/material';
+import { Card, Table, TableRow, TableBody, TableCell, Container, TableContainer, TablePagination, Chip } from '@mui/material';
 // redux
 // import { useDispatch, useSelector } from '../../../redux/store';
 // utils
@@ -25,103 +13,60 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Page from '../../../../components/Page';
 import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
-import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import ProductListHead from '../components/product-list/ProductListHead';
-import ProductListToolbar from '../components/product-list/ProductListToolbar';
-import ProductMoreMenu from '../components/product-list/ProductMoreMenu';
+import { HistoryListHead, HistoryListToolbar } from '../components/historial';
+
 // import { getProducts } from '../../../redux/slices/product';
-import Image from '../../../../components/Image';
-import { products } from '../../../../_mock/product';
+import { useSelector } from 'react-redux';
+import WatchComents from '../components/historial/WatchComents';
 // sections
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'fecha', label: 'Fecha', alignRight: false },
+  { id: 'estado', label: 'Estado', alignRight: false },
   { id: 'cantidad', label: 'Cantidad', alignRight: false },
-  { id: 'total', label: 'Total', alignRight: false },
-  { id: 'estado', label: 'Estado', alignRight: true },
-  { id: '' },
+  { id: 'monto', label: 'Monto', alignRight: false },
+  { id: 'detalles', label: 'Detalles', alignRight: false },
+  { id: 'urgente', label: 'Urgente', alignRight: false },
+  { id: 'comentarios', label: 'Comentarios', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductList() {
   const theme = useTheme();
+  const { historial, order, orderBy } = useSelector(s => s.product.historial);
   // const dispatch = useDispatch();
-  const [productList, setProductList] = useState([]);
+  const [historialList, setHistorialList] = useState(historial);
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [orderBy, setOrderBy] = useState('createdAt');
-
-  // useEffect(() => {
-  //   dispatch(getProducts());
-  // }, [dispatch]);
+  const [openComents, setOpenComents] = useState(-1);
 
   useEffect(() => {
-    console.log(products);
-  }, [products]);
-
-  const handleRequestSort = property => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = checked => {
-    if (checked) {
-      const selected = productList.map(n => n.name);
-      setSelected(selected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = name => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
+    console.log(historial);
+  }, [historial]);
 
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleFilterByName = filterName => {
-    setFilterName(filterName);
-  };
-
-  const handleDeleteProduct = productId => {
-    const deleteProduct = productList.filter(product => product.id !== productId);
-    setSelected([]);
-    setProductList(deleteProduct);
-  };
-
   const handleDeleteProducts = selected => {
-    const deleteProducts = productList.filter(product => !selected.includes(product.name));
+    const deleteProducts = historialList.filter(product => !selected.includes(product.name));
     setSelected([]);
-    setProductList(deleteProducts);
+    setHistorialList(deleteProducts);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productList.length) : 0;
+  const handleChangeExpand = panel => {
+    setOpenComents(panel);
+  };
 
-  const filteredProducts = applySortFilter(productList, getComparator(order, orderBy), filterName);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - historialList.length) : 0;
 
-  const isNotFound = !filteredProducts.length && Boolean(filterName);
+  const filteredProducts = applySortFilter(historialList, getComparator(order, orderBy), '');
 
   return (
     <Page title="Ecommerce: Product List">
@@ -139,55 +84,51 @@ export default function EcommerceProductList() {
         />
 
         <Card>
-          <ProductListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-            onDeleteProducts={() => handleDeleteProducts(selected)}
-          />
+          <HistoryListToolbar numSelected={selected.length} onDeleteProducts={() => handleDeleteProducts(selected)} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <ProductListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
+                <HistoryListHead headLabel={TABLE_HEAD} />
 
                 <TableBody>
-                  {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                    const { id, name, cover, price, createdAt, inventoryType } = row;
-
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                  {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                    const { uid, fecha, cantidad, totalIva, totalSinIva, estado, urgente, comentarios } = row;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={isItemSelected} aria-checked={isItemSelected}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Image disabledEffect alt={name} src={cover} sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }} />
-                          <Typography variant="subtitle2" noWrap>
-                            {name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 160 }}>{fDate(createdAt)}</TableCell>
-                        <TableCell style={{ minWidth: 160 }}>
+                      <TableRow hover key={uid} tabIndex={-1} role="checkbox">
+                        <TableCell align="center">{fDate(fecha)}</TableCell>
+                        <TableCell align="center">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={
-                              (inventoryType === 'out_of_stock' && 'error') || (inventoryType === 'low_stock' && 'warning') || 'success'
-                            }
+                            color={(estado === 'pAceptar' && 'error') || (estado === 'enProceso' && 'warning') || 'success'}
                           >
-                            {inventoryType ? sentenceCase(inventoryType) : ''}
+                            {estado ? sentenceCase(estado) : ''}
                           </Label>
                         </TableCell>
-                        <TableCell align="right">{fCurrency(price)}</TableCell>
-                        <TableCell align="right">
-                          <ProductMoreMenu productName={name} onDelete={() => handleDeleteProduct(id)} />
+                        <TableCell align="center">{cantidad}</TableCell>
+
+                        <TableCell align="center">
+                          <Label value={totalIva + totalSinIva}>{fCurrency(totalSinIva + totalIva)}</Label>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Chip label="Mostrar " color="info" variant="contained" onClick={() => alert('aqui se veran los detalles')} />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Chip label={urgente ? 'Sí' : 'No'} color={urgente ? 'error' : 'default'} variant="contained" />
+                        </TableCell>
+                        <TableCell align="center">
+                          {comentarios ? (
+                            <WatchComents
+                              open={openComents}
+                              handleChangeExpand={handleChangeExpand}
+                              setOpen={setOpenComents}
+                              comment={comentarios}
+                              id={i}
+                            />
+                          ) : (
+                            <span>No</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
@@ -198,18 +139,6 @@ export default function EcommerceProductList() {
                     </TableRow>
                   )}
                 </TableBody>
-
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6}>
-                        <Box sx={{ py: 3 }}>
-                          <SearchNotFound searchQuery={filterName} />
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -217,7 +146,7 @@ export default function EcommerceProductList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={productList.length}
+            count={historialList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(event, value) => setPage(value)}

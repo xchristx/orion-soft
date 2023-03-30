@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import sum from 'lodash/sum';
-import uniqBy from 'lodash/uniqBy';
+// import { historialCompras } from '../../_mock/historialCompras';
 // utils
 // import axios from '../../utils/axios';
 import { products } from '../../_mock/product';
@@ -29,7 +29,9 @@ const initialState = {
     discount: 0,
     shipping: 0,
     billing: null,
+    iva: 0,
   },
+  historial: { historial: [], order: 'asc', orderBy: 'fecha' },
 };
 
 const slice = createSlice({
@@ -95,10 +97,14 @@ const slice = createSlice({
     getCart(state, action) {
       const cart = action.payload;
 
-      const subtotal = sum(cart.map(cartItem => cartItem.price * cartItem.quantity));
+      const subtotal = sum(cart.map(cartItem => cartItem.precio * cartItem.cantidad));
       const discount = cart.length === 0 ? 0 : state.checkout.discount;
       const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
       const billing = cart.length === 0 ? null : state.checkout.billing;
+      const iva = cart.reduce((ac, curr) => {
+        if (curr.iva) return ac + curr.precio * curr.cantidad;
+        return ac;
+      }, 0);
 
       state.checkout.cart = cart;
       state.checkout.discount = discount;
@@ -106,31 +112,17 @@ const slice = createSlice({
       state.checkout.billing = billing;
       state.checkout.subtotal = subtotal;
       state.checkout.total = subtotal - discount;
+      state.checkout.iva = iva;
     },
 
     addCart(state, action) {
       const product = action.payload;
-      const isEmptyCart = state.checkout.cart.length === 0;
 
-      if (isEmptyCart) {
-        state.checkout.cart = [...state.checkout.cart, product];
-      } else {
-        state.checkout.cart = state.checkout.cart.map(_product => {
-          const isExisted = _product.id === product.id;
-          if (isExisted) {
-            return {
-              ..._product,
-              quantity: _product.quantity + 1,
-            };
-          }
-          return _product;
-        });
-      }
-      state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
+      state.checkout.cart = [...state.checkout.cart, product];
     },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.cart.filter(item => item.id !== action.payload);
+      const updateCart = state.checkout.cart.filter(item => item.uid !== action.payload);
 
       state.checkout.cart = updateCart;
     },
@@ -184,6 +176,16 @@ const slice = createSlice({
       state.product = data;
       state.isLoading = false;
     },
+    // Historial
+    handleRequestSortHistorial(state, action) {
+      const isAsc = state.historial.orderBy === action.payload && state.historial.order === 'asc';
+      state.historial.order = isAsc ? 'desc' : 'asc';
+      state.historial.property = action.payload;
+      state.historial.orderBy = action.payload;
+    },
+    setNewHistorialData(state, action) {
+      state.historial.historial = [...state.historial.historial, action.payload];
+    },
   },
 });
 
@@ -205,6 +207,8 @@ export const {
   setTallas,
   setTallasProduct,
   setCantidadProduct,
+  handleRequestSortHistorial,
+  setNewHistorialData,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

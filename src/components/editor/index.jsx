@@ -43,16 +43,7 @@ Editor.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function Editor({
-  id = 'minimal-quill',
-  error,
-  value,
-  onChange,
-  simple = false,
-  helperText,
-  sx,
-  ...other
-}) {
+export default function Editor({ id = 'minimal-quill', error, value, onChange, simple = false, helperText, sx, ...other }) {
   const modules = {
     toolbar: {
       container: `#${id}`,
@@ -77,20 +68,13 @@ export default function Editor({
       <RootStyle
         sx={{
           ...(error && {
-            border: (theme) => `solid 1px ${theme.palette.error.main}`,
+            border: theme => `solid 1px ${theme.palette.error.main}`,
           }),
           ...sx,
         }}
       >
         <EditorToolbar id={id} isSimple={simple} />
-        <ReactQuill
-          value={value}
-          onChange={onChange}
-          modules={modules}
-          formats={formats}
-          placeholder="Write something awesome..."
-          {...other}
-        />
+        <ReactQuill value={value} onChange={onChange} modules={modules} formats={formats} placeholder="Escribe aquí..." {...other} />
       </RootStyle>
 
       {helperText && helperText}

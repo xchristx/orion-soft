@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleRequestSortHistorial } from '../../../../../redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -16,34 +18,33 @@ const visuallyHidden = {
   width: '1px',
 };
 
-ProductListHead.propTypes = {
-  order: PropTypes.oneOf(['asc', 'desc']),
-  orderBy: PropTypes.string,
+HistoryListHead.propTypes = {
   headLabel: PropTypes.array,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func,
 };
 
-export default function ProductListHead({ order, orderBy, headLabel, onRequestSort, onSelectAllClick }) {
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
+export default function HistoryListHead({ headLabel }) {
+  const { orderBy, order } = useSelector(s => s.product.historial);
+  const dispatch = useDispatch();
+
+  const createSortHandler = property => {
+    dispatch(handleRequestSortHistorial(property));
   };
 
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox"></TableCell>
         {headLabel.map(headCell => (
           <TableCell
             key={headCell.id}
-            align={headCell.alignRight ? 'right' : 'left'}
+            align={headCell.alignRight ? 'right' : 'center'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               hideSortIcon
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              disabled={headCell.id === 'detalles' || headCell.id === 'monto'}
+              onClick={() => createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (

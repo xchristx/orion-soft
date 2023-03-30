@@ -14,8 +14,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import ProductPropiedadesTable from '../product-detail/ProductPropiedadesTable';
+import { getDetail } from '../../../../../utils/getDetail';
 
-export default function VerTallas({ open, setOpen, sizes }) {
+export default function VerTallas({ open, setOpen, sizes, product }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -46,8 +48,8 @@ export default function VerTallas({ open, setOpen, sizes }) {
                   el =>
                     !!el.value && (
                       <TableRow key={el.size}>
-                        <TableCell>{el.size}</TableCell>
-                        <TableCell>
+                        <TableCell align="center">{el.size}</TableCell>
+                        <TableCell align="center">
                           <Typography>{el.value}</Typography>
                         </TableCell>
                       </TableRow>
@@ -56,6 +58,7 @@ export default function VerTallas({ open, setOpen, sizes }) {
               </TableBody>
             </Table>
           </TableContainer>
+          <ProductPropiedadesTable rows={getDetail(product)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose(false)} autoFocus>
@@ -71,4 +74,5 @@ VerTallas.propTypes = {
   setOpen: PropTypes.func.isRequired,
   sizes: PropTypes.array.isRequired,
   isEmptySizes: PropTypes.bool,
+  product: PropTypes.object,
 };
