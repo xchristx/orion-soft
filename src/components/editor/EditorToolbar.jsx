@@ -9,22 +9,7 @@ import EditorToolbarStyle from './EditorToolbarStyle';
 
 const FONT_FAMILY = ['Arial', 'Tahoma', 'Georgia', 'Impact', 'Verdana'];
 
-const FONT_SIZE = [
-  '8px',
-  '9px',
-  '10px',
-  '12px',
-  '14px',
-  '16px',
-  '20px',
-  '24px',
-  '32px',
-  '42px',
-  '54px',
-  '68px',
-  '84px',
-  '98px',
-];
+const FONT_SIZE = ['8px', '9px', '10px', '12px', '14px', '16px', '20px', '24px', '32px', '42px', '54px', '68px', '84px', '98px'];
 const HEADINGS = ['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'];
 
 export function undoChange() {
@@ -65,7 +50,6 @@ export const formats = [
   'strike',
   'table',
   'underline',
-  'video',
 ];
 
 EditorToolbar.propTypes = {
@@ -81,7 +65,7 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
           {!isSimple && (
             <select className="ql-font" defaultValue="">
               <option value="">Font</option>
-              {FONT_FAMILY.map((font) => (
+              {FONT_FAMILY.map(font => (
                 <option key={font} value={font}>
                   {font}
                 </option>
@@ -91,7 +75,7 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
 
           {!isSimple && (
             <select className="ql-size" defaultValue="16px">
-              {FONT_SIZE.map((size) => (
+              {FONT_SIZE.map(size => (
                 <option key={size} value={size}>
                   {size}
                 </option>
@@ -143,16 +127,15 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
             <button type="button" className="ql-blockquote" />
           </div>
         )}
-
+        {/* 
         <div className="ql-formats">
           <button type="button" className="ql-direction" value="rtl" />
           <select className="ql-align" />
-        </div>
+        </div> */}
 
         <div className="ql-formats">
           <button type="button" className="ql-link" />
           <button type="button" className="ql-image" />
-          <button type="button" className="ql-video" />
         </div>
 
         <div className="ql-formats">

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { MenuItem, IconButton } from '@mui/material';
 
@@ -9,14 +7,17 @@ import { MenuItem, IconButton } from '@mui/material';
 import Iconify from '../../../../../components/Iconify';
 import MenuPopover from '../../../../../components/MenuPopover';
 
+import ChangeStatus from './ChangeStatus';
+
 // ----------------------------------------------------------------------
 
 HistoryMoreMenu.propTypes = {
   onDelete: PropTypes.func,
-  productName: PropTypes.string,
+  estado: PropTypes.string,
+  uid: PropTypes.string,
 };
 
-export default function HistoryMoreMenu({ onDelete, productName }) {
+export default function HistoryMoreMenu({ estado, uid }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = event => {
@@ -25,12 +26,6 @@ export default function HistoryMoreMenu({ onDelete, productName }) {
 
   const handleClose = () => {
     setOpen(null);
-  };
-
-  const ICON = {
-    mr: 2,
-    width: 20,
-    height: 20,
   };
 
   return (
@@ -52,14 +47,10 @@ export default function HistoryMoreMenu({ onDelete, productName }) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
-        </MenuItem>
+        <ChangeStatus />
 
-        <MenuItem component={RouterLink} to={`/dashboard/compras/${paramCase(productName)}/edit`}>
-          <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit
+        <MenuItem sx={{ color: 'success.main' }} to={`/`}>
+          Pagar
         </MenuItem>
       </MenuPopover>
     </>

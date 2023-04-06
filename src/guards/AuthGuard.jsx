@@ -8,6 +8,7 @@ import LoginPage from '../pages/auth/LoginPage';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import { useSelector } from 'react-redux';
+import Register from '../pages/auth/Register';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ export default function AuthGuard({ children }) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
+    if (pathname === '/register') return <Register />;
     return <LoginPage />;
   }
 

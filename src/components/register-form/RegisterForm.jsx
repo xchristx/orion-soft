@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,18 +9,18 @@ import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-// hooks
-import useIsMountedRef from '../../hooks/useIsMountedRef';
 // components
 import { FormProvider, RHFTextField } from '../../components/hook-form';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../../redux/slices/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { hasError, registerUser } from '../../redux/slices/auth';
+import { getValidationError } from '../../utils/getValidationError';
 
 // ----------------------------------------------------------------------
 
 export function RegisterForm() {
-  const isMountedRef = useIsMountedRef();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { error } = useSelector(s => s.authSlice);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,30 +50,31 @@ export function RegisterForm() {
   });
 
   const {
-    reset,
-
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async data => {
-    try {
-      await dispatch(registerUser({ email: data.email, password: data.password, firstName: data.firstName, lastName: data.lastName }));
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', error);
+  const onSubmit = data => {
+    dispatch(registerUser({ email: data.email, password: data.password, firstName: data.firstName, lastName: data.lastName })).then(
+      data => {
+        if (data.error) {
+          console.log(data);
+          setError('afterSubmit', data.error);
+          dispatch(hasError(getValidationError(data.error.code)));
+        } else navigate('/');
       }
-    }
+    );
   };
+  useEffect(() => {
+    dispatch(hasError(false));
+  }, []);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <RHFTextField name="firstName" label="Nombre" />

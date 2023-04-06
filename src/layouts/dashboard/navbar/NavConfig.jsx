@@ -19,7 +19,7 @@ const navConfig = size => [
         children: [
           { title: 'nuevo pedido', path: '/dashboard/usuario/compras/nuevo' },
           { title: 'historial', path: '/dashboard/usuario/compras/historial' },
-          { title: 'nuevo pedido especial', path: '/dashboard/usuario/compras/nuevo-especial' },
+          { title: 'nuevo pedido especial', path: '/dashboard/usuario/compras/especial' },
         ],
       },
 

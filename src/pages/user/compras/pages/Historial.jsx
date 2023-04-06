@@ -14,11 +14,12 @@ import Page from '../../../../components/Page';
 import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import { HistoryListHead, HistoryListToolbar } from '../components/historial';
+import { HistoryListHead, HistoryListToolbar, HistoryMoreMenu } from '../components/historial';
 
 // import { getProducts } from '../../../redux/slices/product';
 import { useSelector } from 'react-redux';
 import WatchComents from '../components/historial/WatchComents';
+import WatchDetail from '../components/historial/WatchDetail';
 // sections
 
 // ----------------------------------------------------------------------
@@ -31,6 +32,7 @@ const TABLE_HEAD = [
   { id: 'detalles', label: 'Detalles', alignRight: false },
   { id: 'urgente', label: 'Urgente', alignRight: false },
   { id: 'comentarios', label: 'Comentarios', alignRight: false },
+  { id: '', label: '', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -44,6 +46,7 @@ export default function EcommerceProductList() {
   const [selected, setSelected] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openComents, setOpenComents] = useState(-1);
+  const [openDetails, setOpenDetails] = useState(-1);
 
   useEffect(() => {
     console.log(historial);
@@ -63,6 +66,9 @@ export default function EcommerceProductList() {
   const handleChangeExpand = panel => {
     setOpenComents(panel);
   };
+  const handleChangeExpandDetail = panel => {
+    setOpenDetails(panel);
+  };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - historialList.length) : 0;
 
@@ -77,7 +83,7 @@ export default function EcommerceProductList() {
             { name: 'Dashboard', href: '/dashboard/usuario' },
             {
               name: 'Compras',
-              href: '/dashboard/compras',
+              href: '/dashboard/usuario/compras/nuevo',
             },
             { name: 'Lista' },
           ]}
@@ -93,7 +99,7 @@ export default function EcommerceProductList() {
 
                 <TableBody>
                   {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    const { uid, fecha, cantidad, totalIva, totalSinIva, estado, urgente, comentarios } = row;
+                    const { uid, fecha, cantidad, totalIva, totalSinIva, estado, urgente, comentarios, products } = row;
 
                     return (
                       <TableRow hover key={uid} tabIndex={-1} role="checkbox">
@@ -101,9 +107,19 @@ export default function EcommerceProductList() {
                         <TableCell align="center">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(estado === 'pAceptar' && 'error') || (estado === 'enProceso' && 'warning') || 'success'}
+                            color={
+                              (estado.estado === 'pAceptar'
+                                ? 'warning'
+                                : estado.estado === 'aceptado'
+                                ? 'info'
+                                : estado.estado === 'recibido'
+                                ? 'success'
+                                : 'error') ||
+                              (estado.estado === 'enProceso' && 'warning') ||
+                              'success'
+                            }
                           >
-                            {estado ? sentenceCase(estado) : ''}
+                            {estado.estado ? sentenceCase(estado.estado) : ''}
                           </Label>
                         </TableCell>
                         <TableCell align="center">{cantidad}</TableCell>
@@ -112,7 +128,14 @@ export default function EcommerceProductList() {
                           <Label value={totalIva + totalSinIva}>{fCurrency(totalSinIva + totalIva)}</Label>
                         </TableCell>
                         <TableCell align="center">
-                          <Chip label="Mostrar " color="info" variant="contained" onClick={() => alert('aqui se veran los detalles')} />
+                          <WatchDetail
+                            id={i}
+                            open={openDetails}
+                            setOpen={setOpenDetails}
+                            product={products}
+                            handleChangeExpand={handleChangeExpandDetail}
+                            other={{ ...row }}
+                          />
                         </TableCell>
                         <TableCell align="center">
                           <Chip label={urgente ? 'Sí' : 'No'} color={urgente ? 'error' : 'default'} variant="contained" />
@@ -129,6 +152,9 @@ export default function EcommerceProductList() {
                           ) : (
                             <span>No</span>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          <HistoryMoreMenu estado={estado.estado} uid={uid} />
                         </TableCell>
                       </TableRow>
                     );

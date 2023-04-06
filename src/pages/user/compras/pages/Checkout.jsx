@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import sum from 'lodash/sum';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // uid
 import { v4 as uuid } from 'uuid';
 // @mui
@@ -24,6 +24,7 @@ import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 
 export default function Checkout() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { checkout } = useSelector(state => state.product);
 
@@ -49,10 +50,10 @@ export default function Checkout() {
       fecha: Date.now(),
       totalIva: iva,
       totalSinIva: Math.abs(iva - total),
-      estado: 'pAceptar',
+      estado: { estado: 'pAceptar', responsable: '' },
       cantidad: totalItems,
       fechaPrevista: '',
-      products: cart,
+      products: cart.map(el => ({ ...el, estado: { estado: 'pAceptar', responsable: '' } })),
       adelanto,
       urgente: checked,
       comentarios: message,
@@ -62,6 +63,7 @@ export default function Checkout() {
     setAdelanto('');
     setMessage('');
     setChecked(false);
+    navigate('/dashboard/usuario/compras/historial');
   };
 
   useEffect(() => {

@@ -6,7 +6,6 @@ import { Box, Card, Link, Container, Typography } from '@mui/material';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Page from '../../components/Page';
-import Logo from '../../assets/mainviewImg/orion-logo.jpg';
 import { RegisterForm } from '../../components/register-form';
 
 // ----------------------------------------------------------------------
@@ -62,11 +61,11 @@ export default function Register() {
     <Page title="Register">
       <RootStyle>
         <HeaderStyle>
-          <img height="70px" src={Logo} alt="ivy-logo" />
+          <img height="70px" src="/assets/orion-logo.jpg" alt="ivy-logo" />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               ¿Ya tienes una cuenta?{' '}
-              <Link variant="subtitle2" component={RouterLink} to="/login">
+              <Link variant="subtitle2" component={RouterLink} to="/">
                 Ingresar
               </Link>
             </Typography>
@@ -75,7 +74,7 @@ export default function Register() {
 
         {mdUp && (
           <SectionStyle>
-            <Box component="img" src="/src/assets/mainviewImg/toro.png" alt="login" maxHeight={500} />
+            <Box component="img" src="/assets/toro.png" alt="login" maxHeight={500} />
           </SectionStyle>
         )}
 
@@ -94,9 +93,9 @@ export default function Register() {
 
             {!smUp && (
               <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-                Already have an account?{' '}
+                Ya tienes una cuenta?{' '}
                 <Link variant="subtitle2" to="/" component={RouterLink}>
-                  Login
+                  Ingresar
                 </Link>
               </Typography>
             )}

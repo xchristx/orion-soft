@@ -50,6 +50,7 @@ export default function Router() {
             <Route path="producto/:nombre" element={<ProductDetails />} />
             <Route path="historial" element={<Historial />} />
             <Route path="checkout" element={<Checkout />} />
+            <Route path="especial" element={<NuevaCompraEspecial />} />
           </Route>
           <Route path="clientes" element={<Clientes />} />
           <Route path="proveedores" element={<Proveedores />} />
@@ -84,3 +85,4 @@ const Products = Loadable(lazy(() => import('../pages/user/product/Products')));
 const Historial = Loadable(lazy(() => import('../pages/user/compras/pages/Historial')));
 const ProductDetails = Loadable(lazy(() => import('../pages/user/compras/pages/ProductDetails')));
 const Checkout = Loadable(lazy(() => import('../pages/user/compras/pages/Checkout')));
+const NuevaCompraEspecial = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompraEspecial')));

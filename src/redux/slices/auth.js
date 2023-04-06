@@ -28,21 +28,33 @@ export const fetchUser = createAsyncThunk('auth/login', async ({ email, password
   }
 });
 
-export const registerUser = createAsyncThunk('auth/register', async ({ email, password, firstName, lastName }) =>
-  createUserWithEmailAndPassword(AUTH, email, password).then(async res => {
-    const userRef = doc(collection(DB, 'users'), res.user?.uid);
-    const data = {
-      uid: res.user?.uid,
-      email,
-      firstName,
-      lastName,
-      rol: 'user',
-    };
+export const registerUser = createAsyncThunk('auth/register', async ({ email, password, firstName, lastName }) => {
+  try {
+    const response = await createUserWithEmailAndPassword(AUTH, email, password);
 
-    await setDoc(userRef, { ...data, password });
-    return data;
-  })
-);
+    if (response.error) return Promise.reject(response.error);
+    else {
+      try {
+        const userRef = doc(collection(DB, 'users'), response.user?.uid);
+        const data = {
+          uid: response.user?.uid,
+          email,
+          firstName,
+          lastName,
+          rol: 'user',
+        };
+
+        await setDoc(userRef, { ...data, password });
+        return data;
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error);
+  }
+});
 
 export const logout = () => signOut(AUTH);
 
@@ -117,15 +129,15 @@ const slice = createSlice({
     });
     builder.addCase(registerUser.fulfilled, (state, actions) => {
       state.isLoading = false;
-      state.isAuthenticated = true;
-      state.isInitialized = true;
-      state.user = { ...state.user, email: actions.payload.email, uid: actions.payload.uid };
+      state.isAuthenticated = false;
+      state.isInitialized = false;
+      state.user = null;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;
       state.isAuthenticated = false;
       state.isInitialized = true;
-      state.error = action.payload;
+      state.error = null;
       state.user = null;
     });
   },

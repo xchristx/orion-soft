@@ -186,6 +186,14 @@ const slice = createSlice({
     setNewHistorialData(state, action) {
       state.historial.historial = [...state.historial.historial, action.payload];
     },
+    handleChangeStatus(state, action) {
+      state.historial.historial = [...state.historial.historial].map(el => {
+        if (el.uid === action.payload.uid) {
+          return { ...el, estado: { estado: action.payload.estado, responsable: action.payload.responsable } };
+        }
+        return el;
+      });
+    },
   },
 });
 
@@ -209,6 +217,7 @@ export const {
   setCantidadProduct,
   handleRequestSortHistorial,
   setNewHistorialData,
+  handleChangeStatus,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

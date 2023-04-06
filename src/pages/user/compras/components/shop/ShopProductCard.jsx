@@ -7,7 +7,6 @@ import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../../utils/formatNumber';
 // components
-import Label from '../../../../../components/Label';
 import Image from '../../../../../components/Image';
 import { ColorPreview } from '../../../../../components/color-utils';
 
@@ -18,28 +17,16 @@ ShopProductCard.propTypes = {
 };
 
 export function ShopProductCard({ product }) {
-  const { nombre, img, precio, colores, disponible, precioIva, codigo } = product;
+  const { nombre, img, precio, colores, codigo } = product;
 
   const linkTo = `/dashboard/usuario/compras/producto/${paramCase(codigo)}`;
 
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
-        {disponible && (
-          <Label
-            variant="filled"
-            color={(disponible === 'sale' && 'error') || 'info'}
-            sx={{
-              top: 16,
-              right: 16,
-              zIndex: 9,
-              position: 'absolute',
-            }}
-          >
-            {disponible} uds
-          </Label>
-        )}
-        <Image alt={nombre} src={img} ratio="1/1" />
+        <Link to={linkTo} color="inherit" component={RouterLink}>
+          <Image alt={nombre} src={img} ratio="1/1" />
+        </Link>
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
@@ -53,11 +40,9 @@ export function ShopProductCard({ product }) {
           <ColorPreview colors={colores} />
 
           <Stack direction="row" spacing={0.8}>
-            {precioIva && (
-              <Typography component="span" sx={{ color: 'lightcoral', fontSize: '0.95rem' }}>
-                F {fCurrency(precio / 0.93)}
-              </Typography>
-            )}
+            <Typography component="span" sx={{ color: 'info.main', fontSize: '0.95rem' }}>
+              {fCurrency(Math.round(precio / 0.93))}
+            </Typography>
 
             <Typography variant="subtitle1">{fCurrency(precio)}</Typography>
           </Stack>

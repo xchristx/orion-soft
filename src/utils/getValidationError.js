@@ -13,6 +13,7 @@ export const getValidationError = errorCode => {
     'auth/wrong-password': 'Contraseña Incorrecta',
     'auth/too-many-requests': 'Demasiados intentos fallidos para esta cuenta, intentelo mas tarde',
     'auth/network-request-failed': 'No nos pudimos conectar al servidor, revisa tu conexion a internet por favor',
+    'auth/email-already-in-use': 'El email ingresado ya esta en uso',
   };
 
   return codeMatcher[errorCode];

@@ -38,7 +38,7 @@ export const products = [
     adicional: '',
     disponible: 12,
     tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
-    cantidad: 0,
+    proveedor: 'jrc',
   },
   {
     id: 2,
@@ -64,7 +64,7 @@ export const products = [
     adicional: '',
     disponible: 12,
     tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
-    cantidad: 0,
+    proveedor: 'jrc',
   },
   {
     id: 3,
@@ -89,7 +89,7 @@ export const products = [
     adicional: 'lengueta castor',
     disponible: 12,
     tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
-    cantidad: 0,
+    proveedor: 'jrc',
   },
   {
     id: 4,
@@ -115,7 +115,7 @@ export const products = [
     adicional: '',
     disponible: 12,
     tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
-    cantidad: 0,
+    proveedor: 'jrc',
   },
   {
     id: 5,
@@ -141,6 +141,6 @@ export const products = [
     adicional: 'cuello de cuero, lengueta cuero suave, lengueta acolchada',
     disponible: 12,
     tallas: [...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })),
-    cantidad: 0,
+    proveedor: 'jrc',
   },
 ];

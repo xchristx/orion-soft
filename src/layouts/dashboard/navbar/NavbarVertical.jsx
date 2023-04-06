@@ -75,7 +75,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box component="img" src="/src/assets/mainviewImg/orion-logo.jpg" sx={{ height: isCollapse ? 50 : 80, m: '0 auto' }} />
+          <Box component="img" src="/assets/orion-logo.jpg" sx={{ height: isCollapse ? 50 : 80, m: '0 auto' }} />
 
           {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={() => dispatch(handleToggleCollapse())} collapseClick={collapseClick} />

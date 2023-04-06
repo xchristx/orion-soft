@@ -5,7 +5,6 @@ import { Link, Container, Typography, Box } from '@mui/material';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
-import Logo2 from '../../assets/mainviewImg/orion-logo.jpg';
 import LoginForm from '../../components/loginForm/LoginForm';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -50,7 +49,7 @@ export default function LoginPage() {
 
       <StyledRoot>
         <Box sx={{ px: 2.5, py: 2, position: 'fixed', objectFit: 'cover' }}>
-          <img height="70px" src={Logo2} alt="ivy-logo" />
+          <img height="70px" src="/assets/orion-logo.jpg" alt="ivy-logo" />
         </Box>
 
         {mdUp && (
@@ -58,7 +57,7 @@ export default function LoginPage() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hola, bienvenido
             </Typography>
-            <Box component="img" src="/src/assets/mainviewImg/toro.png" alt="login" maxHeight={500} />
+            <Box component="img" src="/assets//toro.png" alt="login" maxHeight={500} />
           </StyledSection>
         )}
 
