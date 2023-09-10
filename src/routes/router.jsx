@@ -7,6 +7,7 @@ import AuthGuard from '../guards/AuthGuard';
 // Components
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardUser from '../pages/user/mainview/Mainview';
+import Recibos from '../pages/user/ventas/pages/recibos/Recibos';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,7 @@ export default function Router() {
           <Route index element={<DashboardUser />} />
           <Route path="ventas">
             <Route index element={<Ventas />} />
+            <Route path="recibos" element={<Recibos />} />
           </Route>
           <Route path="compras">
             <Route path="nuevo" element={<NuevaCompra />} />

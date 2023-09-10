@@ -142,13 +142,9 @@ const slice = createSlice({
     });
   },
 });
-// Actions
-export const setUserData = data => dispatch => {
-  dispatch(slice.actions.startLoading());
-  dispatch(slice.actions.setUserData(data));
-};
+// Actio
 // Reducer
 export default slice.reducer;
-export const { login, startLoading, hasError, setUserNull } = slice.actions;
+export const { login, startLoading, hasError, setUserNull, setUserData } = slice.actions;
 
 // ----------------

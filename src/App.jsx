@@ -9,23 +9,23 @@ import ThemeProvider from './theme';
 import ScrollToTop from './components/scroll-to-top';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import NotistackProvider from './components/NotistackProvider';
-
+// firebase
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import { useDispatch } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import { FIREBASE_API } from '../config';
+
+import { useDispatch } from 'react-redux';
 import { setUserData, setUserNull, startLoading } from './redux/slices/auth';
 import { ProgressBarStyle } from './components/ProgressBar';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
 
 // ----------------------------------------------------------------------
 
+export const firebaseApp = initializeApp(FIREBASE_API);
+const AUTH = getAuth(firebaseApp);
+export const DB = getFirestore(firebaseApp);
 export default function App() {
   const dispatch = useDispatch();
-
-  const firebaseApp = initializeApp(FIREBASE_API);
-  const AUTH = getAuth(firebaseApp);
-  const DB = getFirestore(firebaseApp);
 
   onAuthStateChanged(AUTH, async user => {
     if (user) {
@@ -43,16 +43,14 @@ export default function App() {
   });
 
   return (
-    <>
-      <ThemeProvider>
-        <NotistackProvider>
-          <MotionLazyContainer>
-            <ProgressBarStyle />
-            <ScrollToTop />
-            <Router />
-          </MotionLazyContainer>
-        </NotistackProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider>
+      <NotistackProvider>
+        <MotionLazyContainer>
+          <ProgressBarStyle />
+          <ScrollToTop />
+          <Router />
+        </MotionLazyContainer>
+      </NotistackProvider>
+    </ThemeProvider>
   );
 }

@@ -10,6 +10,7 @@ import authSlice from './slices/auth';
 import product from './slices/product';
 import drawerSlice from './slices/drawer';
 import settings from './slices/settings';
+import recibos from './slices/recibos';
 
 const rootConfig = {
   key: 'root',
@@ -29,6 +30,7 @@ export const rootReducer = combineReducers({
   product: persistReducer(productPersistConfig, product),
   drawerSlice,
   settings,
+  recibos,
 });
 
 const store = configureStore({

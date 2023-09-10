@@ -21,7 +21,7 @@ import Iconify from '../../../../../components/Iconify';
 import useResponsive from '../../../../../hooks/useResponsive';
 import { useState } from 'react';
 
-export default function ProductAddSizesDialog({ open, setOpen, sizes, isEmptySizes, setSizes }) {
+export default function ProductAddSizesDialog({ open, setOpen, sizes, isEmptySizes, setSizes, buttonVariant = 'contained' }) {
   const isMobile = useResponsive('down', 'md');
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,7 +68,7 @@ export default function ProductAddSizesDialog({ open, setOpen, sizes, isEmptySiz
 
   return (
     <>
-      <Button sx={{ my: 2 }} variant="outlined" onClick={handleClickOpen}>
+      <Button sx={{ my: 2 }} variant={buttonVariant} onClick={handleClickOpen}>
         {isEmptySizes ? 'Editar Tallas' : 'Añadir Tallas'}
       </Button>
       {isEmptySizes && (
@@ -134,6 +134,7 @@ ProductAddSizesDialog.propTypes = {
   sizes: PropTypes.array.isRequired,
   isEmptySizes: PropTypes.bool,
   setSizes: PropTypes.func,
+  buttonVariant: PropTypes.string,
 };
 function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity, handleChangeInput }) {
   return (

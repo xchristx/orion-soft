@@ -31,6 +31,7 @@ const navConfig = size => [
         children: [
           { title: 'nueva venta', path: '/dashboard/usuario/ventas/nuevo' },
           { title: 'historial', path: '/dashboard/usuario/ventas/historial' },
+          { title: 'recibos', path: '/dashboard/usuario/ventas/recibos' },
         ],
       },
 
