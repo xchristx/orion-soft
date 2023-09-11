@@ -1,10 +1,10 @@
 export const FIREBASE_API = {
-  apiKey: 'AIzaSyB9EunLbLYlOCbveWiSVVmvxdbQXm6SlXI',
-  authDomain: 'orion-soft.firebaseapp.com',
-  databaseURL: 'https://orion-soft-default-rtdb.firebaseio.com',
-  projectId: 'orion-soft',
-  storageBucket: 'orion-soft.appspot.com',
-  messagingSenderId: '890826928910',
-  appId: '1:890826928910:web:bca1bd472541b2d362dd5f',
-  measurementId: 'G-HX3425DC19',
+  apiKey: import.meta.env.apikey,
+  authDomain: import.meta.env.authDomain,
+  databaseURL: import.meta.env.databaseURL,
+  projectId: import.meta.env.projectId,
+  storageBucket: import.meta.env.storageBucket,
+  messagingSenderId: import.meta.env.messagingSenderId,
+  appId: import.meta.env.appId,
+  measurementId: import.meta.env.measurementId,
 };
