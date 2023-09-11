@@ -14,7 +14,7 @@ export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows
   return (
     <TableBody>
       {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-        const { id, reciboId, fecha, cliente, adelanto, concepto, montoTotal, detelleRecibo, detalleVenta, cantidadTotal } = row;
+        const { id, reciboId, fecha, cliente, adelanto, concepto, montoTotal, detalleRecibo, detalleVenta, cantidadTotal } = row;
         return (
           <TableRow hover key={id} tabIndex={-1}>
             <TableCell align="center">{reciboId || '---'}</TableCell>
@@ -27,7 +27,7 @@ export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows
 
             <TableCell align="center">{montoTotal.toLocaleString('es-MX')}</TableCell>
             <TableCell align="center">{(montoTotal - adelanto).toLocaleString('es-MX')}</TableCell>
-            <TableCell align="center">{detelleRecibo}</TableCell>
+            <TableCell align="center">{detalleRecibo}</TableCell>
             <TableCell align="center">
               <DetalleVentaDialog detalleVenta={detalleVenta} montoTotal={montoTotal} cantidadTotal={cantidadTotal} />{' '}
             </TableCell>

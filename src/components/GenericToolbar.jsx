@@ -26,9 +26,13 @@ export default function GenericToolbar({
   labels,
   hasMenu = true,
   searchInput = false,
+  searchInput2 = false,
   searchValue,
+  searchValue2,
   handleSearchChange,
+  handleSearchChange2,
   searchPlaceholder,
+  searchPlaceholder2,
   filterChipLabels,
   handleResetFilter,
 }) {
@@ -70,10 +74,25 @@ export default function GenericToolbar({
         </Button>
         {searchInput && (
           <InputStyle
-            stretchStart={200}
+            stretchStart={250}
             value={searchValue}
             onChange={handleSearchChange}
             placeholder={searchPlaceholder}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
+        {searchInput2 && (
+          <InputStyle
+            stretchStart={200}
+            value={searchValue2}
+            onChange={handleSearchChange2}
+            placeholder={searchPlaceholder2}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -93,6 +112,7 @@ GenericToolbar.propTypes = {
   idValue: PropTypes.string,
   handleClickOpen: PropTypes.func,
   handleChange: PropTypes.func,
+  handleChange2: PropTypes.func,
   handleClose: PropTypes.func,
   menuElements: PropTypes.array,
   error: PropTypes.bool,
@@ -102,9 +122,13 @@ GenericToolbar.propTypes = {
   labels: PropTypes.object,
   hasMenu: PropTypes.bool,
   searchInput: PropTypes.bool,
+  searchInput2: PropTypes.bool,
   searchValue: PropTypes.string,
+  searchValue2: PropTypes.string,
   searchPlaceholder: PropTypes.string,
+  searchPlaceholder2: PropTypes.string,
   handleSearchChange: PropTypes.func,
+  handleSearchChange2: PropTypes.func,
   handleResetFilter: PropTypes.func,
   filterChipLabels: PropTypes.object,
 };

@@ -273,6 +273,10 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
                         <LabelStyle>Monto:</LabelStyle>
                         <Chip size="medium" label={`${totales.montoTotal.toLocaleString('es-MX')} bs.`} />
                       </WrapperStyle>
+                      <WrapperStyle>
+                        <LabelStyle>Ssaldo:</LabelStyle>
+                        <Chip size="medium" label={`${(totales.montoTotal - parseFloat(watch('adelanto'))).toLocaleString('es-MX')} bs.`} />
+                      </WrapperStyle>
                     </RootStyle>
                     <TableContainer sx={{ display: 'flex', justifyContent: 'center' }}>
                       <Scrollbar sx={{ maxHeight: '100%' }}>

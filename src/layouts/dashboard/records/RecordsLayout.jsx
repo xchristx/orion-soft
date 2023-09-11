@@ -31,9 +31,13 @@ export default function RecordsLayout({
   children,
   addEditComponent,
   searchInput,
+  searchInput2,
   searchPlaceholder,
+  searchPlaceholder2,
   searchValue,
+  searchValue2,
   handleSearchChange,
+  handleSearchChange2,
   handleRequestSort,
   handleFilter,
   order,
@@ -52,9 +56,13 @@ export default function RecordsLayout({
     <Page title={pageTitle}>
       <GenericToolbar
         searchPlaceholder={searchPlaceholder}
+        searchPlaceholder2={searchPlaceholder2}
         searchValue={searchValue}
+        searchValue2={searchValue2}
         handleSearchChange={handleSearchChange}
+        handleSearchChange2={handleSearchChange2}
         searchInput={searchInput}
+        searchInput2={searchInput2}
         breadcrumbs={breadcrumbs}
         hasMenu={false}
         idValue={idValue}
@@ -118,8 +126,11 @@ export default function RecordsLayout({
 RecordsLayout.propTypes = {
   breadcrumbs: PropTypes.bool,
   searchInput: PropTypes.bool,
+  searchInput2: PropTypes.bool,
   searchPlaceholder: PropTypes.string,
+  searchPlaceholder2: PropTypes.string,
   searchValue: PropTypes.string,
+  searchValue1: PropTypes.string,
   idValue: PropTypes.string,
   emptyCondicion: PropTypes.bool.isRequired,
   fullCondicion: PropTypes.bool.isRequired,
@@ -137,6 +148,7 @@ RecordsLayout.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
   handleChangeRowsPerPage: PropTypes.func.isRequired,
   handleSearchChange: PropTypes.func,
+  handleSearchChange2: PropTypes.func,
   handleOpen: PropTypes.func.isRequired,
   onPageChange: PropTypes.func.isRequired,
   handleFilter: PropTypes.func.isRequired,
