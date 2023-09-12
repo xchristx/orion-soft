@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Container } from '@mui/material';
 // components
 import { ModuleCards } from '../../../components/module-cards';
+import navConfig from '../../../layouts/dashboard/navbar/NavConfig';
 // sections
 
 // ----------------------------------------------------------------------
@@ -15,7 +16,7 @@ export default function DashboardUser() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <ModuleCards />
+        <ModuleCards navConfig={navConfig} size={100} />
       </Container>
     </>
   );

@@ -41,7 +41,6 @@ export default function App() {
       dispatch(setUserNull());
     }
   });
-
   return (
     <ThemeProvider>
       <NotistackProvider>

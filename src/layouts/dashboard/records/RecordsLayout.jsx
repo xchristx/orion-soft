@@ -47,6 +47,7 @@ export default function RecordsLayout({
   filterChipLabels,
   handleResetFilter,
   data,
+  buttonStartIcon,
 }) {
   // Added the translation for the tittle and other translations
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ export default function RecordsLayout({
         labels={GTLabels}
         filterChipLabels={filterChipLabels}
         handleResetFilter={() => dispatch(handleResetFilter())}
+        buttonStartIcon={buttonStartIcon}
       />
 
       {addEditComponent}
@@ -131,6 +133,7 @@ RecordsLayout.propTypes = {
   searchPlaceholder2: PropTypes.string,
   searchValue: PropTypes.string,
   searchValue1: PropTypes.string,
+  searchValue2: PropTypes.string,
   idValue: PropTypes.string,
   emptyCondicion: PropTypes.bool.isRequired,
   fullCondicion: PropTypes.bool.isRequired,
@@ -160,4 +163,5 @@ RecordsLayout.propTypes = {
   filterCells: PropTypes.array,
   filterChipLabels: PropTypes.object,
   data: PropTypes.array.isRequired,
+  buttonStartIcon: PropTypes.node,
 };

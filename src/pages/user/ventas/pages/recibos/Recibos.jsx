@@ -9,6 +9,7 @@ import SearchNotFound from '../../../../../components/SearchNotFound';
 import { resetFilteredData, setFilteredData } from '../../../../../redux/slices/recibos';
 import useRecords from '../../../../../hooks/useRecords';
 import { getRecibos } from './utils/getRecibos';
+import AddIcon from '@mui/icons-material/Add';
 
 const headLabel = [
   { id: 'reciboId', label: 'Recibo No.', alignRight: false },
@@ -75,6 +76,7 @@ export default function Recibos() {
       searchInput={true}
       searchInput2={false}
       data={data}
+      buttonStartIcon={<AddIcon />}
       searchPlaceholder={'Buscar por No. de recibo'} // placeHolder que tendra el input del buscador
       handleFilter={setFilteredData} // funcion para manejar el filtrado de la tabla
       filterChipLabels={filter} // aqui poner un objeto que tenga esta estructura {name:'string' value:'string'} esto indica que filtro se esta aplicando

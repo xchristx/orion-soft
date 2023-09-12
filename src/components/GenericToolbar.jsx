@@ -35,6 +35,7 @@ export default function GenericToolbar({
   searchPlaceholder2,
   filterChipLabels,
   handleResetFilter,
+  buttonStartIcon,
 }) {
   return (
     <>
@@ -69,7 +70,7 @@ export default function GenericToolbar({
             </Select>
           </FormControl>
         )}
-        <Button variant="contained" onClick={handleClickOpen} disabled={!!error || isLoading}>
+        <Button variant="contained" startIcon={buttonStartIcon || ''} onClick={handleClickOpen} disabled={!!error || isLoading}>
           {labels.buttonLabel}
         </Button>
         {searchInput && (
@@ -131,4 +132,5 @@ GenericToolbar.propTypes = {
   handleSearchChange2: PropTypes.func,
   handleResetFilter: PropTypes.func,
   filterChipLabels: PropTypes.object,
+  buttonStartIcon: PropTypes.node,
 };

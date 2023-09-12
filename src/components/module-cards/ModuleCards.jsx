@@ -1,9 +1,9 @@
+import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
-import navConfig from '../../layouts/dashboard/navbar/NavConfig';
 import { ModuleCard } from '../module-card/ModuleCard';
 
-export const ModuleCards = () => {
-  const user = navConfig(100);
+export const ModuleCards = ({ navConfig, size }) => {
+  const user = navConfig(size);
   const modules = user;
   return (
     <>
@@ -14,4 +14,8 @@ export const ModuleCards = () => {
       </Grid>
     </>
   );
+};
+ModuleCards.propTypes = {
+  navConfig: PropTypes.func,
+  size: PropTypes.number,
 };

@@ -57,6 +57,7 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+    "react-to-print": "^2.14.13",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "rehype-raw": "^6.1.1",
