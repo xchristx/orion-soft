@@ -13,13 +13,13 @@ import { NAVBAR } from '../header/config';
 // redux
 import { handleHoverEnter, handleHoverLeave, handleToggleCollapse } from '../../../redux/slices/drawer';
 // components
-import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
 import { useDispatch, useSelector } from 'react-redux';
+import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
 // ----------------------------------------------------------------------
 

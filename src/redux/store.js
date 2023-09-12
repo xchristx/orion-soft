@@ -11,6 +11,8 @@ import product from './slices/product';
 import drawerSlice from './slices/drawer';
 import settings from './slices/settings';
 import recibos from './slices/recibos';
+import clientes from './slices/clientes';
+import proveedores from './slices/proveedores';
 
 const rootConfig = {
   key: 'root',
@@ -31,6 +33,8 @@ export const rootReducer = combineReducers({
   drawerSlice,
   settings,
   recibos,
+  clientes,
+  proveedores,
 });
 
 const store = configureStore({

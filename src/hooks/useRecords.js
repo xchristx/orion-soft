@@ -1,15 +1,25 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // notistack
 import { useSnackbar } from 'notistack';
 import { getValidationError } from '../utils/getValidationError';
 // utils
 
-export default function useRecords({ getters, ueDependencies, data, filteredData, searchFilter, hasTwoSearch = false }) {
+export default function useRecords({
+  getters,
+  ueDependencies,
+  data,
+  filteredData,
+  searchFilter,
+  searchFilter2,
+  hasTwoSearch = false,
+  isLoading,
+  error,
+}) {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { isLoading, error } = useSelector(state => state.recibos);
+
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -45,12 +55,16 @@ export default function useRecords({ getters, ueDependencies, data, filteredData
   const isNotFound = searchActive === 'search1' ? isNotFound1 : isNotFound2;
 
   const handleSearchChange = e => {
+    setOrderBy(searchFilter);
     setSearchActive('search1');
     setSearchName(e.target.value);
+    setSearchName2('');
   };
   const handleSearchChange2 = e => {
+    setOrderBy(searchFilter2);
     setSearchActive('search2');
     setSearchName2(e.target.value);
+    setSearchName('');
   };
   const handleRequestSort = property => {
     const isAsc = orderBy === property && order === 'asc';
@@ -66,7 +80,7 @@ export default function useRecords({ getters, ueDependencies, data, filteredData
       return a[1] - b[1];
     });
     if (query) {
-      return array.filter(_user => String(_user[searchFilter]).toLowerCase().indexOf(String(query).toLowerCase()) !== -1);
+      return array.filter(_user => String(_user[orderBy]).toLowerCase().indexOf(String(query).toLowerCase()) !== -1);
     }
     return stabilizedThis.map(el => el[0]);
   }
@@ -91,6 +105,7 @@ export default function useRecords({ getters, ueDependencies, data, filteredData
     onPageChange,
     filtered,
     isNotFound,
+    isNotFound2,
     emptyRows,
     handleSearchChange,
     handleSearchChange2,
@@ -99,6 +114,7 @@ export default function useRecords({ getters, ueDependencies, data, filteredData
     searchName2,
     order,
     orderBy,
+    searchActive,
   };
 }
 useRecords.propTypes = {
@@ -107,16 +123,20 @@ useRecords.propTypes = {
 };
 
 function descendingComparator(a, b, orderBy) {
-  if (typeof a[orderBy] === 'string') {
-    if (b[orderBy].toLowerCase() < a[orderBy].toLowerCase()) {
-      return -1;
+  try {
+    if (typeof a[orderBy] === 'string') {
+      if (b[orderBy]?.toLowerCase() < a[orderBy]?.toLowerCase()) {
+        return -1;
+      }
+      if (b[orderBy]?.toLowerCase() > a[orderBy]?.toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    } else if (typeof a[orderBy] === 'number') {
+      return parseFloat(a[orderBy]) - parseFloat(b[orderBy]);
     }
-    if (b[orderBy].toLowerCase() > a[orderBy].toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  } else if (typeof a[orderBy] === 'number') {
-    return parseFloat(a[orderBy]) - parseFloat(b[orderBy]);
+  } catch (error) {
+    console.log(orderBy, error);
   }
 }
 function getComparator(order, orderBy) {

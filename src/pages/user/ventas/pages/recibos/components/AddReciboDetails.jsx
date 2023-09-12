@@ -27,7 +27,7 @@ import { useEffect, useState } from 'react';
 import ProductAddSizesDialog from '../../../../compras/components/product-detail/ProductAddSizesDialog';
 import styled from '@emotion/styled';
 import { v4 as uuid } from 'uuid';
-import Scrollbar from '../../../../../../components/Scrollbar';
+import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
 
 const tableHeadLabels = [
   { id: 'detalle', label: 'Detalle' },

@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import useResponsive from '../../../../../../hooks/useResponsive';
-import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
+import useResponsive from '../../../../hooks/useResponsive';
+import Scrollbar from '../../../../components/scrollbar/Scrollbar';
 
 const tableHeadLabels = [
   { id: 'detalle', label: 'Detalle' },

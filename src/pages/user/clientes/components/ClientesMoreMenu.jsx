@@ -1,30 +1,33 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { MenuItem, IconButton } from '@mui/material';
 
 // components
-import Iconify from '../../../../../components/Iconify';
-import MenuPopover from '../../../../../components/MenuPopover';
+import Iconify from '../../../../components/Iconify';
+import MenuPopover from '../../../../components/MenuPopover';
+
+// Translation module
+import AddEditLabor from './AddEditCliente';
 
 // ----------------------------------------------------------------------
 
-UserMoreMenu.propTypes = {
-  onDelete: PropTypes.func,
-  userName: PropTypes.string,
-};
+export default function ReciboMoreMenu({ onDelete, editInfo }) {
+  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
-export default function UserMoreMenu({ onDelete, userName }) {
-  const [open, setOpen] = useState(null);
+  // Added the translation for the tittle and other translations
 
   const handleOpen = event => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(null);
+    setOpen(false);
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setOpen(false);
   };
 
   const ICON = {
@@ -54,14 +57,27 @@ export default function UserMoreMenu({ onDelete, userName }) {
       >
         <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+          {'eliminar'}
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`/dashboard/clientes/${paramCase(userName)}/edit`}>
+        <MenuItem onClick={() => setOpenDialog(true)}>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit
+          {'editar'}
         </MenuItem>
       </MenuPopover>
+      <AddEditLabor
+        open={openDialog}
+        onClose={() => handleCloseDialog()}
+        title={'Editar registro de fertilización'}
+        edit={true}
+        editInfo={editInfo}
+      />
     </>
   );
 }
+
+ReciboMoreMenu.propTypes = {
+  onDelete: PropTypes.func,
+  editInfo: PropTypes.object,
+  recodId: PropTypes.string,
+};

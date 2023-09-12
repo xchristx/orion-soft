@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // MUI
 import { Alert, LinearProgress, Table, TableContainer, TablePagination } from '@mui/material';
@@ -48,10 +48,11 @@ export default function RecordsLayout({
   handleResetFilter,
   data,
   buttonStartIcon,
+  isLoading,
+  error,
 }) {
   // Added the translation for the tittle and other translations
   const dispatch = useDispatch();
-  const { isLoading, error } = useSelector(state => state.recibos);
 
   return (
     <Page title={pageTitle}>
@@ -164,4 +165,6 @@ RecordsLayout.propTypes = {
   filterChipLabels: PropTypes.object,
   data: PropTypes.array.isRequired,
   buttonStartIcon: PropTypes.node,
+  isLoading: PropTypes.bool,
+  error: PropTypes.any,
 };

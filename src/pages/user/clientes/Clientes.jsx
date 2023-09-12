@@ -1,245 +1,116 @@
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
-import { useTheme } from '@mui/material/styles';
-import {
-  Card,
-  Table,
-  Avatar,
-  Button,
-  Checkbox,
-  TableRow,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  TableContainer,
-  TablePagination,
-} from '@mui/material';
+import { useSelector } from 'react-redux';
+
+import AddEditStaffInfo from './components/AddEditCliente';
+import ClientesTableBody from './components/ClientesTableBody';
+import RecordsLayout from '../../../layouts/dashboard/records/RecordsLayout';
+// utils
+import { TableBody, TableCell, TableRow } from '@mui/material';
+import { resetFilteredData, setFilteredData } from '../../../redux/slices/clientes';
+import useRecords from '../../../hooks/useRecords';
+import { getClientes } from './utils/getClientes';
 import AddIcon from '@mui/icons-material/Add';
-// _mock_
-import { _userList } from '../../../_mock';
-// components
-import Page from '../../../components/Page';
-import Label from '../../../components/Label';
-import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import UserListHead from './components/list/UserListHead';
-import UserMoreMenu from './components/list/UserMoreMenu';
-import UserListToolbar from './components/list/UserListToolbar';
 
-// sections
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
+const headLabel = [
   { id: 'nombre', label: 'Nombre', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'apellido', label: 'Apellido', alignRight: false },
+  { id: 'celular', label: 'Celular', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'tipo', label: 'Tipo de cliente', alignRight: false },
+  { id: 'notas', label: 'Notas', alignRight: false },
+
+  { id: 'moreMenu', label: '', alignRight: false },
+];
+const bcLinks = [
+  { name: 'Inicio', href: '/dashboard/usuario' },
+  { name: 'Clientes', href: '/dashboard/usuario/ventas' },
 ];
 
-// ----------------------------------------------------------------------
-
 export default function Clientes() {
-  const theme = useTheme();
-
-  const [userList, setUserList] = useState(_userList);
-  const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleRequestSort = property => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = checked => {
-    if (checked) {
-      const newSelecteds = userList.map(n => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = name => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilterByName = filterName => {
-    setFilterName(filterName);
-    setPage(0);
-  };
-
-  const handleDeleteUser = userId => {
-    const deleteUser = userList.filter(user => user.id !== userId);
-    setSelected([]);
-    setUserList(deleteUser);
-  };
-
-  const handleDeleteMultiUser = selected => {
-    const deleteUsers = userList.filter(user => !selected.includes(user.name));
-    setSelected([]);
-    setUserList(deleteUsers);
-  };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
-
-  const isNotFound = !filteredUsers.length && Boolean(filterName);
-
-  return (
-    <Page title="Compras: Historial">
-      <Container maxWidth={'lg'}>
-        <HeaderBreadcrumbs
-          heading="Historial de compras"
-          links={[{ name: 'Dashboard', href: '/dashboard/usuario' }, { name: 'CLientes', href: '/dashboard/clientes' }, { name: 'Lista' }]}
-          action={
-            <Button variant="contained" component={RouterLink} to="/dashboard/compras/nuevo" startIcon={<AddIcon />}>
-              Nueva Compra
-            </Button>
-          }
-        />
-
-        <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-            onDeleteUsers={() => handleDeleteMultiUser(selected)}
-          />
-
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
-
-                    return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={isItemSelected} aria-checked={isItemSelected}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
-                          <Typography variant="subtitle2" noWrap>
-                            {name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={userList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(e, page) => setPage(page)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
-      </Container>
-    </Page>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
+  const { data, filteredData, filter, isLoading, error } = useSelector(state => state.clientes);
+  const {
+    open,
+    page,
+    rowsPerPage,
+    filtered,
+    emptyRows,
+    searchName,
+    searchName2,
+    order,
+    orderBy,
+    isNotFound,
+    isNotFound2,
+    handleChangeRowsPerPage,
+    handleClose,
+    handleOpen,
+    onPageChange,
+    handleRequestSort,
+    handleSearchChange,
+    handleSearchChange2,
+    searchActive,
+  } = useRecords({
+    getters: [getClientes],
+    data,
+    filteredData,
+    hasTwoSearch: false,
+    searchFilter: 'celular',
+    searchFilter2: 'nombre',
+    reduxSlice: 'clientes',
+    isLoading,
+    error,
   });
-  if (query) {
-    return array.filter(_user => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map(el => el[0]);
+  const isNotFoundAux = searchActive === 'search1' ? isNotFound : isNotFound2;
+  return (
+    <RecordsLayout
+      // viene del custom hook
+      searchValue={searchName} // estado que se crea en el useRecords
+      searchValue2={searchName2} // estado que se crea en el useRecords
+      handleSearchChange={handleSearchChange} // funcion para la busqueda que viene el useRecords
+      handleSearchChange2={handleSearchChange2} // funcion para la busqueda que viene el useRecords
+      page={page} // pagia ligado al paginado de la table viene del useRecords
+      rowsPerPage={rowsPerPage} // para el paginado de la tabla
+      handleChangeRowsPerPage={handleChangeRowsPerPage} // 'para el paginado de la tabla
+      onPageChange={onPageChange} // para el paginado de la tabla
+      handleOpen={handleOpen} // estado boleano para abrir el modal del formulario
+      handleRequestSort={handleRequestSort} // funcion para el ordenamiento de la tabla, viene del useRecords
+      order={order} // estado para manejar el ordenado de la tabla viene del useRecords
+      orderBy={orderBy} // estado para manejar el ordenado de la tabla viene del useRecords
+      // lo que debes editar de acuero al componente
+      searchInput={true}
+      searchInput2={true}
+      data={data}
+      buttonStartIcon={<AddIcon />}
+      searchPlaceholder={'Buscar por celular'} // placeHolder que tendra el input del buscador
+      searchPlaceholder2={'Buscar por nombre'} // placeHolder que tendra el input del buscador
+      handleFilter={setFilteredData} // funcion para manejar el filtrado de la tabla
+      filterChipLabels={filter} // aqui poner un objeto que tenga esta estructura {name:'string' value:'string'} esto indica que filtro se esta aplicando
+      handleResetFilter={resetFilteredData} // funcion tipo action que viene del store para eliminar el filtro aplicado
+      emptyCondicion={Boolean(!data.length)} // condicion para mostrar en caso de que este la tabla vacia
+      fullCondicion={Boolean(data.length)} // condicion para mostrar en caso de que se tenga datos
+      paginationCount={data.length} // para el paginado de la tabla
+      headTranslate="salesRecordsInputs." // string que identifica que grupo dentro de records usara el i18 para las traducciones
+      pageTitle={'Clientes'} // title que viene en head del html
+      GTLabels={{ buttonLabel: 'Nuevo cliente', bcTitle: 'Clientes' }} // labels para el toolbar
+      bcLinks={bcLinks} // array de links que consumira Los breadcums
+      headLabel={headLabel} // strings que tendran el head de la tabla de contenido, esta ligado al translategroup
+      filterCells={['tipo']} // introducir array de los ids de las colunmas que contendran la funcion de filtrado
+      disableOptions={['email', 'notas']} // array de las columnas que no tendran la opcion de ordenamiento
+      addEditComponent={<AddEditStaffInfo edit={false} open={open} onClose={handleClose} />} // componente que contiene el formulario para agregar nuevas filas
+      isLoading={isLoading}
+      error={error}
+    >
+      <ClientesTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
+      {isNotFoundAux ? (
+        <TableBody>
+          <TableRow>
+            <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+              <SearchNotFound searchQuery={searchName} searchQuery2={searchName2} searchActive={searchActive} />
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      ) : (
+        <></>
+      )}
+    </RecordsLayout>
+  );
 }

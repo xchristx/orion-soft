@@ -30,7 +30,7 @@ const bcLinks = [
 ];
 
 export default function Recibos() {
-  const { data, filteredData, filter } = useSelector(state => state.recibos);
+  const { data, filteredData, filter, isLoading, error } = useSelector(state => state.recibos);
   const {
     open,
     page,
@@ -42,6 +42,8 @@ export default function Recibos() {
     order,
     orderBy,
     isNotFound,
+    isNotFound2,
+    searchActive,
     handleChangeRowsPerPage,
     handleClose,
     handleOpen,
@@ -55,7 +57,13 @@ export default function Recibos() {
     filteredData,
     hasTwoSearch: false,
     searchFilter: 'reciboId',
+    searchFilter2: 'cliente',
+    reduxSlice: 'recibos',
+    isLoading,
+    error,
   });
+  console.log(searchActive);
+  const isNotFoundAux = searchActive === 'search1' ? isNotFound : isNotFound2;
 
   return (
     <RecordsLayout
@@ -74,10 +82,11 @@ export default function Recibos() {
       orderBy={orderBy} // estado para manejar el ordenado de la tabla viene del useRecords
       // lo que debes editar de acuero al componente
       searchInput={true}
-      searchInput2={false}
+      searchInput2={true}
       data={data}
       buttonStartIcon={<AddIcon />}
       searchPlaceholder={'Buscar por No. de recibo'} // placeHolder que tendra el input del buscador
+      searchPlaceholder2={'Buscar por cliente'} // placeHolder que tendra el input del buscador
       handleFilter={setFilteredData} // funcion para manejar el filtrado de la tabla
       filterChipLabels={filter} // aqui poner un objeto que tenga esta estructura {name:'string' value:'string'} esto indica que filtro se esta aplicando
       handleResetFilter={resetFilteredData} // funcion tipo action que viene del store para eliminar el filtro aplicado
@@ -92,13 +101,15 @@ export default function Recibos() {
       filterCells={[]} // introducir array de los ids de las colunmas que contendran la funcion de filtrado
       disableOptions={['adelanto', 'notas', 'detalleVenta', 'saldo', 'total']} // array de las columnas que no tendran la opcion de ordenamiento
       addEditComponent={<AddEditStaffInfo edit={false} open={open} onClose={handleClose} />} // componente que contiene el formulario para agregar nuevas filas
+      isLoading={isLoading}
+      error={error}
     >
       <RecibosTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
-      {isNotFound ? (
+      {isNotFoundAux ? (
         <TableBody>
           <TableRow>
             <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-              <SearchNotFound searchQuery={searchName} />
+              <SearchNotFound searchQuery={searchName} searchActive={searchActive} searchQuery2={searchName2} />
             </TableCell>
           </TableRow>
         </TableBody>

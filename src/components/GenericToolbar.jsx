@@ -79,6 +79,7 @@ export default function GenericToolbar({
             value={searchValue}
             onChange={handleSearchChange}
             placeholder={searchPlaceholder}
+            label={searchPlaceholder}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -94,6 +95,7 @@ export default function GenericToolbar({
             value={searchValue2}
             onChange={handleSearchChange2}
             placeholder={searchPlaceholder2}
+            label={searchPlaceholder2}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

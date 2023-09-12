@@ -44,7 +44,7 @@ import AddReciboDetails from './AddReciboDetails';
 import styled from '@emotion/styled';
 import { addRecibo } from '../../../../../../redux/actions/recibosActions';
 import { DB } from '../../../../../../App';
-import Scrollbar from '../../../../../../components/Scrollbar';
+import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
