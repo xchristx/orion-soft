@@ -6,10 +6,10 @@ import { Box, Radio, Stack, Button, Drawer, Rating, Divider, IconButton, Typogra
 // @types
 import { NAVBAR } from '../../../../../layouts/dashboard/header/config';
 // components
-import Scrollbar from '../../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroup } from '../../../../../components/hook-form';
 import Iconify from '../../../../../components/Iconify';
+import Scrollbar from '../../../../../components/scrollbar/Scrollbar';
 
 // ----------------------------------------------------------------------
 

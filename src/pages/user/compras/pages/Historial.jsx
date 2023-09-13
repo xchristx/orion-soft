@@ -12,7 +12,6 @@ import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Page from '../../../../components/Page';
 import Label from '../../../../components/Label';
-import Scrollbar from '../../../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { HistoryListHead, HistoryListToolbar, HistoryMoreMenu } from '../components/historial';
 
@@ -20,6 +19,7 @@ import { HistoryListHead, HistoryListToolbar, HistoryMoreMenu } from '../compone
 import { useSelector } from 'react-redux';
 import WatchComents from '../components/historial/WatchComents';
 import WatchDetail from '../components/historial/WatchDetail';
+import Scrollbar from '../../../../components/scrollbar/Scrollbar';
 // sections
 
 // ----------------------------------------------------------------------

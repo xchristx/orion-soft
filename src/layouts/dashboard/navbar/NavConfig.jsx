@@ -12,16 +12,16 @@ const navConfig = size => [
     subheader: 'Administración',
     items: [
       // // MANAGEMENT : COMPRAS
-      // {
-      //   title: 'Compras',
-      //   path: '/dashboard/usuario/compras',
-      //   icon: icon('ic_cart', size),
-      //   children: [
-      //     { title: 'nuevo pedido', path: '/dashboard/usuario/compras/nuevo' },
-      //     { title: 'historial', path: '/dashboard/usuario/compras/historial' },
-      //     { title: 'nuevo pedido especial', path: '/dashboard/usuario/compras/especial' },
-      //   ],
-      // },
+      {
+        title: 'Compras',
+        path: '/dashboard/usuario/compras',
+        icon: icon('ic_cart', size),
+        children: [
+          { title: 'nuevo pedido', path: '/dashboard/usuario/compras/nuevo' },
+          { title: 'historial', path: '/dashboard/usuario/compras/historial' },
+          { title: 'nuevo pedido especial', path: '/dashboard/usuario/compras/especial' },
+        ],
+      },
 
       // MANAGEMENT : VENTAS
       {
