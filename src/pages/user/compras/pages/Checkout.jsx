@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { Grid, Card, Button, CardHeader, Typography, Container, Alert } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { deleteCart, getCart, resetCart, setNewHistorialData } from '../../../../redux/slices/product';
+import { deleteCart, getCart, resetCart, setNewHistorialData } from '../../../../redux/slices/compras';
 // components
 import Scrollbar from '../../../../components/Scrollbar';
 import EmptyContent from '../../../../components/EmptyContent';
@@ -26,7 +26,7 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { checkout } = useSelector(state => state.product);
+  const { checkout } = useSelector(state => state.compras);
 
   const { cart, total, subtotal, iva } = checkout;
 

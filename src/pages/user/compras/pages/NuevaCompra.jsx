@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProducts, filterProducts } from '../../../../redux/slices/product';
+import { getProducts, filterProducts } from '../../../../redux/slices/compras';
 // components
 import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
@@ -22,7 +22,7 @@ export default function NuevaCompra() {
 
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { products, sortBy, filters } = useSelector(state => state.product);
+  const { products, sortBy, filters } = useSelector(state => state.compras);
 
   // const filteredProducts = applyFilter(products, sortBy, filters);
   const filteredProducts = products;

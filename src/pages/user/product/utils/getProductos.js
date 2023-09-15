@@ -1,7 +1,7 @@
 import { getDocs, collection } from 'firebase/firestore';
-import { hasError, setData, startLoading } from '../../../../redux/slices/clientes';
-import { clientesFormater } from '../formaters/clientesFormater';
+import { productFormater } from '../formaters/productFormater';
 import { DB } from '../../../../App';
+import { hasError, setData, startLoading } from '../../../../redux/slices/product';
 
 export const getProductos = () => async dispatch => {
   const dataRef = collection(DB, 'productos');
@@ -10,7 +10,7 @@ export const getProductos = () => async dispatch => {
     const docSnap = await getDocs(dataRef);
     let data = [];
     docSnap.forEach(el => {
-      data = [...data, clientesFormater(el.data())];
+      data = [...data, productFormater(el.data())];
     });
     dispatch(setData(data));
   } catch (error) {

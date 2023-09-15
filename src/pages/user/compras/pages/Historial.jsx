@@ -39,7 +39,7 @@ const TABLE_HEAD = [
 
 export default function EcommerceProductList() {
   const theme = useTheme();
-  const { historial, order, orderBy } = useSelector(s => s.product.historial);
+  const { historial, order, orderBy } = useSelector(s => s.compras.historial);
   // const dispatch = useDispatch();
   const [historialList, setHistorialList] = useState(historial);
   const [page, setPage] = useState(0);

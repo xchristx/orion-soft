@@ -18,7 +18,7 @@ import ProductAddSizesDialog from './ProductAddSizesDialog';
 import { Box } from '@mui/system';
 import useResponsive from '../../../../../hooks/useResponsive';
 import { useDispatch } from 'react-redux';
-import { setCantidadProduct } from '../../../../../redux/slices/product';
+import { setCantidadProduct } from '../../../../../redux/slices/compras';
 import { fCurrency } from '../../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------

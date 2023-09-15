@@ -1,25 +1,23 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
 // utils
-import { fCurrency } from '../../../../../utils/formatNumber';
 // components
-import Image from '../../../../../components/Image';
-import { ColorPreview } from '../../../../../components/color-utils';
+import Image from '../../../../components/Image';
+// import { ColorPreview } from '../../../../components/color-utils';
 
 // ----------------------------------------------------------------------
 
-ShopProductCard.propTypes = {
+ProductCard.propTypes = {
   product: PropTypes.object,
 };
 
-export function ShopProductCard({ product }) {
-  const { nombre, img, precio, colores, codigo } = product;
+export function ProductCard({ product }) {
+  const { nombre, img, precio } = product;
 
-  const linkTo = `/dashboard/usuario/compras/producto/${paramCase(codigo)}`;
+  const linkTo = `/dashboard/usuario`;
 
   return (
     <Card>
@@ -37,14 +35,14 @@ export function ShopProductCard({ product }) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colores} />
+          {/* <ColorPreview colors={'cafe'} /> */}
 
           <Stack direction="row" spacing={0.8}>
             <Typography component="span" sx={{ color: 'info.main', fontSize: '0.95rem' }}>
-              {fCurrency(Math.round(precio / 0.93))}
+              {Math.round(precio.facturado / 0.93)}
             </Typography>
 
-            <Typography variant="subtitle1">{fCurrency(precio)}</Typography>
+            <Typography variant="subtitle1">{precio.facturado}</Typography>
           </Stack>
         </Stack>
       </Stack>
