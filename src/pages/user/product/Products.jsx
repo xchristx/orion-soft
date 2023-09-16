@@ -10,10 +10,12 @@ import useRecords from '../../../hooks/useRecords';
 import AddIcon from '@mui/icons-material/Add';
 import SearchNotFound from '../../../components/SearchNotFound';
 import { getProductos } from './utils/getProductos';
+import { getProveedores } from '../proveedores/utils/getProveedores';
 
 const headLabel = [
   { id: 'img', label: 'Foto', alignRight: false },
   { id: 'nombre', label: 'Nombre', alignRight: false },
+  { id: 'proveedor', label: 'Proveedor', alignRight: false },
   { id: 'precioFacturado', label: 'Precio Facturado', alignRight: false },
   { id: 'precioNoFacturado', label: 'Precio No Facturado', alignRight: false },
   { id: 'cantidad', label: 'Cantidad', alignRight: false },
@@ -51,7 +53,7 @@ export default function Productos() {
     handleSearchChange2,
     searchActive,
   } = useRecords({
-    getters: [getProductos],
+    getters: [getProductos, getProveedores],
     data,
     filteredData,
     hasTwoSearch: false,

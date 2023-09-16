@@ -15,13 +15,14 @@ export default function ClientesTableBody({ fRecords, page, rowsPerPage, emptyRo
   return (
     <TableBody>
       {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-        const { img, nombre, precio, cantidad, tallas, tipo, detalles, notas, uid } = row;
+        const { img, nombre, precio, cantidad, tallas, tipo, detalles, notas, uid, proveedor } = row;
         return (
           <TableRow hover key={uid} tabIndex={-1}>
             <TableCell align="center" sx={{ minWidth: { xs: 150, sm: 200 } }}>
               <Box component="img" sx={{ width: 180 }} src={img} alt="asd" />{' '}
             </TableCell>
             <TableCell align="center">{nombre || '---'}</TableCell>
+            <TableCell align="center">{proveedor?.name || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.facturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.noFacturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
             <TableCell align="center">{cantidad.toLocaleString('es-MX') + ' prs.' || '---'}</TableCell>

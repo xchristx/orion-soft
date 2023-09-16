@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 // MUI
-import { Alert, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Slide } from '@mui/material';
+import { Alert, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Box, Slide } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import SaveIcon from '@mui/icons-material/Save';
 import { useTheme } from '@emotion/react';
@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // react -redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { addProducto, editProducto } from '../../../../redux/actions/productActions';
 
@@ -20,6 +20,9 @@ import { addProducto, editProducto } from '../../../../redux/actions/productActi
 import Iconify from '../../../../components/Iconify';
 import { IconButtonAnimate } from '../../../../components/animate/IconButtonAnimate';
 import { FormProvider, RHFSelect, RHFTextField } from '../../../../components/hook-form';
+import ImgCardUpload from './ImgCardUpload';
+import useResponsive from '../../../../hooks/useResponsive';
+import { useSnackbar } from 'notistack';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,7 +31,13 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const fullScreen = useResponsive('down', 'md');
+  const { enqueueSnackbar } = useSnackbar();
 
+  const { data } = useSelector(s => s.proveedores);
+
+  const [imagen, setImagen] = useState([]);
+  const [imagenError, setImagenError] = useState();
   const uid = uuid();
 
   const FormSchema = Yup.object().shape({
@@ -80,11 +89,16 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
     onClose();
   };
   const onSubmit = edit ? onSubmitEdit : onSubmitAdd;
-
+  useEffect(() => {
+    if (imagenError) {
+      enqueueSnackbar('Error al subir la imagen!');
+    }
+  }, [imagenError]);
   return (
     <div>
       <Dialog
         fullWidth
+        fullScreen={fullScreen}
         maxWidth="lg"
         open={Boolean(open)}
         TransitionComponent={Transition}
@@ -106,15 +120,25 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
         <DialogContent>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-            <Grid container spacing={1.5}>
-              <Grid item xs={12} sm={6}>
+            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={1}>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }} gridRow={{ xs: 'span 0', sm: 'span 5' }}>
+                <ImgCardUpload setError={setImagenError} setState={setImagen} images={imagen} />
+              </Box>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }}>
                 <RHFTextField variant="filled" name="nombre" label="Nombre" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFTextField variant="filled" name="apellido" label="Apellido" />
-              </Grid>
+              </Box>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }}>
+                <RHFSelect variant="filled" name="proveedor" label="Proveedor">
+                  <option></option>
+                  {data.map(el => (
+                    <option key={el.uid} value={el.nombre}>
+                      {el.nombre?.toUpperCase()}
+                    </option>
+                  ))}
+                </RHFSelect>
+              </Box>
 
-              <Grid item xs={12} sm={6}>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }}>
                 <RHFTextField
                   variant="filled"
                   name="celular"
@@ -124,25 +148,15 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
                     endAdornment: <WhatsAppIcon />,
                   }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              </Box>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }}>
                 <RHFTextField variant="filled" name="email" label="email" type="email" />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} sm={6}>
-                <RHFSelect variant="filled" name="tipo" label="Tipo de cliente">
-                  <option></option>
-                  {['EMPRESA', 'USUARIO'].map((el, i) => (
-                    <option key={i} value={el}>
-                      {el}
-                    </option>
-                  ))}
-                </RHFSelect>
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              <Box gridColumn={{ xs: 'span 12', sm: 'span 6' }}>
                 <RHFTextField variant="filled" name="notas" label="Notas/comentarios" />
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </FormProvider>
         </DialogContent>
         <DialogActions>

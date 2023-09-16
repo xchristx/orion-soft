@@ -9,8 +9,7 @@ import { Box, Grid, Stack } from '@mui/material';
 import { ColorPreview } from '../../../../components/color-utils';
 
 export default function DetallesList({ detalles }) {
-  const { colores, plantillaArmar, plantillaInterna, lengueta, otros, acero, cuero, goma, modelo, aleteado, forro, planchaMetalica } =
-    detalles;
+  const { colores, plantillaArmar, plantillaInterna, lengueta, otros, acero, cuero, goma, aleteado, forro, planchaMetalica } = detalles;
 
   const lista = [
     {
@@ -44,8 +43,8 @@ export default function DetallesList({ detalles }) {
       icon: 'fluent-emoji-high-contrast:footprints',
     },
     {
-      nombre: modelo,
-      mostrar: Boolean(modelo),
+      nombre: lengueta,
+      mostrar: Boolean(lengueta),
       secondary: 'Lengueta',
       icon: 'fluent-emoji-high-contrast:hiking-boot',
     },
@@ -85,9 +84,9 @@ export default function DetallesList({ detalles }) {
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', display: 'flex', justifyContent: 'center' }}>
       <Grid container spacing={1}>
         {lista.map(
-          el =>
+          (el, i) =>
             el.mostrar && (
-              <Grid item xs={12} md={6} key={el.nombre}>
+              <Grid item xs={12} md={6} key={i}>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar>
@@ -110,7 +109,7 @@ export default function DetallesList({ detalles }) {
               <Box component="span" sx={{ fontWeight: 600 }}>
                 Colores
               </Box>
-              <ColorPreview colors={['#BD1414', '#000']} />
+              <ColorPreview colors={colores} />
             </Stack>
           </ListItem>
         </Grid>
