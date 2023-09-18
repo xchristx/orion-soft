@@ -54,7 +54,7 @@ export const ProductDetalleDialog = ({ detalleVenta, tallas }) => {
 
   return (
     <div>
-      <Chip color="info" onClick={handleClickOpen} label="ver" />
+      <Chip color="primary" onClick={handleClickOpen} label="ver" />
 
       <Dialog fullScreen={isMobile} fullWidth open={open} onClose={() => setOpen(false)} aria-labelledby="responsive-dialog-title">
         <DialogTitle id="responsive-dialog-title">{'Ver Detalles'}</DialogTitle>

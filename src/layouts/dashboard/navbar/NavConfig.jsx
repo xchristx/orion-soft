@@ -40,10 +40,7 @@ const navConfig = size => [
         title: 'Inventario',
         path: '/dashboard/usuario/inventario/productos',
         icon: icon('ic_inventory', size),
-        children: [
-          { title: 'nuevo producto', path: '/dashboard/usuario/inventario/nuevo' },
-          { title: 'productos', path: '/dashboard/usuario/inventario/productos' },
-        ],
+        children: [{ title: 'productos', path: '/dashboard/usuario/inventario/productos' }],
       },
 
       { title: 'Clientes', path: '/dashboard/usuario/clientes', icon: icon('ic_user', size) },

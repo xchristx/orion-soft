@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { TableBody, TableCell, TableRow } from '@mui/material';
+import { Chip, TableBody, TableCell, TableRow } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import StaffInfoMoreMenu from './ProductosMoreMenu';
 import { deleteProducto } from '../../../../redux/actions/productActions';
@@ -54,7 +54,9 @@ export default function ClientesTableBody({ fRecords, page, rowsPerPage, emptyRo
             <TableCell align="center">{proveedor?.nombre || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.facturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.noFacturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
-            <TableCell align="center">{cantidad.toLocaleString('es-MX') + ' prs.' || '---'}</TableCell>
+            <TableCell align="center">
+              <Chip color={cantidad > 5 ? 'info' : 'error'} label={cantidad.toLocaleString('es-MX') + ' prs.' || '---'} />
+            </TableCell>
             <TableCell align="center">{tipo || '---'}</TableCell>
             <TableCell align="center">
               <ProductDetalleDialog detalleVenta={detalles} tallas={tallas} />
