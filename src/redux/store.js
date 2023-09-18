@@ -18,8 +18,8 @@ import createMigrate from 'redux-persist/es/createMigrate';
 const rootConfig = {
   key: 'root',
   storage,
-  version: 1,
-  blackList: ['product'],
+  version: import.meta.env.VITE_YVY_LOCALSTORAGE_VERSION,
+  blackList: [],
   migrate: createMigrate({
     [import.meta.env.VITE_YVY_LOCALSTORAGE_VERSION]: state => {
       return undefined;
