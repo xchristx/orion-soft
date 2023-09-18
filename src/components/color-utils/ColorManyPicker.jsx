@@ -47,11 +47,11 @@ export default function ColorManyPicker({ colors, onChangeColor, sx, ...other })
                     position: 'absolute',
                     boxShadow: '4px 4px 8px 0 currentColor',
                   },
-                  '& svg': { width: 12, height: 12, color: 'common.white' },
+                  '& svg': { width: 20, height: 20, color: 'red' },
                   ...(isWhite && {
                     border: theme => `solid 1px ${theme.palette.divider}`,
                     boxShadow: theme => `4px 4px 8px 0 ${theme.palette.grey[500_24]}`,
-                    '& svg': { width: 12, height: 12, color: 'common.black' },
+                    '& svg': { width: 20, height: 20, color: 'common.black' },
                   }),
                 }}
               />
@@ -78,8 +78,8 @@ function IconColor({ sx, ...other }) {
   return (
     <Box
       sx={{
-        width: 20,
-        height: 20,
+        width: 30,
+        height: 30,
         display: 'flex',
         borderRadius: '50%',
         position: 'relative',

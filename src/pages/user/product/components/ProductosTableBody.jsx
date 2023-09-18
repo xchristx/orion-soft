@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
-import { Box, TableBody, TableCell, TableRow } from '@mui/material';
+import { TableBody, TableCell, TableRow } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import StaffInfoMoreMenu from './ProductosMoreMenu';
 import { deleteProducto } from '../../../../redux/actions/productActions';
 import { ProductDetalleDialog } from './ProductDetalleDialog';
+import ImageGallery from 'react-image-gallery';
+import useResponsive from '../../../../hooks/useResponsive';
 
 export default function ClientesTableBody({ fRecords, page, rowsPerPage, emptyRows }) {
   const dispatch = useDispatch();
+  const isDesktop = useResponsive('up', 'lg');
 
   const handleDelete = async id => {
     dispatch(deleteProducto(id));
@@ -15,14 +18,40 @@ export default function ClientesTableBody({ fRecords, page, rowsPerPage, emptyRo
   return (
     <TableBody>
       {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-        const { img, nombre, precio, cantidad, tallas, tipo, detalles, notas, uid, proveedor } = row;
+        const { img, nombre, precio, cantidad, tallas, tipo, detalles, uid, proveedor } = row;
+        const galleryImages = img.length
+          ? img.map(el => ({
+              original: el.uploadInfo?.secure_url,
+              thumbnail: el.uploadInfo?.thumbnail_url,
+              originalWidth: '150px',
+              originalHeight: '150px',
+              thumbnailHeight: '50px',
+              thumbnailWidth: '50px',
+            }))
+          : [
+              {
+                original: '/assets/predeterminado.png',
+                thumbnail: '/assets/predeterminado.png',
+                originalWidth: '150px',
+                originalHeight: '150px',
+                thumbnailHeight: '50px',
+                thumbnailWidth: '20px',
+              },
+            ];
         return (
           <TableRow hover key={uid} tabIndex={-1}>
-            <TableCell align="center" sx={{ minWidth: { xs: 150, sm: 200 } }}>
-              <Box component="img" sx={{ width: 180 }} src={img} alt="asd" />{' '}
+            <TableCell align="center" sx={{ width: { xs: 150, sm: 250 } }}>
+              <ImageGallery
+                items={galleryImages}
+                showThumbnails={false}
+                showFullscreenButton={false}
+                showPlayButton={false}
+                showNav={isDesktop}
+                autoPlay={isDesktop}
+              />
             </TableCell>
             <TableCell align="center">{nombre || '---'}</TableCell>
-            <TableCell align="center">{proveedor?.name || '---'}</TableCell>
+            <TableCell align="center">{proveedor?.nombre || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.facturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
             <TableCell align="center">{parseFloat(precio.noFacturado).toLocaleString('es-MX') + ' bs.' || '---'}</TableCell>
             <TableCell align="center">{cantidad.toLocaleString('es-MX') + ' prs.' || '---'}</TableCell>
@@ -30,7 +59,6 @@ export default function ClientesTableBody({ fRecords, page, rowsPerPage, emptyRo
             <TableCell align="center">
               <ProductDetalleDialog detalleVenta={detalles} tallas={tallas} />
             </TableCell>
-            <TableCell align="center">{notas || '---'}</TableCell>
 
             <TableCell>
               <StaffInfoMoreMenu onDelete={() => handleDelete(uid)} editInfo={row} />

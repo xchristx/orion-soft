@@ -13,6 +13,7 @@ export const CloudinaryUploadWidget = ({ setState, setError }) => {
         cloudName: 'dw8jw0zhx',
         uploadPreset: 'orionsoft',
         clientAllowedFormats: ['jpg', 'png'],
+        sources: ['local'],
       },
       function (error, result) {
         if (result.info.files) setState(prev => result.info.files.concat(prev));

@@ -9,13 +9,13 @@ import { Box, Grid, Stack } from '@mui/material';
 import { ColorPreview } from '../../../../components/color-utils';
 
 export default function DetallesList({ detalles }) {
-  const { colores, plantillaArmar, plantillaInterna, lengueta, otros, acero, cuero, goma, aleteado, forro, planchaMetalica } = detalles;
+  const { colores, plantillaArmar, plantillaInterna, lengueta, otros, puntera, cuero, goma, aleteado, forro, plancha } = detalles;
 
   const lista = [
     {
-      nombre: 'Punta de acero',
-      mostrar: Boolean(acero),
-      secondary: 'EN-12568',
+      nombre: puntera,
+      mostrar: Boolean(puntera),
+      secondary: 'Puntera',
       icon: 'streamline:interface-security-shield-4-shield-protection-security-defend-crime-war-cover',
     },
     {
@@ -62,7 +62,7 @@ export default function DetallesList({ detalles }) {
     },
     {
       nombre: 'Plancha metálica',
-      mostrar: Boolean(planchaMetalica),
+      mostrar: Boolean(plancha),
       secondary: 'Acero',
       icon: 'game-icons:metal-bar',
     },

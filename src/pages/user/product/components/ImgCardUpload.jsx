@@ -3,7 +3,6 @@ import { Box, Card, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CloudinaryUploadWidget } from '../../../../components/CloudinaryUploadWidget';
 import ImageGallery from 'react-image-gallery';
-import 'react-image-gallery/styles/css/image-gallery.css';
 
 export default function ImgCardUpload({ setState, setError, images }) {
   const galleryImages = images.length
@@ -12,6 +11,8 @@ export default function ImgCardUpload({ setState, setError, images }) {
         thumbnail: el.uploadInfo?.thumbnail_url,
         originalWidth: '300px',
         originalHeight: '300px',
+        thumbnailHeight: '50px',
+        thumbnailWidth: '50px',
       }))
     : [
         {
@@ -19,6 +20,8 @@ export default function ImgCardUpload({ setState, setError, images }) {
           thumbnail: '/assets/predeterminado.png',
           originalWidth: '300px',
           originalHeight: '300px',
+          thumbnailHeight: '50px',
+          thumbnailWidth: '20px',
         },
       ];
 
@@ -27,7 +30,7 @@ export default function ImgCardUpload({ setState, setError, images }) {
       <Box my={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Card sx={{ position: 'relative', margin: 'auto' }}>
           <Box sx={{ left: 5, top: 5, maxWidth: { xs: 250, sm: 300, md: 400, lg: 500 } }}>
-            <ImageGallery items={galleryImages} showThumbnails />
+            <ImageGallery items={galleryImages} showThumbnails showFullscreenButton={false} showPlayButton={false} />
           </Box>
           <Box sx={{ position: 'absolute', top: 5, left: 5 }}>
             <CloudinaryUploadWidget setError={setError} setState={setState} />

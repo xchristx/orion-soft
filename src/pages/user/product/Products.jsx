@@ -21,8 +21,6 @@ const headLabel = [
   { id: 'cantidad', label: 'Cantidad', alignRight: false },
   { id: 'tipo', label: 'Tipo', alignRight: false },
   { id: 'detalles', label: 'Detalles', alignRight: false },
-  { id: 'notas', label: 'Notas', alignRight: false },
-
   { id: 'moreMenu', label: '', alignRight: false },
 ];
 const bcLinks = [
