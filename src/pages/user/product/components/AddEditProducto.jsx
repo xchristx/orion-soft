@@ -199,7 +199,7 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
       precio: { facturado: parseInt(formData.facturado), noFacturado: parseInt(formData.noFacturado) },
       img: imagen,
       tallas: sizes.filter(el => el.value > 0),
-      uid,
+      uid: editInfo.uid,
       descripcion: formData.descripcion,
       cantidad: cantidad.value,
       proveedor: data.find(el => el.uid === formData.proveedor),

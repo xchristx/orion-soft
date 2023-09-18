@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleRequestSortHistorial } from '../../../../../redux/slices/product';
+import { handleRequestSortHistorial } from '../../../../../redux/slices/compras';
 
 // ----------------------------------------------------------------------
 

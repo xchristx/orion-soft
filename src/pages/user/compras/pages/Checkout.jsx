@@ -9,7 +9,6 @@ import { Grid, Card, Button, CardHeader, Typography, Container, Alert } from '@m
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { deleteCart, getCart, resetCart, setNewHistorialData } from '../../../../redux/slices/compras';
 // components
-import Scrollbar from '../../../../components/Scrollbar';
 import EmptyContent from '../../../../components/EmptyContent';
 import Iconify from '../../../../components/Iconify';
 import Page from '../../../../components/Page';
@@ -19,6 +18,7 @@ import CheckoutProductList from '../components/checkout/CheckoutProductList';
 import useIsMountedRef from '.././../../../hooks/useIsMountedRef';
 // components
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import Scrollbar from '../../../../components/scrollbar/Scrollbar';
 
 // ----------------------------------------------------------------------
 
