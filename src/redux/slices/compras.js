@@ -3,7 +3,6 @@ import sum from 'lodash/sum';
 // import { historialCompras } from '../../_mock/historialCompras';
 // utils
 // import axios from '../../utils/axios';
-import { products } from '../../_mock/product';
 //
 
 // ----------------------------------------------------------------------
@@ -11,7 +10,7 @@ import { products } from '../../_mock/product';
 const initialState = {
   isLoading: false,
   error: null,
-  products,
+  products: [],
   product: {},
   sortBy: null,
   filters: {
@@ -252,7 +251,7 @@ export const {
 // };
 export const getProducts = () => dispatch => {
   dispatch(slice.actions.startLoading);
-  dispatch(slice.actions.getProductsSuccess(products));
+  dispatch(slice.actions.getProductsSuccess([]));
 };
 export const getProduct = name => dispatch => {
   dispatch(slice.actions.startLoading());

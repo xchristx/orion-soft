@@ -47,13 +47,13 @@ export default function Router() {
             <Route index element={<Ventas />} />
             <Route path="recibos" element={<Recibos />} />
           </Route>
-          <Route path="compras">
+          {/* <Route path="compras">
             <Route path="nuevo" element={<NuevaCompra />} />
             <Route path="producto/:nombre" element={<ProductDetails />} />
             <Route path="historial" element={<Historial />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="especial" element={<NuevaCompraEspecial />} />
-          </Route>
+          </Route> */}
           <Route path="clientes" element={<Clientes />} />
           <Route path="proveedores" element={<Proveedores />} />
           <Route path="inventario">

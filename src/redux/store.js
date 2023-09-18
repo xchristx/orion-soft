@@ -8,7 +8,6 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import { combineReducers } from 'redux';
 import authSlice from './slices/auth';
 import product from './slices/product';
-import compras from './slices/compras';
 import drawerSlice from './slices/drawer';
 import settings from './slices/settings';
 import recibos from './slices/recibos';
@@ -36,7 +35,6 @@ export const rootReducer = combineReducers({
   recibos,
   clientes,
   proveedores,
-  compras,
 });
 
 const store = configureStore({
