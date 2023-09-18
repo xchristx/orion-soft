@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../../../redux/slices/product';
+import { getProducts } from '../../../../redux/slices/compras';
 // routes
 // hooks
 // components
@@ -17,7 +17,7 @@ const NuevaCompraEspecial = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { nombre } = useParams();
-  const { products } = useSelector(state => state.product);
+  const { products } = useSelector(state => state.compras);
   const isEdit = pathname.includes('edit');
   const currentProduct = products.find(product => paramCase(product.codigo) === nombre);
 

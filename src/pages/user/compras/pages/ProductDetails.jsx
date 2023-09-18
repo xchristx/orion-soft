@@ -7,7 +7,7 @@ import { Box, Card, Grid, Divider, Container, Typography } from '@mui/material';
 import { TabContext, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProduct, addCart } from '../../../../redux/slices/product';
+import { getProduct, addCart } from '../../../../redux/slices/compras';
 
 // components
 import Page from '../../../../components/Page';
@@ -58,7 +58,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 export default function ProductDetails() {
   const dispatch = useDispatch();
   const { nombre } = useParams();
-  const { product, error, checkout } = useSelector(state => state.product);
+  const { product, error, checkout } = useSelector(state => state.compras);
 
   useEffect(() => {
     dispatch(getProduct(nombre));

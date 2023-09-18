@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, MenuItem, Typography } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../../redux/store';
-import { sortByProducts } from '../../../../../redux/slices/product';
+import { sortByProducts } from '../../../../../redux/slices/compras';
 // components
 import Iconify from '../../../../../components/Iconify';
 import MenuPopover from '../../../../../components/MenuPopover';
@@ -35,7 +35,7 @@ function renderLabel(label) {
 export function ShopProductSort() {
   const dispatch = useDispatch();
 
-  const { sortBy } = useSelector(state => state.product);
+  const { sortBy } = useSelector(state => state.compras);
 
   const [open, setOpen] = useState(null);
 
