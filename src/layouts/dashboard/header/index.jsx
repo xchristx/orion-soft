@@ -19,6 +19,7 @@ import { IconButtonAnimate } from '../../../components/animate/IconButtonAnimate
 // import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import MuiSwitch from './MuiSwitch';
+import SvgColor from '../../../components/svg-color/SvgColor';
 // import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -71,7 +72,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           px: { lg: 5 },
         }}
       >
-        {isDesktop && verticalLayout && <Box component="img" src="/assets/toro.png" sx={{ mr: 2.5, height: 10 }} />}
+        {isDesktop && verticalLayout && <SvgColor src={`/assets/orion-logo.svg`} sx={{ height: 200, width: 200, m: '0 auto' }} />}
 
         {!isDesktop && (
           <IconButtonAnimate onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>

@@ -7,6 +7,7 @@ import useResponsive from '../../hooks/useResponsive';
 // components
 import Page from '../../components/Page';
 import { RegisterForm } from '../../components/register-form';
+import SvgColor from '../../components/svg-color/SvgColor';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +62,6 @@ export default function Register() {
     <Page title="Register">
       <RootStyle>
         <HeaderStyle>
-          <img height="70px" src="/assets/orion-logo.jpg" alt="ivy-logo" />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               ¿Ya tienes una cuenta?{' '}
@@ -74,7 +74,7 @@ export default function Register() {
 
         {mdUp && (
           <SectionStyle>
-            <Box component="img" src="/assets/toro.png" alt="login" maxHeight={500} />
+            <SvgColor src={`/assets/orion-logo.svg`} sx={{ height: 200, width: 200, m: '0 auto' }} />
           </SectionStyle>
         )}
 

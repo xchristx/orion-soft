@@ -7,6 +7,7 @@ import useResponsive from '../../hooks/useResponsive';
 // components
 import LoginForm from '../../components/loginForm/LoginForm';
 import { Link as RouterLink } from 'react-router-dom';
+import SvgColor from '../../components/svg-color/SvgColor';
 
 // ----------------------------------------------------------------------
 
@@ -48,16 +49,14 @@ export default function LoginPage() {
       </Helmet>
 
       <StyledRoot>
-        <Box sx={{ px: 2.5, py: 2, position: 'fixed', objectFit: 'cover' }}>
-          <img height="70px" src="/assets/orion-logo.jpg" alt="ivy-logo" />
-        </Box>
+        <Box sx={{ px: 2.5, py: 2, position: 'fixed', objectFit: 'cover' }}></Box>
 
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hola, bienvenido
             </Typography>
-            <Box component="img" src="/assets//toro.png" alt="login" maxHeight={500} />
+            <SvgColor src={`/assets/orion-logo.svg`} sx={{ height: 200, width: 200, m: '0 auto' }} />
           </StyledSection>
         )}
 

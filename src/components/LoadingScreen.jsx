@@ -5,6 +5,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 //
 import ProgressBar from './ProgressBar';
+import SvgColor from './svg-color/SvgColor';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,7 @@ export default function LoadingScreen({ isDashboard, ...other }) {
               repeat: Infinity,
             }}
           >
-            <Box component="img" sx={{ height: 50 }} src="/assets/toro.png" />
+            <SvgColor src={`/assets/orion-logo.svg`} sx={{ height: 80, width: 80, m: '0 auto' }} />
           </m.div>
 
           <Box

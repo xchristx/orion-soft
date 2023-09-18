@@ -20,6 +20,7 @@ import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
 import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
+import SvgColor from '../../../components/svg-color/SvgColor';
 
 // ----------------------------------------------------------------------
 
@@ -75,8 +76,8 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box component="img" src="/assets/orion-logo.jpg" sx={{ height: isCollapse ? 50 : 80, m: '0 auto' }} />
-
+          {/* <Box component="img" src="/assets/orion-logo.jpg" sx={{ height: isCollapse ? 50 : 80, m: '0 auto' }} /> */}
+          <SvgColor src={`/assets/orion-logo.svg`} sx={{ height: isCollapse ? 60 : 200, width: isCollapse ? 60 : 200, m: '0 auto' }} />
           {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={() => dispatch(handleToggleCollapse())} collapseClick={collapseClick} />
           )}
