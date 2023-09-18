@@ -36,6 +36,7 @@ export default function GenericToolbar({
   filterChipLabels,
   handleResetFilter,
   buttonStartIcon,
+  disabledSearch
 }) {
   return (
     <>
@@ -80,6 +81,7 @@ export default function GenericToolbar({
             onChange={handleSearchChange}
             placeholder={searchPlaceholder}
             label={searchPlaceholder}
+            disabled={disabledSearch}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -135,4 +137,5 @@ GenericToolbar.propTypes = {
   handleResetFilter: PropTypes.func,
   filterChipLabels: PropTypes.object,
   buttonStartIcon: PropTypes.node,
+  disabledSearch: PropTypes.bool
 };

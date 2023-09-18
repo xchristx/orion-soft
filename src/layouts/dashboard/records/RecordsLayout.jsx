@@ -76,6 +76,7 @@ export default function RecordsLayout({
         filterChipLabels={filterChipLabels}
         handleResetFilter={() => dispatch(handleResetFilter())}
         buttonStartIcon={buttonStartIcon}
+        disabledSearch={!data.length}
       />
 
       {addEditComponent}
