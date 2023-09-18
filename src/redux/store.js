@@ -13,23 +13,23 @@ import settings from './slices/settings';
 import recibos from './slices/recibos';
 import clientes from './slices/clientes';
 import proveedores from './slices/proveedores';
+import createMigrate from 'redux-persist/es/createMigrate';
 
 const rootConfig = {
   key: 'root',
   storage,
   version: 1,
   blackList: ['product'],
+  migrate: createMigrate({
+    [import.meta.env.VITE_YVY_LOCALSTORAGE_VERSION]: state => {
+      return undefined;
+    },
+  }),
 };
-const productPersistConfig = {
-  key: 'product',
-  storage,
-  whitelist: ['sortBy', 'checkout'],
-  version: 1,
-  blackList: ['root'],
-};
+
 export const rootReducer = combineReducers({
   authSlice,
-  product: persistReducer(productPersistConfig, product),
+  product,
   drawerSlice,
   settings,
   recibos,
