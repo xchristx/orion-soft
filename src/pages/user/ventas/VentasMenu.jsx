@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { ModuleCards } from '../../../components/module-cards';
 import VentasNavConfig from './utils/VentasNavConfig';
 
-const Ventas = () => {
+const VentasMemu = () => {
   return (
     <>
       <Helmet>
@@ -17,4 +17,4 @@ const Ventas = () => {
   );
 };
 
-export default Ventas;
+export default VentasMemu;

@@ -7,7 +7,6 @@ import AuthGuard from '../guards/AuthGuard';
 // Components
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardUser from '../pages/user/mainview/Mainview';
-import Recibos from '../pages/user/ventas/pages/recibos/Recibos';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +43,8 @@ export default function Router() {
         <Route path="usuario">
           <Route index element={<DashboardUser />} />
           <Route path="ventas">
-            <Route index element={<Ventas />} />
+            <Route index element={<VentasMemu />} />
+            <Route path="historial" element={<Ventas />} />
             <Route path="recibos" element={<Recibos />} />
           </Route>
           {/* <Route path="compras">
@@ -76,15 +76,24 @@ export default function Router() {
     </Routes>
   );
 }
+
+// Ventas
+const VentasMemu = Loadable(lazy(() => import('../pages/user/ventas/VentasMenu')));
+const Ventas = Loadable(lazy(() => import('../pages/user/ventas/pages/historial/HistorialVentas')));
+const Recibos = Loadable(lazy(() => import('../pages/user/ventas/pages/recibos/Recibos')));
+
+// auth
 const LoginPage = Loadable(lazy(() => import('../pages/auth/LoginPage')));
-const Page404 = Loadable(lazy(() => import('../pages/Page404')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
-const Ventas = Loadable(lazy(() => import('../pages/user/ventas/Ventas')));
-const NuevaCompra = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompra')));
+// Compras
+// const NuevaCompra = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompra')));
+// const Historial = Loadable(lazy(() => import('../pages/user/compras/pages/Historial')));
+// const ProductDetails = Loadable(lazy(() => import('../pages/user/compras/pages/ProductDetails')));
+// const Checkout = Loadable(lazy(() => import('../pages/user/compras/pages/Checkout')));
+// const NuevaCompraEspecial = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompraEspecial')));
+
 const Clientes = Loadable(lazy(() => import('../pages/user/clientes/Clientes')));
 const Proveedores = Loadable(lazy(() => import('../pages/user/proveedores/Proveedores')));
 const Products = Loadable(lazy(() => import('../pages/user/product/Products')));
-const Historial = Loadable(lazy(() => import('../pages/user/compras/pages/Historial')));
-const ProductDetails = Loadable(lazy(() => import('../pages/user/compras/pages/ProductDetails')));
-const Checkout = Loadable(lazy(() => import('../pages/user/compras/pages/Checkout')));
-const NuevaCompraEspecial = Loadable(lazy(() => import('../pages/user/compras/pages/NuevaCompraEspecial')));
+
+const Page404 = Loadable(lazy(() => import('../pages/Page404')));
