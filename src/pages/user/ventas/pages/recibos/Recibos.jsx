@@ -62,7 +62,6 @@ export default function Recibos() {
     isLoading,
     error,
   });
-  console.log(searchActive);
   const isNotFoundAux = searchActive === 'search1' ? isNotFound : isNotFound2;
 
   return (

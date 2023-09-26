@@ -3,12 +3,13 @@ import { TableBody, TableCell, TableRow } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import StaffInfoMoreMenu from './ReciboMoreMenu';
 import { DetalleVentaDialog } from './DetalleVentaDialog';
+import { deleteRecibo } from '../../../../../../redux/actions/recibosActions';
 
 export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows }) {
   const dispatch = useDispatch();
 
   const handleDelete = async id => {
-    dispatch(console.log(id));
+    dispatch(deleteRecibo(id));
   };
 
   return (

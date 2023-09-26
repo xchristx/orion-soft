@@ -84,7 +84,6 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
   const [isEmptySizes, setIsEmptySizes] = useState(false);
 
   const [sizes, setSizes] = useState([]);
-  const [tallasDisponibles, setTallasDisponibles] = useState([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
 
   const [precio, setPrecio] = useState({ value: '', hasError: null, errMessage: '' });
 
@@ -180,17 +179,6 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
     if (detalleProd.hasError === false && precio.hasError === false && cantidad.hasError === false) setHasErros(false);
   }, [validarFomr]);
 
-  useEffect(() => {
-    setLoading(true);
-    if (detalleProd.value && procedenciaProductos === 'stock') {
-      setTallasDisponibles(detalleProd.value.tallas);
-    } else setTallasDisponibles([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, [procedenciaProductos, detalleProd.value]);
-
-  console.log(detalleProd);
   return (
     <>
       <Button fullWidth variant="outlined" onClick={handleClickOpen}>
@@ -354,12 +342,12 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                   <Grid item xs={12} sm={3}>
                     <ProductAddSizesDialog
                       disabled={Boolean(!detalleProd.value)}
+                      procedenciaProductos={procedenciaProductos}
                       open={openSizesDialog}
                       setOpen={setOpenSizesDialog}
                       isEmptySizes={isEmptySizes}
                       setIsEmptySizes={setIsEmptySizes}
                       sizes={sizes}
-                      tallasDisponibles={tallasDisponibles}
                       setSizes={setSizes}
                       buttonVariant="text"
                     />

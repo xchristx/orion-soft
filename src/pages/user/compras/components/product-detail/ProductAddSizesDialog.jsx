@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,22 +21,13 @@ import Iconify from '../../../../../components/Iconify';
 import useResponsive from '../../../../../hooks/useResponsive';
 import { useState } from 'react';
 
-export default function ProductAddSizesDialog({
-  open,
-  setOpen,
-  sizes,
-  isEmptySizes,
-  setSizes,
-  buttonVariant = 'contained',
-  disabled = false,
-  tallasDisponibles,
-}) {
+export default function ProductAddSizesDialog({ open, setOpen, sizes, isEmptySizes, setSizes, buttonVariant = 'contained' }) {
   const isMobile = useResponsive('down', 'md');
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const [defaultSizes, setDefaultSizes] = useState(tallasDisponibles.map(el => ({ ...el, value: 0 })));
+  const [defaultSizes, setDefaultSizes] = useState(sizes);
 
   const handleClose = cancel => {
     if (cancel) setSizes(defaultSizes);
@@ -45,7 +35,7 @@ export default function ProductAddSizesDialog({
     setOpen(false);
   };
   const handleReset = () => {
-    setSizes(tallasDisponibles.map(el => ({ ...el, value: 0 })));
+    setSizes([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
   };
 
   const handleIncreaseItem = key => {
@@ -78,7 +68,7 @@ export default function ProductAddSizesDialog({
 
   return (
     <>
-      <Button sx={{ my: 2 }} variant={buttonVariant} onClick={handleClickOpen} disabled={disabled}>
+      <Button sx={{ my: 2 }} variant={buttonVariant} onClick={handleClickOpen}>
         {isEmptySizes ? 'Editar Tallas' : 'Añadir Tallas'}
       </Button>
       {isEmptySizes && (
@@ -102,7 +92,6 @@ export default function ProductAddSizesDialog({
                 <TableRow>
                   <TableCell align="center">Talla</TableCell>
                   <TableCell align="center">Cantidad</TableCell>
-                  <TableCell align="center">Cantidad maxima</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -111,15 +100,13 @@ export default function ProductAddSizesDialog({
                     <TableCell>{el.size}</TableCell>
                     <TableCell>
                       <Incrementer
-                        available={tallasDisponibles.find(ele => el.size === ele.size).value}
+                        available={200}
                         quantity={el.value}
                         onIncrementQuantity={() => handleIncreaseItem(el.size)}
                         onDecrementQuantity={() => handleDecrementItem(el.size)}
                         handleChangeInput={e => handleChangeInput(e, el.size)}
                       />
                     </TableCell>
-                    <Chip label={`Disponible ${tallasDisponibles.find(ele => el.size === ele.size).value}`} />
-                    <TableCell></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -145,10 +132,8 @@ ProductAddSizesDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   sizes: PropTypes.array.isRequired,
-  tallasDisponibles: PropTypes.array.isRequired,
   isEmptySizes: PropTypes.bool,
   setSizes: PropTypes.func,
-  disabled: PropTypes.bool,
   buttonVariant: PropTypes.string,
 };
 function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity, handleChangeInput }) {
