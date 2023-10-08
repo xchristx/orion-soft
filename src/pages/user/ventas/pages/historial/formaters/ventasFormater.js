@@ -1,6 +1,6 @@
-export const recibosFormater = ({
+export const ventasFormater = ({
   metodoPago,
-  reciboId,
+  ventaId,
   idRecibo,
   fecha,
   cliente,
@@ -12,7 +12,7 @@ export const recibosFormater = ({
   cantidadTotal,
 }) => {
   return {
-    reciboId: reciboId.id,
+    ventaId: ventaId.id,
     idRecibo,
     fecha,
     cliente,

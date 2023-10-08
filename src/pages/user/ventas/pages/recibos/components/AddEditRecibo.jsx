@@ -112,7 +112,10 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const [totales, setTotales] = useState({});
+  const [totales, setTotales] = useState({
+    cantidadTotal: editInfo ? editInfo.cantidadTotal : '',
+    montoTotal: editInfo ? editInfo.montoTotal : '',
+  });
   const [reciboId, setReciboId] = useState(null);
 
   const uid = uuid();
@@ -171,6 +174,10 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
     const dataToPost = {
       ...data,
       fecha: new Date(data.fecha).getTime(),
+      reciboId: { id: editInfo.reciboId },
+      cantidadTotal: totales.cantidadTotal,
+      montoTotal: totales.montoTotal,
+      uid,
     };
 
     dispatch(console.log({ data: dataToPost, staffId: editInfo.id }));
@@ -213,7 +220,15 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
             {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
             <Grid container spacing={1.5}>
               <Grid item xs={6} sm={4}>
-                <TextField disabled value={reciboId} variant="filled" name="reciboId" label="ID" type="number" />
+                <TextField
+                  fullWidth
+                  disabled
+                  value={editInfo ? editInfo.reciboId : reciboId}
+                  variant="filled"
+                  name="reciboId"
+                  label="ID"
+                  type="number"
+                />
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Controller

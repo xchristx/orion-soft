@@ -11,6 +11,7 @@ import product from './slices/product';
 import drawerSlice from './slices/drawer';
 import settings from './slices/settings';
 import recibos from './slices/recibos';
+import ventas from './slices/ventas';
 import clientes from './slices/clientes';
 import proveedores from './slices/proveedores';
 import createMigrate from 'redux-persist/es/createMigrate';
@@ -35,6 +36,7 @@ export const rootReducer = combineReducers({
   recibos,
   clientes,
   proveedores,
+  ventas,
 });
 
 const store = configureStore({

@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { setUserData, setUserNull, startLoading } from './redux/slices/auth';
 import { ProgressBarStyle } from './components/ProgressBar';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
+import Scrollbar from './components/scrollbar/Scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -43,13 +44,15 @@ export default function App() {
   });
   return (
     <ThemeProvider>
-      <NotistackProvider>
-        <MotionLazyContainer>
-          <ProgressBarStyle />
-          <ScrollToTop />
-          <Router />
-        </MotionLazyContainer>
-      </NotistackProvider>
+      <Scrollbar>
+        <NotistackProvider>
+          <MotionLazyContainer>
+            <ProgressBarStyle />
+            <ScrollToTop />
+            <Router />
+          </MotionLazyContainer>
+        </NotistackProvider>
+      </Scrollbar>
     </ThemeProvider>
   );
 }

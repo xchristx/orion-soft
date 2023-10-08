@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useState } from 'react';
 // MUI
 import {
   Alert,
-  Chip,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -42,10 +42,12 @@ import { FormProvider, RHFSelect, RHFTextField } from '../../../../../../compone
 import DatePickerMUI from '../../../../../../components/DatePickerMUI';
 import AddVentaDetails from './AddVentaDetails';
 import styled from '@emotion/styled';
-import { addRecibo } from '../../../../../../redux/actions/recibosActions';
 import { DB } from '../../../../../../App';
 import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
 import useResponsive from '../../../../../../hooks/useResponsive';
+import AddEditCliente from '../../../../clientes/components/AddEditCliente';
+import SkeletonVenta from '../../../../../../components/skeleton/SkeletonVenta';
+import { addVenta } from '../../../../../../redux/actions/ventasActions';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -64,7 +66,7 @@ const WrapperStyle = styled('div')(({ theme }) => ({
   alignItems: 'stretch',
   margin: theme.spacing(0.5),
   borderRadius: theme.shape.borderRadius,
-  border: `solid 1px ${theme.palette.divider}`,
+  border: `solid 1px ${theme.palette.primary.main}`,
 }));
 
 const LabelStyle = styled(props => <Typography component="span" variant="subtitle2" {...props} />)(({ theme }) => ({
@@ -115,19 +117,31 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
   const isDesktop = useResponsive('up', 'lg');
 
   const [totales, setTotales] = useState({});
-  const [reciboId, setReciboId] = useState(null);
+  const [ventaId, setVentaId] = useState(null);
+
+  const [openClienteModal, setOpenClienteModal] = useState(false);
 
   const uid = uuid();
 
   const { user } = useSelector(s => s.authSlice);
-  const { data: clientesData } = useSelector(s => s.clientes);
+  const { data: clientesData, isLoading } = useSelector(s => s.clientes);
 
   const FormSchema = Yup.object().shape({
     fecha: Yup.date().required().typeError('Este campo debe ser una fecha válida por favor'),
     cliente: Yup.string().required('Introduce el nombre del cliente'),
     adelanto: Yup.number().required('Introduce el monto de adelanto').typeError('Introduce un número valido'),
-    concepto: Yup.string().required('Introduce el concepto'),
-    metodoPago: Yup.string().required('Selecciona el método de pago'),
+    concepto: Yup.string().when('adelanto', (adelanto, schema) => {
+      if (parseInt(adelanto) > 1) {
+        return schema.required('Introduzca el concepto de pago');
+      }
+      return schema;
+    }),
+    metodoPago: Yup.string().when('adelanto', (adelanto, schema) => {
+      if (parseInt(adelanto) > 1) {
+        return schema.required('Seleccione el método de pago');
+      }
+      return schema;
+    }),
     responsable: Yup.string().required('Introduce el responsable de emisión'),
     detalleRecibo: Yup.string(),
     detalleVenta: Yup.array().min(1),
@@ -161,12 +175,12 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     const dataToAdd = {
       ...data,
       fecha: new Date(data.fecha).getTime(),
-      reciboId: { id: reciboId },
+      ventaId: { id: ventaId },
       cantidadTotal: totales.cantidadTotal,
       montoTotal: totales.montoTotal,
       uid,
     };
-    dispatch(addRecibo(dataToAdd));
+    dispatch(addVenta(dataToAdd));
     reset();
     onClose();
   };
@@ -184,7 +198,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
 
   useEffect(() => {
     const unsub = onSnapshot(doc(DB, 'idVenta', 'idVenta'), doc => {
-      setReciboId(doc.data().id + 1);
+      setVentaId(doc.data().id + 1);
     });
     return () => unsub();
   }, [onSnapshot]);
@@ -213,142 +227,165 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
         </DialogTitle>
         <Divider />
         <DialogContent>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-            <Grid container spacing={1.5}>
-              <Grid item xs={6} sm={4}>
-                <TextField disabled value={reciboId} variant="filled" name="reciboId" label="ID*" type="number" fullWidth />
-              </Grid>
-              <Grid item xs={6} sm={4}>
-                <Controller
-                  control={control}
-                  name="fecha"
-                  render={({ field, formState }) => (
-                    <DatePickerMUI label={'Fecha*'} value={field.value} onChange={field.onChange} error={formState.errors.fecha} />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center' }}>
-                <AddVentaDetails edit={!!watch('detalleVenta')?.length} setValue={setValue} setTotales={setTotales} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFSelect variant="filled" name="cliente" label="Cliente*">
-                  <option></option>
-                  {clientesData.map(el => (
-                    <option key={el.uid} value={el.uid}>
-                      {el.nombre}
-                    </option>
-                  ))}
-                </RHFSelect>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFTextField
-                  variant="filled"
-                  name="adelanto"
-                  label="Recibí la suma de:*"
-                  type="number"
-                  InputProps={{
-                    endAdornment: <Typography sx={{ ml: 2, fontWeight: 700, zIndex: 500 }}>Bs.</Typography>,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFTextField variant="filled" name="concepto" label="Por concepto de:*" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFSelect variant="filled" name="metodoPago" label="Método de pago*">
-                  <option></option>
-                  {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
-                    <option key={i} value={el}>
-                      {el}
-                    </option>
-                  ))}
-                </RHFSelect>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFTextField variant="filled" disabled name="responsable" label="Responsable*" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RHFTextField variant="filled" name="detalleRecibo" label="Detalle*" />
-              </Grid>
-
-              <Grid item xs={12}>
-                {watch('detalleVenta')?.length && totales.cantidadTotal ? (
-                  <>
-                    <RootStyle>
-                      <WrapperStyle>
-                        <LabelStyle>Cantidad:</LabelStyle>
-                        <Chip size="medium" label={`${totales.cantidadTotal.toLocaleString('es-MX')} pares.`} />
-                      </WrapperStyle>
-                      <WrapperStyle>
-                        <LabelStyle>Monto:</LabelStyle>
-                        <Chip size="medium" label={`${totales.montoTotal.toLocaleString('es-MX')} bs.`} />
-                      </WrapperStyle>
-                      <WrapperStyle>
-                        <LabelStyle>Ssaldo:</LabelStyle>
-                        <Chip size="medium" label={`${(totales.montoTotal - parseFloat(watch('adelanto'))).toLocaleString('es-MX')} bs.`} />
-                      </WrapperStyle>
-                    </RootStyle>
-                    <TableContainer sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Scrollbar sx={{ maxHeight: '100%' }}>
-                        <Table aria-label="simple* table">
-                          <TableHead>
-                            <TableRow>
-                              {tableHeadLabels.map(el => (
-                                <TableCell align="center" sx={{ px: el.id === 'borrar' ? 0 : 1, m: 0 }} key={el.id}>
-                                  {el.label}
-                                </TableCell>
-                              ))}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {watch('detalleVenta').map(el => (
-                              <TableRow key={el.uid}>
-                                <TableCell align="center">{el.detalle}</TableCell>
-                                <TableCell align="center">{parseFloat(el.precio).toLocaleString('es-MX')} bs.</TableCell>
-                                <TableCell align="center">{el.cantidad} prs.</TableCell>
-                                <TableCell align="center">{(el.cantidad * el.precio).toLocaleString('es-MX')} bs.</TableCell>
-
-                                <TableCell>
-                                  <Table>
-                                    <TableHead>
-                                      <StyledTableRow>
-                                        {el.tallas.map((el, i) => (
-                                          <StyledTableCell align="center" key={i}>
-                                            {' '}
-                                            {el.size}{' '}
-                                          </StyledTableCell>
-                                        ))}
-                                      </StyledTableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      <StyledTableRow>
-                                        {el.tallas.map((el, i) => (
-                                          <StyledTableCell align="center" key={i}>
-                                            {' '}
-                                            {el.value}{' '}
-                                          </StyledTableCell>
-                                        ))}
-                                      </StyledTableRow>
-                                    </TableBody>
-                                  </Table>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </Scrollbar>
-                    </TableContainer>
-                  </>
-                ) : (
-                  <Alert severity={errors.detalleVenta ? 'error' : 'warning'}>Aun no se han agregado productos </Alert>
+          {isLoading ? (
+            <SkeletonVenta />
+          ) : (
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+              {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+              <Grid container spacing={1.5}>
+                <Grid item xs={12}>
+                  <Alert sx={{ display: 'flex', alignItems: 'center', my: 0, py: 0 }} severity={'info'}>
+                    ¿Cliente no registrado?{' '}
+                    <Button variant="outlined" onClick={() => setOpenClienteModal(true)}>
+                      Añadir cliente
+                    </Button>
+                  </Alert>
+                  <AddEditCliente open={openClienteModal} edit={false} onClose={() => setOpenClienteModal(false)} />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <TextField disabled value={ventaId} variant="filled" name="reciboId" label="ID*" type="number" fullWidth />
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                  <Controller
+                    control={control}
+                    name="fecha"
+                    render={({ field, formState }) => (
+                      <DatePickerMUI label={'Fecha*'} value={field.value} onChange={field.onChange} error={formState.errors.fecha} />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <AddVentaDetails edit={!!watch('detalleVenta')?.length} setValue={setValue} setTotales={setTotales} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <RHFSelect variant="filled" name="cliente" label="Cliente*">
+                    <option></option>
+                    {clientesData.map(el => (
+                      <option key={el.uid} value={el.uid}>
+                        {el.nombre}
+                      </option>
+                    ))}
+                  </RHFSelect>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <RHFTextField
+                    variant="filled"
+                    name="adelanto"
+                    label="Recibí la suma de:*"
+                    type="number"
+                    InputProps={{
+                      endAdornment: <Typography sx={{ ml: 2, fontWeight: 700, zIndex: 500 }}>Bs.</Typography>,
+                    }}
+                  />
+                </Grid>
+                {parseInt(watch('adelanto')) > 1 && (
+                  <Grid item xs={12} sm={6}>
+                    <RHFTextField variant="filled" name="concepto" label="Por concepto de:*" />
+                  </Grid>
                 )}
+
+                {parseInt(watch('adelanto')) > 1 && (
+                  <Grid item xs={12} sm={6}>
+                    <RHFSelect variant="filled" name="metodoPago" label="Método de pago*">
+                      <option></option>
+                      {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
+                        <option key={i} value={el}>
+                          {el}
+                        </option>
+                      ))}
+                    </RHFSelect>
+                  </Grid>
+                )}
+                <Grid item xs={12} sm={6}>
+                  <RHFTextField variant="filled" disabled name="responsable" label="Responsable*" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <RHFTextField variant="filled" name="detalleRecibo" label="Detalle*" />
+                </Grid>
+
+                <Grid item xs={12}>
+                  {watch('detalleVenta')?.length && totales.cantidadTotal ? (
+                    <>
+                      <RootStyle>
+                        <WrapperStyle>
+                          <LabelStyle>Cantidad:</LabelStyle>
+                          <Typography sx={{ p: 0.5 }}>{`${totales.cantidadTotal.toLocaleString('es-MX')} prs.`}</Typography>
+                        </WrapperStyle>
+                        <WrapperStyle>
+                          <LabelStyle>Monto:</LabelStyle>
+                          <Typography sx={{ p: 0.5 }}>{`${totales.montoTotal.toLocaleString('es-MX')} bs.`}</Typography>
+                        </WrapperStyle>
+                        <WrapperStyle>
+                          <LabelStyle>Ssaldo:</LabelStyle>
+                          <Typography sx={{ p: 0.5 }}>
+                            {`${(isNaN(parseFloat(watch('adelanto')))
+                              ? totales.montoTotal
+                              : totales.montoTotal - parseFloat(watch('adelanto'))
+                            ).toLocaleString('es-MX')} bs.`}
+                          </Typography>
+                        </WrapperStyle>
+                      </RootStyle>
+                      <TableContainer sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Scrollbar sx={{ maxHeight: '100%' }}>
+                          <Table aria-label="simple* table">
+                            <TableHead>
+                              <TableRow>
+                                {tableHeadLabels.map(el => (
+                                  <TableCell align="center" sx={{ px: el.id === 'borrar' ? 0 : 1, m: 0 }} key={el.id}>
+                                    {el.label}
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {watch('detalleVenta').map(el => (
+                                <TableRow key={el.uid}>
+                                  <TableCell align="center">{el.detalle.nombre}</TableCell>
+                                  <TableCell align="center">{parseFloat(el.precio).toLocaleString('es-MX')} bs.</TableCell>
+                                  <TableCell align="center">{el.cantidad} prs.</TableCell>
+                                  <TableCell align="center">{(el.cantidad * el.precio).toLocaleString('es-MX')} bs.</TableCell>
+
+                                  <TableCell>
+                                    <Table>
+                                      <TableHead>
+                                        <StyledTableRow>
+                                          {el.tallas.map((el, i) => (
+                                            <StyledTableCell align="center" key={i}>
+                                              {' '}
+                                              {el.size}{' '}
+                                            </StyledTableCell>
+                                          ))}
+                                        </StyledTableRow>
+                                      </TableHead>
+                                      <TableBody>
+                                        <StyledTableRow>
+                                          {el.tallas.map((el, i) => (
+                                            <StyledTableCell align="center" key={i}>
+                                              {' '}
+                                              {el.value}{' '}
+                                            </StyledTableCell>
+                                          ))}
+                                        </StyledTableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </Scrollbar>
+                      </TableContainer>
+                    </>
+                  ) : (
+                    <Alert severity={errors.detalleVenta ? 'error' : 'warning'}>Aun no se han agregado productos </Alert>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-          </FormProvider>
+            </FormProvider>
+          )}
         </DialogContent>
         <DialogActions>
-          <LoadingButton variant="contained" loading={isSubmitting} onClick={handleSubmit(onSubmit)}>
+          <LoadingButton disabled={isLoading} variant="contained" loading={isSubmitting} onClick={handleSubmit(onSubmit)}>
             <SaveIcon /> {edit ? 'Guardar Cambios' : 'Guardar'}
           </LoadingButton>
         </DialogActions>

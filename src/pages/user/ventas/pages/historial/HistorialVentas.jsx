@@ -6,9 +6,9 @@ import RecordsLayout from '../../../../../layouts/dashboard/records/RecordsLayou
 // utils
 import { TableBody, TableCell, TableRow } from '@mui/material';
 import SearchNotFound from '../../../../../components/SearchNotFound';
-import { resetFilteredData, setFilteredData } from '../../../../../redux/slices/recibos';
+import { resetFilteredData, setFilteredData } from '../../../../../redux/slices/ventas';
 import useRecords from '../../../../../hooks/useRecords';
-import { getRecibos } from './utils/getRecibos';
+import { getVentas } from './utils/getVentas';
 import AddIcon from '@mui/icons-material/Add';
 import { getClientes } from '../../../clientes/utils/getClientes';
 import { getProductos } from '../../../product/utils/getProductos';
@@ -32,7 +32,7 @@ const bcLinks = [
 ];
 
 export default function HistorialVentas() {
-  const { data, filteredData, filter, isLoading, error } = useSelector(state => state.recibos);
+  const { data, filteredData, filter, isLoading, error } = useSelector(state => state.ventas);
   const {
     open,
     page,
@@ -54,7 +54,7 @@ export default function HistorialVentas() {
     handleSearchChange,
     handleSearchChange2,
   } = useRecords({
-    getters: [getRecibos, getClientes, getProductos],
+    getters: [getVentas, getClientes, getProductos],
     data,
     filteredData,
     hasTwoSearch: false,

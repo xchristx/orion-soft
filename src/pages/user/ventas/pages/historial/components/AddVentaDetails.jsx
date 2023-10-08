@@ -13,9 +13,9 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  LinearProgress,
   Radio,
   RadioGroup,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -35,6 +35,7 @@ import styled from '@emotion/styled';
 import { v4 as uuid } from 'uuid';
 import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
 import { useSelector } from 'react-redux';
+import ImageGallery from 'react-image-gallery';
 
 const tableHeadLabels = [
   { id: 'detalle', label: 'Detalle' },
@@ -77,13 +78,15 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 export default function AddVentaDetails({ edit = false, editInfo, setValue, setTotales }) {
+  const isDesktop = useResponsive('up', 'lg');
+
   const { data: productData } = useSelector(s => s.product);
 
   const [open, setOpen] = useState(false);
   const [openSizesDialog, setOpenSizesDialog] = useState(false);
   const [isEmptySizes, setIsEmptySizes] = useState(false);
 
-  const [sizes, setSizes] = useState([]);
+  const [sizes, setSizes] = useState([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
 
   const [precio, setPrecio] = useState({ value: '', hasError: null, errMessage: '' });
 
@@ -92,8 +95,7 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
 
   const [cantidad, setCantidad] = useState({ value: '', hasError: null, errMessage: '' });
 
-  const [procedenciaProductos, setProcedenciaProductos] = useState('stock');
-  const [loading, setLoading] = useState(false);
+  const [procedenciaProductos, setProcedenciaProductos] = useState('pedido');
 
   const [hasErros, setHasErros] = useState(true);
   const [errorsListener, setErrorsListener] = useState(false);
@@ -102,6 +104,8 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
   const [montoTotal, setMontoTotal] = useState('');
 
   const [dataToPost, setDataToPost] = useState([]);
+  const [tempDataToPost, setTempDataToPost] = useState([]);
+
   const isMobile = useResponsive('down', 'md');
   const uid = uuid();
 
@@ -129,15 +133,17 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
 
     if (!hasErros) {
       setDataToPost([...dataToPost, { detalle: detalleProd, precio, cantidad, uid, tallas: sizes.filter(el => el.value > 0) }]);
-      setSizes([...Array(13)].map((el, i) => ({ size: i + 34, value: 0 })));
-      setDetalleProd({ value: '', hasError: null, errMessage: '' });
+      setSizes([...Array(13)].map((_, i) => ({ size: i + 34, value: 0 })));
+      setDetalleProd({ value: null, hasError: null, errMessage: '' });
       setPrecio({ value: '', hasError: null, errMessage: '' });
       setCantidad({ value: '', hasError: null, errMessage: '' });
       setErrorsListener(false);
+      setIsEmptySizes(false);
     }
   };
 
   const handleSave = () => {
+    setTempDataToPost(dataToPost);
     setValue(
       'detalleVenta',
       dataToPost.map(el => ({
@@ -151,6 +157,10 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
     setTotales({ cantidadTotal, montoTotal });
     setOpen(false);
   };
+  const handleCancel = () => {
+    setOpen(false);
+    setDataToPost(tempDataToPost);
+  };
 
   const handleDelete = id => setDataToPost(dataToPost.filter(row => row.uid !== id));
 
@@ -159,6 +169,7 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
       return acc + curr.value;
     }, 0);
     setCantidad({ ...cantidad, value: quantity });
+    if (quantity > 0) setIsEmptySizes(true);
   }, [sizes]);
 
   useEffect(() => {
@@ -175,10 +186,16 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
   useEffect(() => {
     validarFomr();
   }, [errorsListener, precio.value, detalleProd.value, cantidad.value]);
+
   useEffect(() => {
     if (detalleProd.hasError === false && precio.hasError === false && cantidad.hasError === false) setHasErros(false);
   }, [validarFomr]);
 
+  useEffect(() => {
+    if (detalleProd?.value?.uid) {
+      setPrecio({ ...precio, value: productData.find(el => el.uid === detalleProd.value.uid).precio.noFacturado });
+    }
+  }, [detalleProd]);
   return (
     <>
       <Button fullWidth variant="outlined" onClick={handleClickOpen}>
@@ -212,44 +229,78 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {dataToPost.map(el => (
-                            <TableRow key={el.uid}>
-                              <TableCell align="center">{el.detalle.value}</TableCell>
-                              <TableCell align="center">{parseFloat(el.precio.value).toLocaleString('es-MX')} bs.</TableCell>
-                              <TableCell align="center">{el.cantidad.value} prs.</TableCell>
-                              <TableCell align="center">{(el.cantidad.value * el.precio.value).toLocaleString('es-MX')} bs.</TableCell>
+                          {dataToPost.map(el => {
+                            const img = el.detalle?.value.img;
+                            const galleryImages = img?.length
+                              ? img?.map(el => ({
+                                  original: el.uploadInfo?.secure_url,
+                                  thumbnail: el.uploadInfo?.thumbnail_url,
+                                  originalWidth: '70px',
+                                  originalHeight: '70px',
+                                  thumbnailHeight: '50px',
+                                  thumbnailWidth: '50px',
+                                }))
+                              : [
+                                  {
+                                    original: '/assets/predeterminado.png',
+                                    thumbnail: '/assets/predeterminado.png',
+                                    originalWidth: '70px',
+                                    originalHeight: '70px',
+                                    thumbnailHeight: '50px',
+                                    thumbnailWidth: '20px',
+                                  },
+                                ];
+                            return (
+                              <TableRow key={el.uid}>
+                                <TableCell align="center">
+                                  <Stack>
+                                    {el.detalle.value.nombre}
+                                    <ImageGallery
+                                      items={galleryImages}
+                                      showThumbnails={false}
+                                      showFullscreenButton={false}
+                                      showPlayButton={false}
+                                      showNav={isDesktop}
+                                      autoPlay={isDesktop}
+                                    />
+                                  </Stack>
+                                </TableCell>
+                                <TableCell align="center">{parseFloat(el.precio.value).toLocaleString('es-MX')} bs.</TableCell>
+                                <TableCell align="center">{el.cantidad.value} prs.</TableCell>
+                                <TableCell align="center">{(el.cantidad.value * el.precio.value).toLocaleString('es-MX')} bs.</TableCell>
 
-                              <TableCell>
-                                <Table>
-                                  <TableHead>
-                                    <StyledTableRow>
-                                      {el.tallas.map((el, i) => (
-                                        <StyledTableCell align="center" key={i}>
-                                          {' '}
-                                          {el.size}{' '}
-                                        </StyledTableCell>
-                                      ))}
-                                    </StyledTableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    <StyledTableRow>
-                                      {el.tallas.map((el, i) => (
-                                        <StyledTableCell align="center" key={i}>
-                                          {' '}
-                                          {el.value}{' '}
-                                        </StyledTableCell>
-                                      ))}
-                                    </StyledTableRow>
-                                  </TableBody>
-                                </Table>
-                              </TableCell>
-                              <TableCell sx={{ m: 0, p: 0 }}>
-                                <IconButton onClick={() => handleDelete(el.uid)}>
-                                  <Iconify icon={'eva:trash-2-outline'} />
-                                </IconButton>{' '}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                                <TableCell>
+                                  <Table>
+                                    <TableHead>
+                                      <StyledTableRow>
+                                        {el.tallas.map((el, i) => (
+                                          <StyledTableCell align="center" key={i}>
+                                            {' '}
+                                            {el.size}{' '}
+                                          </StyledTableCell>
+                                        ))}
+                                      </StyledTableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                      <StyledTableRow>
+                                        {el.tallas.map((el, i) => (
+                                          <StyledTableCell align="center" key={i}>
+                                            {' '}
+                                            {el.value}{' '}
+                                          </StyledTableCell>
+                                        ))}
+                                      </StyledTableRow>
+                                    </TableBody>
+                                  </Table>
+                                </TableCell>
+                                <TableCell sx={{ m: 0, p: 0 }}>
+                                  <IconButton onClick={() => handleDelete(el.uid)}>
+                                    <Iconify icon={'eva:trash-2-outline'} />
+                                  </IconButton>{' '}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                           <StyledTableRow>
                             <StyledTableCell align="right" colSpan={2}>
                               <Typography sx={{ pr: 4 }}>Total:</Typography>
@@ -284,79 +335,77 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              {loading ? (
-                <Grid item xs={12}>
-                  <LinearProgress color="primary" />
-                </Grid>
-              ) : (
-                <>
-                  <Grid item xs={12} sm={3}>
-                    <Autocomplete
-                      value={detalleProd.value}
-                      onChange={(event, newValue) => {
-                        setDetalleProd({ ...detalleProd, value: newValue });
-                      }}
-                      inputValue={inputValue}
-                      onInputChange={(event, newInputValue) => {
-                        setInputValue(newInputValue);
-                      }}
-                      id="controllable-states-demo"
-                      options={productData}
-                      getOptionLabel={option => option.nombre}
-                      sx={{ width: 300 }}
-                      renderInput={params => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          variant="filled"
-                          label="Detalle"
-                          error={detalleProd.hasError}
-                          helperText={detalleProd.errMessage}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <TextField fullWidth variant="filled" value={cantidad.value} disabled label="Cantidad" />
-                  </Grid>
 
-                  <Grid item xs={12} sm={3}>
-                    <TextField
-                      variant="filled"
-                      fullWidth
-                      label="Precio"
-                      type="number"
-                      error={precio.hasError}
-                      helperText={precio.errMessage}
-                      value={precio.value}
-                      onChange={e => {
-                        setPrecio({ ...precio, value: e.target.value });
-                      }}
-                      InputProps={{
-                        inputMode: 'numeric',
-                        pattern: '[a-z]{1,15}',
-                        endAdornment: <Typography sx={{ ml: 2, fontWeight: 700, zIndex: 500 }}>Bs.</Typography>,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <ProductAddSizesDialog
-                      disabled={Boolean(!detalleProd.value)}
-                      procedenciaProductos={procedenciaProductos}
-                      open={openSizesDialog}
-                      setOpen={setOpenSizesDialog}
-                      isEmptySizes={isEmptySizes}
-                      setIsEmptySizes={setIsEmptySizes}
-                      sizes={sizes}
-                      setSizes={setSizes}
-                      buttonVariant="text"
-                    />
-                    <Button variant="outlined" color="info" onClick={onAddRow}>
-                      Agregar
-                    </Button>
-                  </Grid>
-                </>
-              )}
+              <>
+                <Grid item xs={12} sm={3}>
+                  <Autocomplete
+                    value={detalleProd.value}
+                    onChange={(event, newValue) => {
+                      setDetalleProd({ ...detalleProd, value: newValue });
+                    }}
+                    inputValue={inputValue}
+                    onInputChange={(event, newInputValue) => {
+                      setInputValue(newInputValue);
+                    }}
+                    id="controllable-states-demo"
+                    options={productData}
+                    getOptionDisabled={option => Boolean(dataToPost.find(data => data.detalle.value.uid === option.uid))}
+                    getOptionLabel={option => option.nombre}
+                    sx={{ width: 300 }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        variant="filled"
+                        label="Detalle"
+                        error={detalleProd.hasError}
+                        helperText={detalleProd.errMessage}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField fullWidth variant="filled" value={cantidad.value} disabled label="Cantidad" />
+                </Grid>
+
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    label="Precio"
+                    type="number"
+                    error={precio.hasError}
+                    helperText={precio.errMessage}
+                    value={precio.value}
+                    onChange={e => {
+                      setPrecio({ ...precio, value: e.target.value });
+                    }}
+                    InputProps={{
+                      inputMode: 'numeric',
+                      pattern: '[a-z]{1,15}',
+                      endAdornment: <Typography sx={{ ml: 2, fontWeight: 700, zIndex: 500 }}>Bs.</Typography>,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <ProductAddSizesDialog
+                    disabled={Boolean(!detalleProd.value)}
+                    prod={detalleProd?.value?.uid}
+                    prodProcedencia={procedenciaProductos}
+                    prodData={productData}
+                    open={openSizesDialog}
+                    setOpen={setOpenSizesDialog}
+                    isEmptySizes={isEmptySizes}
+                    setIsEmptySizes={setIsEmptySizes}
+                    sizes={sizes}
+                    setSizes={setSizes}
+                    buttonVariant="text"
+                    showDetail={false}
+                  />
+                  <Button variant="outlined" color="info" onClick={onAddRow}>
+                    Agregar
+                  </Button>
+                </Grid>
+              </>
               <Grid item xs={12}>
                 {errorsListener && cantidad.hasError && <Alert severity="error">No se han agregado tallas</Alert>}
               </Grid>
@@ -396,10 +445,10 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpen(false)}>
+          <Button autoFocus onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button onClick={() => handleSave()} autoFocus disabled={!dataToPost.length}>
+          <Button onClick={handleSave} autoFocus disabled={!dataToPost.length}>
             Guardas productos
           </Button>
         </DialogActions>

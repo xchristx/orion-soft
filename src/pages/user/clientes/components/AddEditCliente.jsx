@@ -25,7 +25,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
+export default function AddEditCliente({ onClose, open, edit, editInfo }) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -154,7 +154,7 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo }) {
     </div>
   );
 }
-AddEditRecibo.propTypes = {
+AddEditCliente.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.any.isRequired,
   edit: PropTypes.bool.isRequired,
