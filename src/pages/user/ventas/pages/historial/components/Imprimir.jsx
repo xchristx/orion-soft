@@ -52,7 +52,7 @@ function BasicTable() {
   );
 }
 
-export default function Ventas() {
+export default function ImprimirVentas() {
   return <PrintButton />;
 }
 

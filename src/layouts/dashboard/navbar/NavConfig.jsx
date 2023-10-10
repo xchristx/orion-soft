@@ -30,7 +30,7 @@ const navConfig = size => [
         icon: icon('ic_ecommerce', size),
         children: [
           { title: 'historial', path: '/dashboard/usuario/ventas/historial' },
-          { title: 'recibos', path: '/dashboard/usuario/ventas/recibos' },
+          // { title: 'recibos', path: '/dashboard/usuario/ventas/recibos' },
         ],
       },
 

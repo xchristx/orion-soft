@@ -12,6 +12,7 @@ import { getVentas } from './utils/getVentas';
 import AddIcon from '@mui/icons-material/Add';
 import { getClientes } from '../../../clientes/utils/getClientes';
 import { getProductos } from '../../../product/utils/getProductos';
+import ImprimirVentas from './components/Imprimir';
 
 const headLabel = [
   { id: 'ventaId', label: 'Recibo No.', alignRight: false },
@@ -83,7 +84,7 @@ export default function HistorialVentas() {
       orderBy={orderBy} // estado para manejar el ordenado de la tabla viene del useRecords
       // lo que debes editar de acuero al componente
       searchInput={true}
-      searchInput2={true}
+      searchInput2={false}
       data={data}
       buttonStartIcon={<AddIcon />}
       searchPlaceholder={'Buscar por No. de recibo'} // placeHolder que tendra el input del buscador
@@ -105,6 +106,7 @@ export default function HistorialVentas() {
       isLoading={isLoading}
       error={error}
     >
+      <ImprimirVentas />
       <VentasTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
       {isNotFoundAux ? (
         <TableBody>
