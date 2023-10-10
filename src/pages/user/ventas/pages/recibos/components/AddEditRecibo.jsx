@@ -74,7 +74,7 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
     detalleRecibo: Yup.string(),
   });
   const defaultValues = edit
-    ? { ...editInfo }
+    ? { ...editInfo, fecha: new Date(editInfo.feecha) }
     : {
         reciboId: '',
         fecha: new Date(),
@@ -106,6 +106,7 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
       ...data,
       fecha: new Date(data.fecha).getTime(),
       reciboId,
+      estado: 'valido',
       uid,
     };
     dispatch(addReciboSaldo({ data: dataToAdd, uid: ventaUid, totalAdelanto: parseFloat(adelantoActual) + parseFloat(data.adelanto) }));

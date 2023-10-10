@@ -64,16 +64,19 @@ export const addReciboSaldo = createAsyncThunk('ventas/addRecibo', async ({ data
     await dispatch(getVentas());
   }
 });
-export const changeReciboState = createAsyncThunk('ventas/changeReciboState', async ({ uid, data }, { dispatch, getState }) => {
-  const ventas = doc(DB, 'ventas', uid);
-  dispatch(startLoading());
-  try {
-    await updateDoc(ventas, { recibosVenta: data });
-  } catch (error) {
-    console.log(error);
-    dispatch(hasError(error));
-    return Promise.reject(error);
-  } finally {
-    await dispatch(getVentas());
+export const changeReciboState = createAsyncThunk(
+  'ventas/changeReciboState',
+  async ({ uid, data, adelantoActualizado }, { dispatch, getState }) => {
+    const ventas = doc(DB, 'ventas', uid);
+    dispatch(startLoading());
+    try {
+      await updateDoc(ventas, { recibosVenta: data, adelanto: adelantoActualizado });
+    } catch (error) {
+      console.log(error);
+      dispatch(hasError(error));
+      return Promise.reject(error);
+    } finally {
+      await dispatch(getVentas());
+    }
   }
-});
+);

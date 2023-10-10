@@ -50,10 +50,11 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
               <TableCell align="center">
                 <DetalleVentaDialog
                   detalleVenta={detalleVenta}
-                  adelanto={adelanto}
+                  totalAdelantos={adelanto}
                   montoTotal={montoTotal}
                   cantidadTotal={cantidadTotal}
                   pagos={recibosVenta}
+                  ventaUid={id}
                 />{' '}
               </TableCell>
 

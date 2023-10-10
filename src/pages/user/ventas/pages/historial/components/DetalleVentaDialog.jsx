@@ -21,6 +21,9 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import useResponsive from '../../../../../../hooks/useResponsive';
 import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
+import ReciboMoreMenu from '../../recibos/components/ReciboMoreMenu';
+import { useDispatch } from 'react-redux';
+import { changeReciboState } from '../../../../../../redux/actions/ventasActions';
 
 const tableHeadLabels = [
   { id: 'detalle', label: 'Detalle' },
@@ -30,6 +33,15 @@ const tableHeadLabels = [
   { id: 'subtotal', label: 'Subtotal' },
   { id: 'tallas', label: 'Tallas' },
   { id: 'borrar', label: '' },
+];
+const reciboTableHeadLabels = [
+  { id: 'id', label: 'Id recibo' },
+  { id: 'fecha', label: 'Fecha' },
+  { id: 'masDetalles', label: 'Más detalles' },
+  { id: 'cliente', label: 'Cliente' },
+  { id: 'montoPagado', label: 'Monto Pagado' },
+  { id: 'estado', label: 'Estado' },
+  { id: 'moreMenu', label: '', alignRight: false },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -57,10 +69,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pagos, adelanto }) => {
+export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pagos, totalAdelantos, ventaUid }) => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const isMobile = useResponsive('down', 'md');
+  const dispatch = useDispatch();
+
+  const handleAnularRecibo = idRecibo => {
+    let adelantoActualizado = 0;
+    const newPagos = pagos.map(recibo => {
+      if (recibo.uid === idRecibo) {
+        adelantoActualizado = totalAdelantos - recibo.adelanto;
+        return { ...recibo, estado: 'anulado' };
+      } else return recibo;
+    });
+    dispatch(changeReciboState({ uid: ventaUid, data: newPagos, adelantoActualizado }));
+  };
 
   return (
     <div>
@@ -139,7 +163,7 @@ export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pa
                           <Typography sx={{ pr: 4 }}>Total pagos:</Typography>
                         </StyledTableCell>
                         <StyledTableCell align="center"></StyledTableCell>
-                        <StyledTableCell align="center">{parseFloat(adelanto).toLocaleString('es-MX')} bs.</StyledTableCell>
+                        <StyledTableCell align="center">{parseFloat(totalAdelantos).toLocaleString('es-MX')} bs.</StyledTableCell>
                       </StyledTableRow>
                       <StyledTableRow>
                         <StyledTableCell align="right" colSpan={3}>
@@ -147,7 +171,7 @@ export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pa
                         </StyledTableCell>
                         <StyledTableCell align="center"></StyledTableCell>
                         <StyledTableCell align="center" sx={{ bgcolor: 'gray', borderRadius: 5, color: 'white' }}>
-                          {(parseFloat(montoTotal) - parseFloat(adelanto)).toLocaleString('es-MX')} bs.
+                          {(parseFloat(montoTotal) - parseFloat(totalAdelantos)).toLocaleString('es-MX')} bs.
                         </StyledTableCell>
                       </StyledTableRow>
                     </TableBody>
@@ -159,24 +183,41 @@ export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pa
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Fecha</TableCell>
-                        <TableCell>Ver recibo</TableCell>
-                        <TableCell>Cliente</TableCell>
-                        <TableCell>Monto Pagado</TableCell>
+                        {reciboTableHeadLabels.map(el => (
+                          <TableCell align="center" sx={{ px: el.id === 'moreMenu' ? 0 : 1, m: 0 }} key={el.id}>
+                            {el.label}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {pagos?.length > 0 &&
                         pagos.map(recibo => (
                           <TableRow key={recibo.uid}>
-                            <TableCell>{recibo.reciboId}</TableCell>
-                            <TableCell>
+                            <TableCell align="center">{recibo.reciboId}</TableCell>
+                            <TableCell align="center">
                               {new Date(recibo.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
                             </TableCell>
-                            <TableCell>Ver Recibo</TableCell>
-                            <TableCell>{recibo.cliente}</TableCell>
-                            <TableCell>{recibo.adelanto} Bs.</TableCell>
+                            <TableCell align="center">Ver Recibo</TableCell>
+                            <TableCell align="center">{recibo.cliente}</TableCell>
+                            <TableCell
+                              align="center"
+                              sx={{
+                                textDecoration: recibo.estado === 'valido' ? 'none' : 'line-through',
+                                color: recibo.estado === 'valido' ? '' : 'error.main',
+                              }}
+                            >
+                              {recibo.adelanto} Bs.
+                            </TableCell>
+                            <TableCell align="center">
+                              <Chip label={recibo.estado} color={recibo.estado === 'valido' ? 'success' : 'error'} />
+                            </TableCell>
+                            <TableCell>
+                              <ReciboMoreMenu
+                                disabled={Boolean(recibo.estado === 'anulado')}
+                                handleAnularRecibo={() => handleAnularRecibo(recibo.uid)}
+                              />
+                            </TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -201,5 +242,6 @@ DetalleVentaDialog.propTypes = {
   pagos: PropTypes.array,
   cantidadTotal: PropTypes.number,
   montoTotal: PropTypes.number,
-  adelanto: PropTypes.number,
+  totalAdelantos: PropTypes.number,
+  ventaUid: PropTypes.string,
 };

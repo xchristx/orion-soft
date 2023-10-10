@@ -1,22 +1,17 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { MenuItem, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 // components
 import Iconify from '../../../../../../components/Iconify';
 import MenuPopover from '../../../../../../components/MenuPopover';
-
-// Translation module
-import AddEditLabor from './AddEditRecibo';
+import AnularReciboDialog from './AnularReciboDialog';
 
 // ----------------------------------------------------------------------
 
-export default function ReciboMoreMenu({ onDelete, editInfo }) {
+export default function ReciboMoreMenu({ handleAnularRecibo, disabled }) {
   const [open, setOpen] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  // Added the translation for the tittle and other translations
 
   const handleOpen = event => {
     setOpen(event.currentTarget);
@@ -24,16 +19,6 @@ export default function ReciboMoreMenu({ onDelete, editInfo }) {
 
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setOpen(false);
-  };
-
-  const ICON = {
-    mr: 2,
-    width: 20,
-    height: 20,
   };
 
   return (
@@ -55,29 +40,16 @@ export default function ReciboMoreMenu({ onDelete, editInfo }) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          {'eliminar'}
-        </MenuItem>
-
-        <MenuItem onClick={() => setOpenDialog(true)}>
-          <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          {'editar'}
-        </MenuItem>
+        <AnularReciboDialog handleAnular={handleAnularRecibo} disabled={disabled} handleCloseMenu={handleClose} />
       </MenuPopover>
-      <AddEditLabor
-        open={openDialog}
-        onClose={() => handleCloseDialog()}
-        title={'Editar registro de fertilización'}
-        edit={true}
-        editInfo={editInfo}
-      />
     </>
   );
 }
 
 ReciboMoreMenu.propTypes = {
-  onDelete: PropTypes.func,
+  handleAnularRecibo: PropTypes.func,
+  disabled: PropTypes.bool,
   editInfo: PropTypes.object,
   recodId: PropTypes.string,
+  totalPagos: PropTypes.number,
 };
