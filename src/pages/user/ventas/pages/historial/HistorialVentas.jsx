@@ -106,7 +106,7 @@ export default function HistorialVentas() {
       isLoading={isLoading}
       error={error}
     >
-      <ImprimirVentas />
+      {/* <ImprimirVentas /> */}
       <VentasTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
       {isNotFoundAux ? (
         <TableBody>
