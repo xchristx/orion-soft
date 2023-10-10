@@ -132,7 +132,10 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
     setErrorsListener(true);
 
     if (!hasErros) {
-      setDataToPost([...dataToPost, { detalle: detalleProd, precio, cantidad, uid, tallas: sizes.filter(el => el.value > 0) }]);
+      setDataToPost([
+        ...dataToPost,
+        { detalle: detalleProd, precio, procedenciaProductos, cantidad, uid, tallas: sizes.filter(el => el.value > 0) },
+      ]);
       setSizes([...Array(13)].map((_, i) => ({ size: i + 34, value: 0 })));
       setDetalleProd({ value: null, hasError: null, errMessage: '' });
       setPrecio({ value: '', hasError: null, errMessage: '' });
@@ -152,6 +155,7 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
         cantidad: el.cantidad.value,
         uid: el.uid,
         tallas: el.tallas,
+        procedenciaProd: el.procedenciaProductos,
       }))
     );
     setTotales({ cantidadTotal, montoTotal });
@@ -195,7 +199,7 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
     if (detalleProd?.value?.uid) {
       setPrecio({ ...precio, value: productData.find(el => el.uid === detalleProd.value.uid).precio.noFacturado });
     }
-  }, [detalleProd]);
+  }, [detalleProd.value]);
   return (
     <>
       <Button fullWidth variant="outlined" onClick={handleClickOpen}>

@@ -8,11 +8,12 @@ import Iconify from '../../../../../../components/Iconify';
 import MenuPopover from '../../../../../../components/MenuPopover';
 
 // Translation module
-import AddEditLabor from './AddEditVenta';
+import AddEditVenta from './AddEditVenta';
+import DeleteDialog from './DeleteDialog';
 
 // ----------------------------------------------------------------------
 
-export default function ReciboMoreMenu({ onDelete, editInfo }) {
+export default function VentasMoreMenu({ onDelete, editInfo, handleOpenRecibo }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -55,17 +56,24 @@ export default function ReciboMoreMenu({ onDelete, editInfo }) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          {'eliminar'}
+        <DeleteDialog onDelete={onDelete} />
+        <MenuItem
+          onClick={() => {
+            handleOpenRecibo();
+            setOpen(false);
+          }}
+          sx={{ color: 'success.main' }}
+        >
+          <Iconify icon={'uil:bill'} sx={{ ...ICON }} />
+          {'nuevo pago'}
         </MenuItem>
 
-        <MenuItem onClick={() => setOpenDialog(true)}>
+        {/* <MenuItem onClick={() => setOpenDialog(true)}>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
           {'editar'}
-        </MenuItem>
+        </MenuItem> */}
       </MenuPopover>
-      <AddEditLabor
+      <AddEditVenta
         open={openDialog}
         onClose={() => handleCloseDialog()}
         title={'Editar registro de fertilización'}
@@ -76,8 +84,9 @@ export default function ReciboMoreMenu({ onDelete, editInfo }) {
   );
 }
 
-ReciboMoreMenu.propTypes = {
+VentasMoreMenu.propTypes = {
   onDelete: PropTypes.func,
+  handleOpenRecibo: PropTypes.func,
   editInfo: PropTypes.object,
   recodId: PropTypes.string,
 };

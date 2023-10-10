@@ -1,5 +1,5 @@
 // scroll bar
-import 'simplebar/src/simplebar.css';
+import 'simplebar-react/dist/simplebar.min.css';
 // editor
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';

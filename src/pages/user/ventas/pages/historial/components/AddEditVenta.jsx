@@ -118,10 +118,12 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
 
   const [totales, setTotales] = useState({});
   const [ventaId, setVentaId] = useState(null);
+  const [reciboId, setReciboId] = useState(null);
 
   const [openClienteModal, setOpenClienteModal] = useState(false);
 
   const uid = uuid();
+  const uidRecibo = uuid();
 
   const { user } = useSelector(s => s.authSlice);
   const { data: clientesData, isLoading } = useSelector(s => s.clientes);
@@ -142,8 +144,15 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       }
       return schema;
     }),
+    personaQuePaga: Yup.string().when('adelanto', (adelanto, schema) => {
+      if (parseInt(adelanto) > 1) {
+        return schema.required('Introduzca la persona que efectúa el pago');
+      }
+      return schema;
+    }),
     responsable: Yup.string().required('Introduce el responsable de emisión'),
     detalleRecibo: Yup.string(),
+    notasVenta: Yup.string(),
     detalleVenta: Yup.array().min(1),
   });
   const defaultValues = edit
@@ -157,6 +166,8 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
         metodoPago: '',
         responsable: user.firstName + ' ' + user.lastName,
         detalleRecibo: '',
+        personaQuePaga: '',
+        notasVenta: '',
         detalleVenta: [],
       };
   const methods = useForm({
@@ -172,13 +183,34 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     formState: { errors, isSubmitting },
   } = methods;
   const onSubmitAdd = async data => {
+    const reciboData = {
+      reciboId,
+      ventaId,
+      fecha: new Date(data.fecha).getTime(),
+      cliente: data.personaQuePaga,
+      adelanto: data.adelanto,
+      concepto: data.concepto,
+      metodoPago: data.metodoPago,
+      responsable: data.responsable,
+      detalleRecibo: data.detalleRecibo,
+      estado: 'valido',
+      uid: uidRecibo,
+      cantidadTotal: totales.cantidadTotal,
+      montoTotal: totales.montoTotal,
+    };
+
+    const pagos = parseFloat(data.adelanto) > 0 ? [reciboData] : [];
     const dataToAdd = {
-      ...data,
+      adelanto: data.adelanto,
+      notasVenta: data.notasVenta,
+      detalleVenta: data.detalleVenta,
+      cliente: data.cliente,
       fecha: new Date(data.fecha).getTime(),
       ventaId: { id: ventaId },
       cantidadTotal: totales.cantidadTotal,
       montoTotal: totales.montoTotal,
       uid,
+      recibosVenta: pagos,
     };
     dispatch(addVenta(dataToAdd));
     reset();
@@ -202,13 +234,19 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     });
     return () => unsub();
   }, [onSnapshot]);
+  useEffect(() => {
+    const unsub = onSnapshot(doc(DB, 'idRecibo', 'idRecibo'), doc => {
+      setReciboId(doc.data().id + 1);
+    });
+    return () => unsub();
+  }, [onSnapshot]);
 
   return (
     <div>
       <Dialog
         fullWidth
         fullScreen={!isDesktop}
-        maxWidth="lg"
+        maxWidth="xl"
         open={Boolean(open)}
         TransitionComponent={Transition}
         onClose={onClose}
@@ -279,28 +317,41 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                   />
                 </Grid>
                 {parseInt(watch('adelanto')) > 1 && (
-                  <Grid item xs={12} sm={6}>
-                    <RHFTextField variant="filled" name="concepto" label="Por concepto de:*" />
-                  </Grid>
+                  <>
+                    <Grid item xs={12}>
+                      <Divider sx={{ bgcolor: 'primary.main' }} />
+                      <Typography my={1}>Datos para el recibo:</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <RHFTextField name="personaQuePaga" label="Persona que efectua el pago." />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <RHFTextField name="concepto" label="Por concepto de:*" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <RHFSelect name="metodoPago" label="Método de pago*">
+                        <option></option>
+                        {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
+                          <option key={i} value={el}>
+                            {el}
+                          </option>
+                        ))}
+                      </RHFSelect>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <RHFTextField name="detalleRecibo" label="Detalle para el recibo" />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Divider sx={{ bgcolor: 'primary.main' }} />
+                    </Grid>
+                  </>
                 )}
 
-                {parseInt(watch('adelanto')) > 1 && (
-                  <Grid item xs={12} sm={6}>
-                    <RHFSelect variant="filled" name="metodoPago" label="Método de pago*">
-                      <option></option>
-                      {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
-                        <option key={i} value={el}>
-                          {el}
-                        </option>
-                      ))}
-                    </RHFSelect>
-                  </Grid>
-                )}
                 <Grid item xs={12} sm={6}>
                   <RHFTextField variant="filled" disabled name="responsable" label="Responsable*" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <RHFTextField variant="filled" name="detalleRecibo" label="Detalle*" />
+                  <RHFTextField name="notasVenta" label="Notas de la venta (no se muestra en el recibo)" />
                 </Grid>
 
                 <Grid item xs={12}>

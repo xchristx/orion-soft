@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { TableBody, TableCell, TableRow } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import StaffInfoMoreMenu from './ReciboMoreMenu';
-import { DetalleVentaDialog } from './DetalleVentaDialog';
 import { deleteRecibo } from '../../../../../../redux/actions/recibosActions';
 
 export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows }) {
@@ -15,7 +14,7 @@ export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows
   return (
     <TableBody>
       {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-        const { id, reciboId, fecha, cliente, adelanto, concepto, montoTotal, detalleRecibo, detalleVenta, cantidadTotal } = row;
+        const { id, reciboId, fecha, cliente, adelanto, concepto, montoTotal, detalleRecibo } = row;
         return (
           <TableRow hover key={id} tabIndex={-1}>
             <TableCell align="center">{reciboId || '---'}</TableCell>
@@ -26,12 +25,9 @@ export default function ReciboTableBody({ fRecords, page, rowsPerPage, emptyRows
             <TableCell align="center">{concepto}</TableCell>
             <TableCell align="center">{adelanto.toLocaleString('es-MX')}</TableCell>
 
-            <TableCell align="center">{montoTotal.toLocaleString('es-MX')}</TableCell>
+            <TableCell align="center">{montoTotal?.toLocaleString('es-MX') || '---'}</TableCell>
             <TableCell align="center">{(montoTotal - adelanto).toLocaleString('es-MX')}</TableCell>
             <TableCell align="center">{detalleRecibo}</TableCell>
-            <TableCell align="center">
-              <DetalleVentaDialog detalleVenta={detalleVenta} montoTotal={montoTotal} cantidadTotal={cantidadTotal} />{' '}
-            </TableCell>
 
             <TableCell>
               <StaffInfoMoreMenu onDelete={() => handleDelete(id)} editInfo={row} />

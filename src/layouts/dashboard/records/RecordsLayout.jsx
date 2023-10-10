@@ -50,6 +50,7 @@ export default function RecordsLayout({
   buttonStartIcon,
   isLoading,
   error,
+  hasActionButton,
 }) {
   // Added the translation for the tittle and other translations
   const dispatch = useDispatch();
@@ -77,6 +78,7 @@ export default function RecordsLayout({
         handleResetFilter={() => dispatch(handleResetFilter())}
         buttonStartIcon={buttonStartIcon}
         disabledSearch={!data.length}
+        hasActionButton={hasActionButton}
       />
 
       {addEditComponent}
@@ -167,5 +169,6 @@ RecordsLayout.propTypes = {
   data: PropTypes.array.isRequired,
   buttonStartIcon: PropTypes.node,
   isLoading: PropTypes.bool,
+  hasActionButton: PropTypes.bool,
   error: PropTypes.any,
 };

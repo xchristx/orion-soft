@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import AddEditStaffInfo from './components/AddEditVenta';
-import RecibosTableBody from './components/ReciboTableBody';
+import VentasTableBody from './components/VentaTableBody';
 import RecordsLayout from '../../../../../layouts/dashboard/records/RecordsLayout';
 // utils
 import { TableBody, TableCell, TableRow } from '@mui/material';
@@ -14,15 +14,15 @@ import { getClientes } from '../../../clientes/utils/getClientes';
 import { getProductos } from '../../../product/utils/getProductos';
 
 const headLabel = [
-  { id: 'reciboId', label: 'Recibo No.', alignRight: false },
+  { id: 'ventaId', label: 'Recibo No.', alignRight: false },
   { id: 'fecha', label: 'Fecha', alignRight: false },
   { id: 'cliente', label: 'Cliente', alignRight: false },
-  { id: 'concepto', label: 'Concepto', alignRight: false },
   { id: 'adelanto', label: 'A cuenta', alignRight: false },
   { id: 'total', label: 'Total', alignRight: false },
   { id: 'saldo', label: 'Saldo', alignRight: false },
-  { id: 'notas', label: 'Detalle', alignRight: false },
-  { id: 'detalleVenta', label: 'Detalle venta', alignRight: false },
+  { id: 'estadoEntrega', label: 'Estado de entrega', alignRight: false },
+  { id: 'estadoPago', label: 'Estado de pago', alignRight: false },
+  { id: 'detalleVenta', label: 'Más Detalles', alignRight: false },
   { id: 'moreMenu', label: '', alignRight: false },
 ];
 const bcLinks = [
@@ -58,9 +58,9 @@ export default function HistorialVentas() {
     data,
     filteredData,
     hasTwoSearch: false,
-    searchFilter: 'reciboId',
+    searchFilter: 'ventaId',
     searchFilter2: 'cliente',
-    reduxSlice: 'recibos',
+    reduxSlice: 'venas',
     isLoading,
     error,
   });
@@ -100,12 +100,12 @@ export default function HistorialVentas() {
       bcLinks={bcLinks} // array de links que consumira Los breadcums
       headLabel={headLabel} // strings que tendran el head de la tabla de contenido, esta ligado al translategroup
       filterCells={[]} // introducir array de los ids de las colunmas que contendran la funcion de filtrado
-      disableOptions={['adelanto', 'notas', 'detalleVenta', 'saldo', 'total']} // array de las columnas que no tendran la opcion de ordenamiento
+      disableOptions={['adelanto', 'notas', 'detalleVenta', 'saldo', 'total', 'estadoPago', 'estadoEntrega']} // array de las columnas que no tendran la opcion de ordenamiento
       addEditComponent={<AddEditStaffInfo edit={false} open={open} onClose={handleClose} />} // componente que contiene el formulario para agregar nuevas filas
       isLoading={isLoading}
       error={error}
     >
-      <RecibosTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
+      <VentasTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
       {isNotFoundAux ? (
         <TableBody>
           <TableRow>

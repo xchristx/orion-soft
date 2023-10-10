@@ -20,7 +20,6 @@ const headLabel = [
   { id: 'total', label: 'Total', alignRight: false },
   { id: 'saldo', label: 'Saldo', alignRight: false },
   { id: 'notas', label: 'Detalle', alignRight: false },
-  { id: 'detalleVenta', label: 'Detalle venta', alignRight: false },
   { id: 'moreMenu', label: '', alignRight: false },
 ];
 const bcLinks = [
@@ -99,9 +98,10 @@ export default function Recibos() {
       headLabel={headLabel} // strings que tendran el head de la tabla de contenido, esta ligado al translategroup
       filterCells={[]} // introducir array de los ids de las colunmas que contendran la funcion de filtrado
       disableOptions={['adelanto', 'notas', 'detalleVenta', 'saldo', 'total']} // array de las columnas que no tendran la opcion de ordenamiento
-      addEditComponent={<AddEditStaffInfo edit={false} open={open} onClose={handleClose} />} // componente que contiene el formulario para agregar nuevas filas
+      // addEditComponent={<AddEditStaffInfo edit={false} open={open} onClose={handleClose} />} // componente que contiene el formulario para agregar nuevas filas
       isLoading={isLoading}
       error={error}
+      hasActionButton={false}
     >
       <RecibosTableBody fRecords={filtered} page={page} rowsPerPage={rowsPerPage} emptyRows={emptyRows} />
       {isNotFoundAux ? (
