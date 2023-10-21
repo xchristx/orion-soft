@@ -7,6 +7,7 @@ import AuthGuard from '../guards/AuthGuard';
 // Components
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardUser from '../pages/user/mainview/Mainview';
+import { ToPrint } from '../pages/user/ventas/pages/historial/components/Imprimir';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +47,7 @@ export default function Router() {
             <Route index element={<VentasMemu />} />
             <Route path="historial" element={<Ventas />} />
             <Route path="recibos" element={<Recibos />} />
+            <Route path="imprimir" element={<ToPrint />} />
           </Route>
           {/* <Route path="compras">
             <Route path="nuevo" element={<NuevaCompra />} />

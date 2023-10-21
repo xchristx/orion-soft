@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import { Chip, TableBody, TableCell, TableRow } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import VentasMoreMenu from './VentaMoreMenu';
-import { DetalleVentaDialog } from './DetalleVentaDialog';
+import { DetalleVentaDialog } from './detalleVentaDialog/DetalleVentaDialog';
 import { deleteVenta } from '../../../../../../redux/actions/ventasActions';
 import AddEditRecibo from '../../recibos/components/AddEditRecibo';
 import { useState } from 'react';
 
 export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows }) {
   const dispatch = useDispatch();
-  const [openRecibo, setOpenRecibo] = useState(false);
+  const [openRecibo, setOpenRecibo] = useState('');
 
-  const onCloseRecibo = () => setOpenRecibo(false);
-  const handleOpenRecibo = () => setOpenRecibo(true);
+  const onCloseRecibo = () => setOpenRecibo('');
+  const handleOpenRecibo = id => setOpenRecibo(id);
 
   const { data: clientes } = useSelector(s => s.clientes);
 
@@ -26,6 +26,7 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
         {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
           const { id, ventaId, fecha, cliente, adelanto, montoTotal, detalleVenta, cantidadTotal, recibosVenta } = row;
           const saldo = parseFloat(montoTotal) - parseFloat(adelanto);
+
           const estadoPagoLabel =
             saldo === 0
               ? { label: 'Pagado', color: 'success' }
@@ -59,9 +60,14 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
               </TableCell>
 
               <TableCell>
-                <VentasMoreMenu onDelete={() => handleDelete(id)} editInfo={row} handleOpenRecibo={handleOpenRecibo} />
+                <VentasMoreMenu
+                  saldo={saldo}
+                  onDelete={() => handleDelete(id)}
+                  editInfo={row}
+                  handleOpenRecibo={() => handleOpenRecibo(id)}
+                />
                 <AddEditRecibo
-                  open={openRecibo}
+                  open={openRecibo === id}
                   onClose={onCloseRecibo}
                   edit={false}
                   ventaId={ventaId}

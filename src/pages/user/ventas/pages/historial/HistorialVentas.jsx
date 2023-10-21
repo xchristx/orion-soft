@@ -12,10 +12,9 @@ import { getVentas } from './utils/getVentas';
 import AddIcon from '@mui/icons-material/Add';
 import { getClientes } from '../../../clientes/utils/getClientes';
 import { getProductos } from '../../../product/utils/getProductos';
-import ImprimirVentas from './components/Imprimir';
 
 const headLabel = [
-  { id: 'ventaId', label: 'Recibo No.', alignRight: false },
+  { id: 'ventaId', label: 'Venta No.', alignRight: false },
   { id: 'fecha', label: 'Fecha', alignRight: false },
   { id: 'cliente', label: 'Cliente', alignRight: false },
   { id: 'adelanto', label: 'A cuenta', alignRight: false },
@@ -87,7 +86,7 @@ export default function HistorialVentas() {
       searchInput2={false}
       data={data}
       buttonStartIcon={<AddIcon />}
-      searchPlaceholder={'Buscar por No. de recibo'} // placeHolder que tendra el input del buscador
+      searchPlaceholder={'Buscar por No. de venta'} // placeHolder que tendra el input del buscador
       searchPlaceholder2={'Buscar por cliente'} // placeHolder que tendra el input del buscador
       handleFilter={setFilteredData} // funcion para manejar el filtrado de la tabla
       filterChipLabels={filter} // aqui poner un objeto que tenga esta estructura {name:'string' value:'string'} esto indica que filtro se esta aplicando

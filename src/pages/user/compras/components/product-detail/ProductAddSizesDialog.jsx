@@ -117,7 +117,16 @@ export default function ProductAddSizesDialog({
               <TableRow>{sizes.map(el => el.value > 0 && <TableCell key={el.size}>{el.size}</TableCell>)}</TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>{sizes.map(el => el.value > 0 && <TableCell key={el.size}>{el.value}</TableCell>)}</TableRow>
+              <TableRow>
+                {sizes.map(
+                  el =>
+                    el.value > 0 && (
+                      <TableCell sx={{ margin: 0, padding: 0, border: '1px solid red' }} key={el.size}>
+                        {el.value}
+                      </TableCell>
+                    )
+                )}
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -125,7 +134,7 @@ export default function ProductAddSizesDialog({
       <Dialog fullScreen={isMobile} fullWidth maxWidth="xs" open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
         <DialogTitle id="responsive-dialog-title">{'Elegir tallas'}</DialogTitle>
         <DialogContent>
-          <Scrollbar sx={{ height: '610px' }}>
+          <Scrollbar>
             <TableContainer component={Paper} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Table sx={{ maxWidth: { xs: 150 } }} aria-label="simple table">
                 <TableHead>
@@ -143,9 +152,9 @@ export default function ProductAddSizesDialog({
                         : null;
                     return (
                       <React.Fragment key={el.size}>
-                        <TableRow>
-                          <TableCell>{el.size}</TableCell>
-                          <TableCell>
+                        <TableRow sx={{ p: 0, m: 0 }}>
+                          <TableCell sx={{ m: 0, py: 0.5 }}>{el.size}</TableCell>
+                          <TableCell sx={{ m: 0, py: 0.5 }}>
                             <Incrementer
                               available={prodProcedencia === 'stock' ? stockData?.value : 200}
                               quantity={el.value}
@@ -198,8 +207,8 @@ function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuan
     <>
       <Box
         sx={{
-          py: 0.5,
           px: 0.75,
+          margin: 0,
           border: 1,
           lineHeight: 0,
           borderRadius: 1,
@@ -217,7 +226,7 @@ function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuan
           value={quantity}
           variant="standard"
           size="small"
-          sx={{ width: 20, color: parseInt(available) < parseInt(quantity) ? 'error' : '' }}
+          sx={{ width: 40, m: 0, color: parseInt(available) < parseInt(quantity) ? 'error' : '' }}
           inputProps={{ sx: { color: parseInt(available) < parseInt(quantity) ? 'red' : '' } }}
           onChange={handleChangeInput}
         />

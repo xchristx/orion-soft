@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 
-import AddEditStaffInfo from './components/AddEditRecibo';
 import RecibosTableBody from './components/ReciboTableBody';
 import RecordsLayout from '../../../../../layouts/dashboard/records/RecordsLayout';
 // utils
@@ -31,7 +30,6 @@ const bcLinks = [
 export default function Recibos() {
   const { data, filteredData, filter, isLoading, error } = useSelector(state => state.recibos);
   const {
-    open,
     page,
     rowsPerPage,
     filtered,
@@ -44,7 +42,6 @@ export default function Recibos() {
     isNotFound2,
     searchActive,
     handleChangeRowsPerPage,
-    handleClose,
     handleOpen,
     onPageChange,
     handleRequestSort,

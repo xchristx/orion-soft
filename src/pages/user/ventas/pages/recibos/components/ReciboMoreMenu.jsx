@@ -7,10 +7,11 @@ import { IconButton } from '@mui/material';
 import Iconify from '../../../../../../components/Iconify';
 import MenuPopover from '../../../../../../components/MenuPopover';
 import AnularReciboDialog from './AnularReciboDialog';
+import ImprimirVentas from '../../historial/components/Imprimir';
 
 // ----------------------------------------------------------------------
 
-export default function ReciboMoreMenu({ handleAnularRecibo, disabled }) {
+export default function ReciboMoreMenu({ handleAnularRecibo, disabled, detalleVenta }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = event => {
@@ -41,6 +42,7 @@ export default function ReciboMoreMenu({ handleAnularRecibo, disabled }) {
         }}
       >
         <AnularReciboDialog handleAnular={handleAnularRecibo} disabled={disabled} handleCloseMenu={handleClose} />
+        <ImprimirVentas detalleVenta={detalleVenta} />
       </MenuPopover>
     </>
   );
@@ -52,4 +54,5 @@ ReciboMoreMenu.propTypes = {
   editInfo: PropTypes.object,
   recodId: PropTypes.string,
   totalPagos: PropTypes.number,
+  detalleVenta: PropTypes.array,
 };

@@ -130,7 +130,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
 
   const FormSchema = Yup.object().shape({
     fecha: Yup.date().required().typeError('Este campo debe ser una fecha válida por favor'),
-    cliente: Yup.string().required('Introduce el nombre del cliente'),
+    cliente: Yup.string().required('Introduce el nombre del cliente').max(totales.montoTotal, 'asdasd'),
     adelanto: Yup.number().required('Introduce el monto de adelanto').typeError('Introduce un número valido'),
     concepto: Yup.string().when('adelanto', (adelanto, schema) => {
       if (parseInt(adelanto) > 1) {
@@ -180,6 +180,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     control,
     watch,
     setValue,
+    setError,
     formState: { errors, isSubmitting },
   } = methods;
   const onSubmitAdd = async data => {
@@ -240,6 +241,12 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     });
     return () => unsub();
   }, [onSnapshot]);
+
+  useEffect(() => {
+    if (totales.montoTotal > 0 && watch('adelanto') > totales.montoTotal) {
+      setError('adelanto', 'asdaskd');
+    }
+  }, []);
 
   return (
     <div>
@@ -367,7 +374,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                           <Typography sx={{ p: 0.5 }}>{`${totales.montoTotal.toLocaleString('es-MX')} bs.`}</Typography>
                         </WrapperStyle>
                         <WrapperStyle>
-                          <LabelStyle>Ssaldo:</LabelStyle>
+                          <LabelStyle>Saldo:</LabelStyle>
                           <Typography sx={{ p: 0.5 }}>
                             {`${(isNaN(parseFloat(watch('adelanto')))
                               ? totales.montoTotal

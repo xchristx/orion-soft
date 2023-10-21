@@ -13,7 +13,7 @@ import DeleteDialog from './DeleteDialog';
 
 // ----------------------------------------------------------------------
 
-export default function VentasMoreMenu({ onDelete, editInfo, handleOpenRecibo }) {
+export default function VentasMoreMenu({ onDelete, editInfo, handleOpenRecibo, saldo }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -57,16 +57,18 @@ export default function VentasMoreMenu({ onDelete, editInfo, handleOpenRecibo })
         }}
       >
         <DeleteDialog onDelete={onDelete} />
-        <MenuItem
-          onClick={() => {
-            handleOpenRecibo();
-            setOpen(false);
-          }}
-          sx={{ color: 'success.main' }}
-        >
-          <Iconify icon={'uil:bill'} sx={{ ...ICON }} />
-          {'nuevo pago'}
-        </MenuItem>
+        {saldo > 0 && (
+          <MenuItem
+            onClick={() => {
+              handleOpenRecibo();
+              setOpen(false);
+            }}
+            sx={{ color: 'success.main' }}
+          >
+            <Iconify icon={'uil:bill'} sx={{ ...ICON }} />
+            {'nuevo pago'}
+          </MenuItem>
+        )}
 
         {/* <MenuItem onClick={() => setOpenDialog(true)}>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
@@ -89,4 +91,5 @@ VentasMoreMenu.propTypes = {
   handleOpenRecibo: PropTypes.func,
   editInfo: PropTypes.object,
   recodId: PropTypes.string,
+  saldo: PropTypes.number,
 };
