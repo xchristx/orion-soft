@@ -110,6 +110,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const responsables = [
+  'J. Sebastian Corrales Lazarte',
+  'Yessenia Valencia Huanca',
+  'Luz Gardenia Aguilera Coronado',
+  'Paola Melani Callata Saavedra',
+];
+
 export default function AddEditVenta({ onClose, open, edit, editInfo }) {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -369,7 +376,14 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                 )}
 
                 <Grid item xs={12} sm={6}>
-                  <RHFTextField variant="filled" disabled name="responsable" label="Responsable*" />
+                  <RHFSelect variant="filled" name="responsable" label="Responsable*">
+                    <option></option>
+                    {responsables.map((el, i) => (
+                      <option key={i} value={el}>
+                        {el}
+                      </option>
+                    ))}
+                  </RHFSelect>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <RHFTextField name="notasVenta" label="Notas de la venta (no se muestra en el recibo)" />
