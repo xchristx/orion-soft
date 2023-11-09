@@ -15,13 +15,7 @@ export function RHFCheckbox({ name, ...other }) {
 
   return (
     <FormControlLabel
-      control={
-        <Controller
-          name={name}
-          control={control}
-          render={({ field }) => <Checkbox {...field} checked={field.value} />}
-        />
-      }
+      control={<Controller name={name} control={control} render={({ field }) => <Checkbox {...field} checked={field.value} />} />}
       {...other}
     />
   );
@@ -42,18 +36,19 @@ export function RHFMultiCheckbox({ name, options, ...other }) {
       name={name}
       control={control}
       render={({ field }) => {
-        const onSelected = (option) =>
-          field.value.includes(option) ? field.value.filter((value) => value !== option) : [...field.value, option];
+        const onSelected = option =>
+          field.value.includes(option) ? field.value.filter(value => value !== option) : [...field.value, option];
 
         return (
           <FormGroup>
-            {options.map((option) => (
+            {options.map(option => (
               <FormControlLabel
                 key={option}
                 control={
                   <Checkbox
                     checked={field.value.includes(option)}
                     onChange={() => field.onChange(onSelected(option))}
+                    sx={{ padding: 0.3 }}
                   />
                 }
                 label={option}

@@ -6,6 +6,7 @@ import { Alert, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid
 import SaveIcon from '@mui/icons-material/Save';
 import { useTheme } from '@emotion/react';
 import { LoadingButton } from '@mui/lab';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 // react-hook-form
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,7 +20,7 @@ import { v4 as uuid } from 'uuid';
 // Components
 import Iconify from '../../../../../../components/Iconify';
 import { IconButtonAnimate } from '../../../../../../components/animate/IconButtonAnimate';
-import { FormProvider, RHFSelect, RHFTextField } from '../../../../../../components/hook-form';
+import { FormProvider, RHFMultiCheckbox, RHFSelect, RHFTextField } from '../../../../../../components/hook-form';
 import DatePickerMUI from '../../../../../../components/DatePickerMUI';
 import { DB } from '../../../../../../App';
 import styled from '@emotion/styled';
@@ -54,7 +55,18 @@ const LabelStyle = styled(props => <Typography component="span" variant="subtitl
   borderRight: `solid 1px ${theme.palette.divider}`,
 }));
 
-export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, totales, ventaUid, adelantoActual }) {
+export default function AddEditRecibo({
+  onClose,
+  open,
+  edit,
+  editInfo,
+  ventaId,
+  totales,
+  ventaUid,
+  adelantoActual,
+  cliente = '',
+  telefono = '',
+}) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -67,9 +79,10 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
   const FormSchema = Yup.object().shape({
     fecha: Yup.date().required().typeError('Este campo debe ser una fecha válida por favor'),
     cliente: Yup.string().required('Introduce el nombre de la persona que efectuará el pago'),
+    celular: Yup.number().required('Introduce el telefono').typeError('Introduce un número valido'),
     adelanto: Yup.number().required('Introduce el monto de adelanto').typeError('Introduce un número valido'),
     concepto: Yup.string().required('Introduce el concepto'),
-    metodoPago: Yup.string().required('Selecciona el método de pago'),
+    metodoPago: Yup.array().min(1),
     responsable: Yup.string().required('Introduce el responsable de emisión'),
     detalleRecibo: Yup.string(),
   });
@@ -78,10 +91,11 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
     : {
         reciboId: '',
         fecha: new Date(),
-        cliente: '',
+        cliente,
+        telefono,
         adelanto: '',
         concepto: '',
-        metodoPago: '',
+        metodoPago: [],
         responsable: user.firstName + ' ' + user.lastName,
         detalleRecibo: '',
       };
@@ -141,7 +155,7 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
     });
     return () => unsub();
   }, [onSnapshot]);
-
+  console.log(errors);
   return (
     <div>
       <Dialog
@@ -196,6 +210,17 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
               <Grid item xs={12} sm={6}>
                 <RHFTextField
                   variant="filled"
+                  name="celular"
+                  label="Celular:"
+                  type="number"
+                  InputProps={{
+                    startAdornment: <LocalPhoneIcon sx={{ mt: 2, mr: 1 }} fontSize="small" />,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <RHFTextField
+                  variant="filled"
                   name="adelanto"
                   label="La suma de:"
                   type="number"
@@ -208,14 +233,11 @@ export default function AddEditRecibo({ onClose, open, edit, editInfo, ventaId, 
                 <RHFTextField variant="filled" name="concepto" label="Por concepto de:" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <RHFSelect variant="filled" name="metodoPago" label="Método de pago">
-                  <option></option>
-                  {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
-                    <option key={i} value={el}>
-                      {el}
-                    </option>
-                  ))}
-                </RHFSelect>
+                <RHFMultiCheckbox
+                  name="metodoPago"
+                  options={['EFECTIVO', 'TRANSFERENCIA BANCARIA O QR', 'TIGO MONEY', ' CHEQUE']}
+                  sx={{ width: 1 }}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <RHFTextField variant="filled" disabled name="responsable" label="Responsable" />
@@ -266,4 +288,6 @@ AddEditRecibo.propTypes = {
   ventaId: PropTypes.number,
   ventaUid: PropTypes.string,
   adelantoActual: PropTypes.number,
+  telefono: PropTypes.number,
+  cliente: PropTypes.string,
 };

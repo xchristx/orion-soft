@@ -11,7 +11,7 @@ import ImprimirVentas from '../../historial/components/Imprimir';
 
 // ----------------------------------------------------------------------
 
-export default function ReciboMoreMenu({ handleAnularRecibo, disabled, detalleVenta }) {
+export default function ReciboMoreMenu({ handleAnularRecibo, disabled, recibo }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = event => {
@@ -42,7 +42,7 @@ export default function ReciboMoreMenu({ handleAnularRecibo, disabled, detalleVe
         }}
       >
         <AnularReciboDialog handleAnular={handleAnularRecibo} disabled={disabled} handleCloseMenu={handleClose} />
-        <ImprimirVentas detalleVenta={detalleVenta} />
+        <ImprimirVentas recibo={recibo} />
       </MenuPopover>
     </>
   );
@@ -54,5 +54,5 @@ ReciboMoreMenu.propTypes = {
   editInfo: PropTypes.object,
   recodId: PropTypes.string,
   totalPagos: PropTypes.number,
-  detalleVenta: PropTypes.array,
+  recibo: PropTypes.object,
 };

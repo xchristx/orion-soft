@@ -74,6 +74,8 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
                   ventaUid={id}
                   adelantoActual={adelanto}
                   totales={{ saldoActual: saldo, cantidadTotal }}
+                  cliente={cliente.nombre + ' ' + cliente.apellido}
+                  telefono={cliente.celular}
                 />
               </TableCell>
             </TableRow>

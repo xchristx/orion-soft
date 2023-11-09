@@ -60,7 +60,7 @@ export default function HistorialVentas() {
     hasTwoSearch: false,
     searchFilter: 'ventaId',
     searchFilter2: 'cliente',
-    reduxSlice: 'venas',
+    reduxSlice: 'ventas',
     isLoading,
     error,
   });

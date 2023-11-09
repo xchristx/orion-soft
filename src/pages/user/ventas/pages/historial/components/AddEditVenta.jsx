@@ -38,13 +38,12 @@ import { v4 as uuid } from 'uuid';
 // Components
 import Iconify from '../../../../../../components/Iconify';
 import { IconButtonAnimate } from '../../../../../../components/animate/IconButtonAnimate';
-import { FormProvider, RHFSelect, RHFTextField } from '../../../../../../components/hook-form';
+import { FormProvider, RHFMultiCheckbox, RHFSelect, RHFTextField } from '../../../../../../components/hook-form';
 import DatePickerMUI from '../../../../../../components/DatePickerMUI';
 import AddVentaDetails from './AddVentaDetails';
 import styled from '@emotion/styled';
 import { DB } from '../../../../../../App';
 import Scrollbar from '../../../../../../components/scrollbar/Scrollbar';
-import useResponsive from '../../../../../../hooks/useResponsive';
 import AddEditCliente from '../../../../clientes/components/AddEditCliente';
 import SkeletonVenta from '../../../../../../components/skeleton/SkeletonVenta';
 import { addVenta } from '../../../../../../redux/actions/ventasActions';
@@ -114,7 +113,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function AddEditVenta({ onClose, open, edit, editInfo }) {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const isDesktop = useResponsive('up', 'lg');
 
   const [totales, setTotales] = useState({});
   const [ventaId, setVentaId] = useState(null);
@@ -130,7 +128,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
 
   const FormSchema = Yup.object().shape({
     fecha: Yup.date().required().typeError('Este campo debe ser una fecha válida por favor'),
-    cliente: Yup.string().required('Introduce el nombre del cliente').max(totales.montoTotal, 'asdasd'),
+    cliente: Yup.string().required('Introduce el nombre del cliente'),
     adelanto: Yup.number().required('Introduce el monto de adelanto').typeError('Introduce un número valido'),
     concepto: Yup.string().when('adelanto', (adelanto, schema) => {
       if (parseInt(adelanto) > 1) {
@@ -138,15 +136,21 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       }
       return schema;
     }),
-    metodoPago: Yup.string().when('adelanto', (adelanto, schema) => {
+    metodoPago: Yup.array().when('adelanto', (adelanto, schema) => {
       if (parseInt(adelanto) > 1) {
-        return schema.required('Seleccione el método de pago');
+        return schema.min(1);
       }
       return schema;
     }),
     personaQuePaga: Yup.string().when('adelanto', (adelanto, schema) => {
       if (parseInt(adelanto) > 1) {
         return schema.required('Introduzca la persona que efectúa el pago');
+      }
+      return schema;
+    }),
+    telefono: Yup.number().when('adelanto', (adelanto, schema) => {
+      if (parseInt(adelanto) > 1) {
+        return schema.required('Introduzca el teléfono').typeError('introduzca el numero telefonico por favor');
       }
       return schema;
     }),
@@ -161,9 +165,10 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
         reciboId: '',
         fecha: new Date(),
         cliente: '',
+        telefono: '',
         adelanto: '',
         concepto: '',
-        metodoPago: '',
+        metodoPago: [],
         responsable: user.firstName + ' ' + user.lastName,
         detalleRecibo: '',
         personaQuePaga: '',
@@ -189,6 +194,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       ventaId,
       fecha: new Date(data.fecha).getTime(),
       cliente: data.personaQuePaga,
+      telefono: data.telefono,
       adelanto: data.adelanto,
       concepto: data.concepto,
       metodoPago: data.metodoPago,
@@ -205,7 +211,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       adelanto: data.adelanto,
       notasVenta: data.notasVenta,
       detalleVenta: data.detalleVenta,
-      cliente: data.cliente,
+      cliente: clientesData.find(el => el.uid === data.cliente),
       fecha: new Date(data.fecha).getTime(),
       ventaId: { id: ventaId },
       cantidadTotal: totales.cantidadTotal,
@@ -247,12 +253,19 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       setError('adelanto', 'asdaskd');
     }
   }, []);
+  useEffect(() => {
+    if (watch('cliente')) {
+      setValue('telefono', clientesData?.find(el => el.uid === watch('cliente'))?.celular);
+      const cliente = clientesData.find(el => el.uid === watch('cliente'));
+      setValue('personaQuePaga', cliente?.nombre + ' ' + cliente?.apellido);
+    }
+  }, [watch('cliente')]);
 
   return (
     <div>
       <Dialog
         fullWidth
-        fullScreen={!isDesktop}
+        fullScreen={true}
         maxWidth="xl"
         open={Boolean(open)}
         TransitionComponent={Transition}
@@ -307,7 +320,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                     <option></option>
                     {clientesData.map(el => (
                       <option key={el.uid} value={el.uid}>
-                        {el.nombre}
+                        {el.nombre + ' ' + el.apellido}
                       </option>
                     ))}
                   </RHFSelect>
@@ -333,17 +346,18 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                       <RHFTextField name="personaQuePaga" label="Persona que efectua el pago." />
                     </Grid>
                     <Grid item xs={12} sm={6}>
+                      <RHFTextField name="telefono" label="Celular:" type="number" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                       <RHFTextField name="concepto" label="Por concepto de:*" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <RHFSelect name="metodoPago" label="Método de pago*">
-                        <option></option>
-                        {['EFECTIVO', 'TRANSFERECIA BANCARIA', 'QR', 'TIGO MONEY'].map((el, i) => (
-                          <option key={i} value={el}>
-                            {el}
-                          </option>
-                        ))}
-                      </RHFSelect>
+                      <RHFMultiCheckbox
+                        name="metodoPago"
+                        options={['EFECTIVO', 'TRANSFERENCIA BANCARIA O QR', 'TIGO MONEY', ' CHEQUE']}
+                        sx={{ width: 1 }}
+                      />
+                      {!!errors.metodoPago && <p style={{ color: 'red', fontSize: '0.8rem' }}>Selecciona el método de pago</p>}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <RHFTextField name="detalleRecibo" label="Detalle para el recibo" />

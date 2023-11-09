@@ -12,7 +12,7 @@ const reciboTableHeadLabels = [
 ];
 
 const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta }) => {
-  console.log(pagos);
+  console.log(detalleVenta);
   return (
     <Table>
       <TableHead>
@@ -48,7 +48,7 @@ const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta }) => {
               </TableCell>
               <TableCell>
                 <ReciboMoreMenu
-                  detalleVenta={detalleVenta}
+                  recibo={recibo}
                   disabled={Boolean(recibo.estado === 'anulado')}
                   handleAnularRecibo={() => handleAnularRecibo(recibo.uid)}
                 />
