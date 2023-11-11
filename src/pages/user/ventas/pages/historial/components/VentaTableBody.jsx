@@ -41,7 +41,7 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
               <TableCell align="center">
                 {new Date(fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
               </TableCell>
-              <TableCell align="center">{clientes?.find(el => cliente === el.uid)?.nombre || '---'}</TableCell>
+              <TableCell align="center">{clientes?.find(el => cliente.uid === el.uid)?.nombre || '---'}</TableCell>
               <TableCell align="center">{adelanto.toLocaleString('es-MX')}</TableCell>
 
               <TableCell align="center">{montoTotal.toLocaleString('es-MX')}</TableCell>
@@ -56,6 +56,7 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
                   cantidadTotal={cantidadTotal}
                   pagos={recibosVenta}
                   ventaUid={id}
+                  cliente={clientes?.find(el => cliente.uid === el.uid)}
                 />{' '}
               </TableCell>
 

@@ -7,7 +7,7 @@ import { changeReciboState } from '../../../../../../../redux/actions/ventasActi
 import DVTable from './DVTable';
 import DPagosTable from './DPagosTable';
 
-export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pagos, totalAdelantos, ventaUid }) => {
+export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pagos, totalAdelantos, ventaUid, cliente }) => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pa
                     <Divider />
                     <Typography sx={{ my: 1 }}>Detalle Pagos:</Typography>
                   </Box>
-                  <DPagosTable detalleVenta={detalleVenta} pagos={pagos} handleAnularRecibo={handleAnularRecibo} />
+                  <DPagosTable detalleVenta={detalleVenta} pagos={pagos} handleAnularRecibo={handleAnularRecibo} cliente={cliente} />
                 </>
               ) : (
                 <></>
@@ -68,4 +68,5 @@ DetalleVentaDialog.propTypes = {
   montoTotal: PropTypes.number,
   totalAdelantos: PropTypes.number,
   ventaUid: PropTypes.string,
+  cliente: PropTypes.object,
 };

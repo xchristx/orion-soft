@@ -11,8 +11,7 @@ const reciboTableHeadLabels = [
   { id: 'moreMenu', label: '', alignRight: false },
 ];
 
-const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta }) => {
-  console.log(detalleVenta);
+const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta, cliente }) => {
   return (
     <Table>
       <TableHead>
@@ -33,7 +32,7 @@ const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta }) => {
                 {new Date(recibo.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
               </TableCell>
               <TableCell align="center">Ver Recibo</TableCell>
-              <TableCell align="center">{recibo.cliente}</TableCell>
+              <TableCell align="center">{cliente.nombre || '---'}</TableCell>
               <TableCell
                 align="center"
                 sx={{
@@ -65,4 +64,5 @@ DPagosTable.propTypes = {
   pagos: PropTypes.array,
   detalleVenta: PropTypes.array,
   handleAnularRecibo: PropTypes.func,
+  cliente: PropTypes.object,
 };
