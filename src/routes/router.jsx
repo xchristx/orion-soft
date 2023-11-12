@@ -7,7 +7,7 @@ import AuthGuard from '../guards/AuthGuard';
 // Components
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardUser from '../pages/user/mainview/Mainview';
-import { ToPrint } from '../pages/user/ventas/pages/historial/components/Imprimir';
+import { ToPrint } from '../pages/user/ventas/pages/historial/components/imprimirRecibo/Imprimir';
 
 // ----------------------------------------------------------------------
 

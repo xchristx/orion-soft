@@ -11,7 +11,7 @@ const reciboTableHeadLabels = [
   { id: 'moreMenu', label: '', alignRight: false },
 ];
 
-const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta, cliente }) => {
+const DPagosTable = ({ pagos, handleAnularRecibo, ventaUid, cliente }) => {
   return (
     <Table>
       <TableHead>
@@ -32,7 +32,7 @@ const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta, cliente }) => {
                 {new Date(recibo.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
               </TableCell>
               <TableCell align="center">Ver Recibo</TableCell>
-              <TableCell align="center">{cliente.nombre || '---'}</TableCell>
+              <TableCell align="center">{cliente?.nombre || '---'}</TableCell>
               <TableCell
                 align="center"
                 sx={{
@@ -50,6 +50,7 @@ const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta, cliente }) => {
                   recibo={recibo}
                   disabled={Boolean(recibo.estado === 'anulado')}
                   handleAnularRecibo={() => handleAnularRecibo(recibo.uid)}
+                  ventaUid={ventaUid}
                 />
               </TableCell>
             </TableRow>
@@ -62,7 +63,7 @@ const DPagosTable = ({ pagos, handleAnularRecibo, detalleVenta, cliente }) => {
 export default DPagosTable;
 DPagosTable.propTypes = {
   pagos: PropTypes.array,
-  detalleVenta: PropTypes.array,
+  ventaUid: PropTypes.string,
   handleAnularRecibo: PropTypes.func,
   cliente: PropTypes.object,
 };

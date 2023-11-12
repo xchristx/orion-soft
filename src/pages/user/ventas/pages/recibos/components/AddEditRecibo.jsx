@@ -20,7 +20,7 @@ import { v4 as uuid } from 'uuid';
 // Components
 import Iconify from '../../../../../../components/Iconify';
 import { IconButtonAnimate } from '../../../../../../components/animate/IconButtonAnimate';
-import { FormProvider, RHFMultiCheckbox, RHFSelect, RHFTextField } from '../../../../../../components/hook-form';
+import { FormProvider, RHFMultiCheckbox, RHFTextField } from '../../../../../../components/hook-form';
 import DatePickerMUI from '../../../../../../components/DatePickerMUI';
 import { DB } from '../../../../../../App';
 import styled from '@emotion/styled';
@@ -92,7 +92,7 @@ export default function AddEditRecibo({
         reciboId: '',
         fecha: new Date(),
         cliente,
-        telefono,
+        celular: telefono,
         adelanto: '',
         concepto: '',
         metodoPago: [],
