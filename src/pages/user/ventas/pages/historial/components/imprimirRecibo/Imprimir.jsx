@@ -66,6 +66,11 @@ export const ToPrint = forwardRef(({ recibo, ventaUid }, ref) => {
   return (
     <div ref={ref}>
       <Box sx={{ width: '21.59cm', height: '27.94cm', padding: '0.5cm', justifyContent: 'space-between' }}>
+        {recibo.estado === 'anulado' && (
+          <Typography component="h1" sx={{ fontSize: 100, position: 'absolute', textAlign: 'center', color: 'red', top: '20%' }}>
+            NULO NULO NULO
+          </Typography>
+        )}
         <Grid container spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Grid item xs={9}>
             <Stack direction="row" spacing={2}>
@@ -166,7 +171,7 @@ export const ToPrint = forwardRef(({ recibo, ventaUid }, ref) => {
             <Typography> Resumen de pagos:</Typography>{' '}
           </Grid>
           <Grid item xs={12} sx={{ mt: '10px' }}>
-            <ExtractoPagos pagos={filterVentas.recibosVenta} />
+            <ExtractoPagos pagos={filterVentas.recibosVenta.filter(el => el.estado === 'valido')} />
           </Grid>
         </Grid>
         <Box
