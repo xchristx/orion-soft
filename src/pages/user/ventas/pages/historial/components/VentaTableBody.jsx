@@ -26,6 +26,9 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
         {fRecords?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
           const { id, ventaId, fecha, cliente, adelanto, montoTotal, detalleVenta, cantidadTotal, recibosVenta } = row;
           const saldo = parseFloat(montoTotal) - parseFloat(adelanto);
+          const clienteDB = clientes?.find(el => cliente.uid === el.uid);
+          const clienteToRender = clienteDB || cliente;
+          console.log(cliente);
 
           const estadoPagoLabel =
             saldo === 0
@@ -41,7 +44,7 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
               <TableCell align="center">
                 {new Date(fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
               </TableCell>
-              <TableCell align="center">{clientes?.find(el => cliente.uid === el.uid)?.nombre || '---'}</TableCell>
+              <TableCell align="center">{clienteToRender.nombre || '---'}</TableCell>
               <TableCell align="center">{adelanto.toLocaleString('es-MX')}</TableCell>
 
               <TableCell align="center">{montoTotal.toLocaleString('es-MX')}</TableCell>
@@ -56,7 +59,7 @@ export default function VentaTableBody({ fRecords, page, rowsPerPage, emptyRows 
                   cantidadTotal={cantidadTotal}
                   pagos={recibosVenta}
                   ventaUid={id}
-                  cliente={clientes?.find(el => cliente.uid === el.uid)}
+                  cliente={clienteToRender}
                 />{' '}
               </TableCell>
 

@@ -7,13 +7,12 @@ import { IconButton } from '@mui/material';
 import Iconify from '../../../../../../components/Iconify';
 import MenuPopover from '../../../../../../components/MenuPopover';
 import AnularReciboDialog from './AnularReciboDialog';
-import ImprimirVentas from '../../historial/components/Imprimir';
+import ImprimirVentas from '../../historial/components/imprimirRecibo/Imprimir';
 
 // ----------------------------------------------------------------------
 
-export default function ReciboMoreMenu({ handleAnularRecibo, disabled, recibo }) {
+export default function ReciboMoreMenu({ handleAnularRecibo, disabled, recibo, ventaUid }) {
   const [open, setOpen] = useState(false);
-
   const handleOpen = event => {
     setOpen(event.currentTarget);
   };
@@ -42,7 +41,7 @@ export default function ReciboMoreMenu({ handleAnularRecibo, disabled, recibo })
         }}
       >
         <AnularReciboDialog handleAnular={handleAnularRecibo} disabled={disabled} handleCloseMenu={handleClose} />
-        <ImprimirVentas recibo={recibo} />
+        <ImprimirVentas recibo={recibo} ventaUid={ventaUid} />
       </MenuPopover>
     </>
   );
@@ -55,4 +54,5 @@ ReciboMoreMenu.propTypes = {
   recodId: PropTypes.string,
   totalPagos: PropTypes.number,
   recibo: PropTypes.object,
+  ventaUid: PropTypes.string,
 };

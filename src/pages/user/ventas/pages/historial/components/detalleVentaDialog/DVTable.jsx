@@ -1,16 +1,8 @@
 import { TableBody, TableCell, TableHead, TableRow, tableCellClasses, Table, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-const tableHeadLabels = [
-  { id: 'detalle', label: 'Detalle' },
-  { id: 'procedenciaProd', label: 'Procedencia' },
-  { id: 'precio', label: 'Precio' },
-  { id: 'cantidad', label: 'Cantidad' },
-  { id: 'subtotal', label: 'Subtotal' },
-  { id: 'tallas', label: 'Tallas' },
-  { id: 'borrar', label: '' },
-];
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.light,
@@ -37,31 +29,42 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const DVTable = ({ detalleVenta, cantidadTotal, montoTotal, totalAdelantos }) => {
+const DVTable = ({ detalleVenta, cantidadTotal, montoTotal, totalAdelantos, showProcedencia = true }) => {
+  const tableHeadLabels = [
+    { id: 'detalle', label: 'Detalle' },
+    { id: 'tallas', label: 'Tallas' },
+    { id: 'procedenciaProd', label: 'Procedencia' },
+    { id: 'precio', label: 'Precio' },
+    { id: 'cantidad', label: 'Cantidad' },
+    { id: 'subtotal', label: 'Subtotal' },
+    { id: 'borrar', label: '' },
+  ];
+  const colSpanP = showProcedencia ? 4 : 3;
   return (
-    <Table aria-label="simple table">
+    <Table aria-label="simple table" sx={{ width: '100%' }}>
       <TableHead>
         <TableRow>
-          {tableHeadLabels.map(el => (
-            <TableCell align="center" sx={{ px: el.id === 'borrar' ? 0 : 1, m: 0 }} key={el.id}>
-              {el.label}
-            </TableCell>
-          ))}
+          {tableHeadLabels.map(el =>
+            el.id === 'procedenciaProd' && !showProcedencia ? (
+              <React.Fragment key={el.id}></React.Fragment>
+            ) : (
+              <TableCell align="center" sx={{ px: el.id === 'borrar' ? 0 : 1, m: 0 }} key={el.id}>
+                {el.label}
+              </TableCell>
+            )
+          )}
         </TableRow>
       </TableHead>
       <TableBody>
         {detalleVenta.map(el => (
           <TableRow key={el.uid}>
-            <TableCell align="center">{el.detalle.nombre}</TableCell>
-            <TableCell align="center">{el.procedenciaProd}</TableCell>
-            <TableCell align="center">{parseFloat(el.precio).toLocaleString('es-MX')} bs.</TableCell>
-            <TableCell align="center">{el.cantidad} prs.</TableCell>
-            <TableCell align="center">{(el.cantidad * el.precio).toLocaleString('es-MX')} bs.</TableCell>
-
-            <TableCell>
+            <TableCell sx={{ p: 1 }} align="center">
+              {el.detalle.nombre}
+            </TableCell>
+            <TableCell sx={{ p: 1 }}>
               <Table>
                 <TableHead>
-                  <StyledTableRow>
+                  <StyledTableRow sx={{ borderBottom: '1px dashed black' }}>
                     {el.tallas.map((el, i) => (
                       <StyledTableCell align="center" key={i}>
                         {' '}
@@ -82,11 +85,23 @@ const DVTable = ({ detalleVenta, cantidadTotal, montoTotal, totalAdelantos }) =>
                 </TableBody>
               </Table>
             </TableCell>
+            {showProcedencia && <TableCell align="center">{el.procedenciaProd}</TableCell>}
+            <TableCell sx={{ p: 1 }} align="center">
+              {parseFloat(el.precio).toLocaleString('es-MX')} bs.
+            </TableCell>
+            <TableCell sx={{ p: 1 }} align="center">
+              {el.cantidad} prs.
+            </TableCell>
+            <TableCell sx={{ p: 1 }} align="center">
+              {(el.cantidad * el.precio).toLocaleString('es-MX')} bs.
+            </TableCell>
           </TableRow>
         ))}
+        <TableRow sx={{ borderTop: '1px dashed gray', height: 10 }} />
+
         <StyledTableRow>
-          <StyledTableCell align="right" colSpan={3}>
-            <Typography sx={{ pr: 4 }}>Total:</Typography>
+          <StyledTableCell align="right" colSpan={colSpanP}>
+            <Typography sx={{ pr: 3 }}>Total:</Typography>
           </StyledTableCell>
           <StyledTableCell align="center" sx={{ bgcolor: 'gray', borderRadius: 5, color: 'white' }}>
             {cantidadTotal.toLocaleString('es-MX')} prs.
@@ -94,15 +109,15 @@ const DVTable = ({ detalleVenta, cantidadTotal, montoTotal, totalAdelantos }) =>
           <StyledTableCell align="center">{montoTotal.toLocaleString('es-MX')} bs.</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow>
-          <StyledTableCell align="right" colSpan={3}>
-            <Typography sx={{ pr: 4 }}>Total pagos:</Typography>
+          <StyledTableCell align="right" colSpan={colSpanP}>
+            <Typography sx={{ pr: 3 }}>Total pagos:</Typography>
           </StyledTableCell>
           <StyledTableCell align="center"></StyledTableCell>
           <StyledTableCell align="center">{parseFloat(totalAdelantos).toLocaleString('es-MX')} bs.</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow>
-          <StyledTableCell align="right" colSpan={3}>
-            <Typography sx={{ pr: 4 }}>Saldo:</Typography>
+          <StyledTableCell align="right" colSpan={colSpanP}>
+            <Typography sx={{ pr: 3 }}>Saldo:</Typography>
           </StyledTableCell>
           <StyledTableCell align="center"></StyledTableCell>
           <StyledTableCell align="center" sx={{ bgcolor: 'gray', borderRadius: 5, color: 'white' }}>
@@ -120,4 +135,5 @@ DVTable.propTypes = {
   cantidadTotal: PropTypes.number,
   montoTotal: PropTypes.number,
   totalAdelantos: PropTypes.number,
+  showProcedencia: PropTypes.bool,
 };

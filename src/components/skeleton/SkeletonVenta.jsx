@@ -10,12 +10,12 @@ export default function SkeletonVenta() {
         <Skeleton variant="text" height={56} sx={{ borderRadius: 1 }} />
       </Grid>
       {[1, 2, 3].map(el => (
-        <Grid key={{ el }} item xs={6} md={4}>
+        <Grid key={el} item xs={6} md={4}>
           <Skeleton variant="rectangular" sx={{ borderRadius: 1 }} height={56} />
         </Grid>
       ))}
       {[1, 2, 3, 4, 5, 6].map(el => (
-        <Grid key={{ el }} item xs={12} md={6}>
+        <Grid key={el} item xs={12} md={6}>
           <Skeleton variant="rectangular" sx={{ borderRadius: 1 }} height={56} />
         </Grid>
       ))}

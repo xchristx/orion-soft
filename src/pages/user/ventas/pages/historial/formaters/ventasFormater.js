@@ -11,7 +11,6 @@ export const ventasFormater = ({
   detalleVenta,
   cantidadTotal,
   recibosVenta,
-  cliente1,
 }) => {
   return {
     ventaId: ventaId.id,
@@ -26,6 +25,5 @@ export const ventasFormater = ({
     concepto,
     cantidadTotal,
     recibosVenta,
-    cliente1,
   };
 };

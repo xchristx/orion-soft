@@ -45,7 +45,7 @@ export const DetalleVentaDialog = ({ detalleVenta, cantidadTotal, montoTotal, pa
                     <Divider />
                     <Typography sx={{ my: 1 }}>Detalle Pagos:</Typography>
                   </Box>
-                  <DPagosTable detalleVenta={detalleVenta} pagos={pagos} handleAnularRecibo={handleAnularRecibo} cliente={cliente} />
+                  <DPagosTable ventaUid={ventaUid} pagos={pagos} handleAnularRecibo={handleAnularRecibo} cliente={cliente} />
                 </>
               ) : (
                 <></>

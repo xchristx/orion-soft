@@ -193,6 +193,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
     watch,
     setValue,
     setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = methods;
   const onSubmitAdd = async data => {
@@ -256,10 +257,11 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
   }, [onSnapshot]);
 
   useEffect(() => {
-    if (totales.montoTotal > 0 && watch('adelanto') > totales.montoTotal) {
-      setError('adelanto', 'asdaskd');
-    }
-  }, []);
+    if (watch('adelanto') > totales.montoTotal) {
+      setError('importe', { type: 'importeMax', message: 'Adelanto no puede ser mayor a monto total, saldo negativo' });
+    } else clearErrors('importe');
+  }, [watch('adelanto'), totales.montoTotal, setError]);
+
   useEffect(() => {
     if (watch('cliente')) {
       setValue('telefono', clientesData?.find(el => el.uid === watch('cliente'))?.celular);
@@ -267,6 +269,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
       setValue('personaQuePaga', cliente?.nombre + ' ' + cliente?.apellido);
     }
   }, [watch('cliente')]);
+  console.log(errors);
 
   return (
     <div>
@@ -343,6 +346,13 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                     }}
                   />
                 </Grid>
+                {!!errors.importe && (
+                  <Grid item xs={12}>
+                    {' '}
+                    <Alert severity="error">{errors.importe.message}</Alert>
+                  </Grid>
+                )}
+
                 {parseInt(watch('adelanto')) > 1 && (
                   <>
                     <Grid item xs={12}>
