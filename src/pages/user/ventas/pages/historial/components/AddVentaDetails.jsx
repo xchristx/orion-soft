@@ -267,6 +267,7 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                                       showNav={isDesktop}
                                       autoPlay={isDesktop}
                                     />
+                                    {`origen: ${el.procedenciaProductos}`}
                                   </Stack>
                                 </TableCell>
                                 <TableCell align="center">{parseFloat(el.precio.value).toLocaleString('es-MX')} bs.</TableCell>
@@ -332,7 +333,10 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
                     value={procedenciaProductos}
-                    onChange={e => setProcedenciaProductos(e.target.value)}
+                    onChange={e => {
+                      setDetalleProd({ ...detalleProd, value: null });
+                      setProcedenciaProductos(e.target.value);
+                    }}
                   >
                     <FormControlLabel value="stock" control={<Radio />} label="Stock" />
                     <FormControlLabel value="pedido" control={<Radio />} label="A pedido" />
@@ -353,7 +357,9 @@ export default function AddVentaDetails({ edit = false, editInfo, setValue, setT
                     }}
                     id="controllable-states-demo"
                     options={productData}
-                    getOptionDisabled={option => Boolean(dataToPost.find(data => data.detalle.value.uid === option.uid))}
+                    getOptionDisabled={option =>
+                      Boolean(dataToPost.find(data => data.detalle.value.uid === option.uid)) && procedenciaProductos === 'stock'
+                    }
                     getOptionLabel={option => option.nombre}
                     sx={{ width: 300 }}
                     renderInput={params => (

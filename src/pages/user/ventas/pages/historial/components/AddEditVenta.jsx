@@ -436,7 +436,7 @@ export default function AddEditVenta({ onClose, open, edit, editInfo }) {
                             <TableBody>
                               {watch('detalleVenta').map(el => (
                                 <TableRow key={el.uid}>
-                                  <TableCell align="center">{el.detalle.nombre}</TableCell>
+                                  <TableCell align="center">{`${el.detalle.nombre} (${el.procedenciaProd})`}</TableCell>
                                   <TableCell align="center">{parseFloat(el.precio).toLocaleString('es-MX')} bs.</TableCell>
                                   <TableCell align="center">{el.cantidad} prs.</TableCell>
                                   <TableCell align="center">{(el.cantidad * el.precio).toLocaleString('es-MX')} bs.</TableCell>
